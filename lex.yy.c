@@ -393,11 +393,21 @@ char *yytext;
 #line 1 "lexer.l"
 #define INITIAL 0
 #line 2 "lexer.l"
+#include "parser.tab.h"
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-#line 401 "lex.yy.c"
+FILE* inputFile;
+FILE* outputFile;
+
+void set_input_file(FILE* file) {
+    yyin = file;
+}
+
+void set_output_file(FILE* file) {
+    outputFile = file;
+}
+
+#line 411 "lex.yy.c"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -548,9 +558,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 10 "lexer.l"
+#line 21 "lexer.l"
 
-#line 554 "lex.yy.c"
+#line 564 "lex.yy.c"
 
 	if ( yy_init )
 		{
@@ -635,90 +645,90 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 11 "lexer.l"
-{ fprintf(yyout, "PRINT\n");}
+#line 22 "lexer.l"
+{ fprintf(outputFile, "PRINT\n"); return PRINT;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 12 "lexer.l"
-{ fprintf(yyout, "PRINT\n");}
+#line 23 "lexer.l"
+{ fprintf(outputFile, "PRINT\n"); return PRINT;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 13 "lexer.l"
-{ fprintf(yyout, "ADD\n");}
+#line 24 "lexer.l"
+{ fprintf(outputFile, "ADD\n"); return ADD;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 14 "lexer.l"
-{ fprintf(yyout, "ADD\n");}
+#line 25 "lexer.l"
+{ fprintf(outputFile, "ADD\n"); return ADD;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 15 "lexer.l"
-{ fprintf(yyout, "SUB\n");}
+#line 26 "lexer.l"
+{ fprintf(outputFile, "SUB\n"); return SUB;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 16 "lexer.l"
-{ fprintf(yyout, "SUB\n");}
+#line 27 "lexer.l"
+{ fprintf(outputFile, "SUB\n"); return SUB;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 17 "lexer.l"
-{ fprintf(yyout, "MUL\n");}
+#line 28 "lexer.l"
+{ fprintf(outputFile, "MUL\n"); return MUL;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 18 "lexer.l"
-{ fprintf(yyout, "MUL\n");}
+#line 29 "lexer.l"
+{ fprintf(outputFile, "MUL\n"); return MUL;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 19 "lexer.l"
-{ fprintf(yyout, "DIV\n");}
+#line 30 "lexer.l"
+{ fprintf(outputFile, "DIV\n"); return DIV;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 20 "lexer.l"
-{ fprintf(yyout, "DIV\n");}
+#line 31 "lexer.l"
+{ fprintf(outputFile, "DIV\n"); return DIV;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 21 "lexer.l"
-{ fprintf(yyout, "LPAREN\n");}
+#line 32 "lexer.l"
+{ fprintf(outputFile, "LPAREN\n"); return LPAREN;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 22 "lexer.l"
-{ fprintf(yyout, "RPAREN\n");}
+#line 33 "lexer.l"
+{ fprintf(outputFile, "RPAREN\n"); return RPAREN;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 23 "lexer.l"
-{ fprintf(yyout, "NUM %s\n", yytext);}
+#line 34 "lexer.l"
+{ fprintf(outputFile, "NUM %s\n", yytext); return NUM;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 24 "lexer.l"
+#line 35 "lexer.l"
 ; // Ignore whitespace and newline characters
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 25 "lexer.l"
-{ fprintf(yyout, "ENDL\n");}
+#line 36 "lexer.l"
+{ fprintf(outputFile, "ENDL\n"); return ENDL;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 26 "lexer.l"
-{ fprintf(yyout, "ERROR %s\n", yytext);}
+#line 37 "lexer.l"
+{ fprintf(outputFile, "ERROR %s\n", yytext); return ERROR;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 27 "lexer.l"
+#line 39 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 722 "lex.yy.c"
+#line 732 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1604,32 +1614,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 27 "lexer.l"
+#line 39 "lexer.l"
 
 
-int main(int argc, char** argv) {
-    if (argc != 3) {
-        return 1;
-    }
 
-    FILE* input_file = fopen(argv[1], "r");
-    if (!input_file) {
-        return 1;
-    }
-
-    FILE* output_file = fopen(argv[2], "w");
-    if (!output_file) {
-        fclose(input_file);
-        return 1;
-    }
-
-    yyin = input_file;
-    yyout = output_file;
-
-    yylex(); 
-
-    fclose(input_file);
-    fclose(output_file);
-
-    return 0;
-}

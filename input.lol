@@ -1,3 +1,1 @@
-print(5 - 5 * 2 / (20 - 2))
-fff
-22
+5 veod veod veod
