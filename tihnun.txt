@@ -1,0 +1,83 @@
+
+mispar num shave 15  ->  int num = 15
+ot letter shave 'a'  -> char letter = 'a'
+mishpat word shave "hello world!"  -> string word = "hello world"
+esroni decNum shave 8.5  -> float decNum = 8.5
+meteg met shave cabuy / daluk  -> daluk is true -> bool met = false
+matzbiaLe mispar pnum = ctovetShel num -> int* pnum = &num
+
+shone -> !=
+shaveshave -> ==
+shave -> =
+katanShave -> <=
+gadolShave -> >=
+gadolMe -> >
+katanMe -> <
+ksor -> ^
+modulo -> %
+helkei -> /
+kaful -> *
+pahot -> -
+veod -> +
+ctovetShel -> &
+matzbiaLe -> *
+true -> daluk
+false -> cabuy
+void -> clum
+:) -> //
+
+bemikreVe (var shaveshave 5) az
+{
+	var shave 10
+}
+veBemikreShelo (met) az
+{
+	met shave cabuy
+}
+veBemikreShelo az
+{
+	tahzir clum
+}
+->
+if(var == 5)
+{
+    var = 10;
+}
+else (met)
+{
+    met = false;
+}
+else
+{
+    return;  :) return void;
+}
+
+colOd (daluk)
+{
+}
+->
+while(true)
+{
+}
+
+Lemeshech 5 peamim bishvil i
+{
+}
+->
+for(int i = 0; i < 5; i++)
+{
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

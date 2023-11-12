@@ -18,9 +18,18 @@
     <ClCompile Include="prog.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TokenGetter.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="llist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TokenGetter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="llist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
