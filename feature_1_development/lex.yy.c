@@ -646,67 +646,67 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 22 "lexer.l"
-{ fprintf(outputFile, "PRINT\n"); return PRINT;}
+{ fprintf(outputFile, "8\n"); return PRINT;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 23 "lexer.l"
-{ fprintf(outputFile, "PRINT\n"); return PRINT;}
+{ fprintf(outputFile, "8\n"); return PRINT;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 24 "lexer.l"
-{ fprintf(outputFile, "ADD\n"); return ADD;}
+{ fprintf(outputFile, "2\n"); return ADD;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 25 "lexer.l"
-{ fprintf(outputFile, "ADD\n"); return ADD;}
+{ fprintf(outputFile, "2\n"); return ADD;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 26 "lexer.l"
-{ fprintf(outputFile, "SUB\n"); return SUB;}
+{ fprintf(outputFile, "3\n"); return SUB;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 27 "lexer.l"
-{ fprintf(outputFile, "SUB\n"); return SUB;}
+{ fprintf(outputFile, "3\n"); return SUB;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 28 "lexer.l"
-{ fprintf(outputFile, "MUL\n"); return MUL;}
+{ fprintf(outputFile, "4\n"); return MUL;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 29 "lexer.l"
-{ fprintf(outputFile, "MUL\n"); return MUL;}
+{ fprintf(outputFile, "4\n"); return MUL;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 30 "lexer.l"
-{ fprintf(outputFile, "DIV\n"); return DIV;}
+{ fprintf(outputFile, "5\n"); return DIV;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 31 "lexer.l"
-{ fprintf(outputFile, "DIV\n"); return DIV;}
+{ fprintf(outputFile, "5\n"); return DIV;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 32 "lexer.l"
-{ fprintf(outputFile, "LPAREN\n"); return LPAREN;}
+{ fprintf(outputFile, "6\n"); return LPAREN;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 33 "lexer.l"
-{ fprintf(outputFile, "RPAREN\n"); return RPAREN;}
+{ fprintf(outputFile, "7\n"); return RPAREN;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 34 "lexer.l"
-{ fprintf(outputFile, "NUM %s\n", yytext); return NUM;}
+{ fprintf(outputFile, "1 %s\n", yytext); return NUM;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
@@ -716,12 +716,12 @@ YY_RULE_SETUP
 case 15:
 YY_RULE_SETUP
 #line 36 "lexer.l"
-{ fprintf(outputFile, "ENDL\n"); yylineno++; return ENDL;}
+{ fprintf(outputFile, "9\n"); yylineno++; return ENDL;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 37 "lexer.l"
-{ yylval.str = yytext; fprintf(outputFile, "ERROR %s\n", yytext); return ERROR;}
+{ yylval.str = yytext; fprintf(outputFile, "0 %s\n", yytext); return ERROR;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
