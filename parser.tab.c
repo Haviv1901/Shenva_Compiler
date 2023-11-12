@@ -71,10 +71,12 @@
 #line 2 "parser.y"
 
 #include <stdio.h>
+int yylineno;  
+FILE* errorFile;
 
 
 /* Line 189 of yacc.c  */
-#line 78 "parser.tab.c"
+#line 80 "parser.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -117,7 +119,20 @@
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+{
+
+/* Line 214 of yacc.c  */
+#line 10 "parser.y"
+
+    int num;
+    char *str;  // Add a string field
+
+
+
+/* Line 214 of yacc.c  */
+#line 135 "parser.tab.c"
+} YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -128,7 +143,7 @@ typedef int YYSTYPE;
 
 
 /* Line 264 of yacc.c  */
-#line 132 "parser.tab.c"
+#line 147 "parser.tab.c"
 
 #ifdef short
 # undef short
@@ -415,8 +430,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    19,    19,    22,    23,    26,    27,    28,    29,    32,
-      33,    34,    35,    36,    37,    38
+       0,    26,    26,    29,    30,    33,    34,    35,    36,    39,
+      40,    41,    42,    43,    44,    45
 };
 #endif
 
@@ -1332,63 +1347,56 @@ yyreduce:
         case 5:
 
 /* Line 1455 of yacc.c  */
-#line 26 "parser.y"
+#line 33 "parser.y"
     { /* Handle print statement */ ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 29 "parser.y"
-    { yyerror("Syntax error: unrecognized expression in the code!"); ;}
+#line 36 "parser.y"
+    {fprintf(errorFile, "syntax error, unrecognized \"%s\" in the code (line %d)\n", (yyvsp[(1) - (1)].str), yylineno);;}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 33 "parser.y"
+#line 40 "parser.y"
     { /* Handle addition here */ ;}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 34 "parser.y"
+#line 41 "parser.y"
     { /* Handle subtraction here */ ;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 35 "parser.y"
+#line 42 "parser.y"
     { /* Handle multiplication here */ ;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 36 "parser.y"
+#line 43 "parser.y"
     { /* Handle division here */ ;}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 37 "parser.y"
+#line 44 "parser.y"
     { /* Handle parentheses here */ ;}
     break;
 
-  case 15:
-
-/* Line 1455 of yacc.c  */
-#line 38 "parser.y"
-    {yyerror("Syntax error: unexpected phrase in the code! please follow the grammer rules!");}
-    break;
-
 
 
 /* Line 1455 of yacc.c  */
-#line 1392 "parser.tab.c"
+#line 1400 "parser.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1600,10 +1608,11 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 42 "parser.y"
+#line 49 "parser.y"
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
     if (argc != 3) {
         fprintf(stderr, "Usage: %s input_code_file output_file\n", argv[0]);
         return 1;
@@ -1621,7 +1630,7 @@ int main(int argc, char *argv[]) {
         fclose(inputFile);
         return 1;
     }
-	FILE* errorFile = fopen("errors.log", "w");
+	errorFile = fopen("errors.log", "w");
     if (!errorFile) 
 	{
         perror("Error opening error file");
@@ -1629,31 +1638,82 @@ int main(int argc, char *argv[]) {
 		fclose(outputFile);
         return 1;
     }
-	fclose(errorFile);
+	yylineno = 1;
     set_input_file(inputFile);
     set_output_file(outputFile);
-
+	
     yyparse();
 
     fclose(inputFile);
     fclose(outputFile);
-    return 0;
-}
-
-int yyerror(const char *msg) 
-{
-	FILE* errorFile = fopen("errors.log", "a");
-    if (!errorFile) 
-	{
-        perror("Error opening error file");
-        return 1;
-    }
-	if (msg[0] == 'S')
-	{
-		fprintf(errorFile, msg);
-		fprintf(errorFile, "\n");
-	}
 	fclose(errorFile);
     return 0;
 }
+
+int yyerror(char *msg) 
+{
+	int i = 0;
+	for (i = 0; i < strlen(msg); i++)
+	{
+    switch (msg[i]) {
+        case 'A':
+            fprintf(errorFile, "\"+\"");
+			i += 2;
+            break;
+        case 'S':
+            fprintf(errorFile, "\"-\"");
+			i += 2;
+            break;
+        case 'M':
+            fprintf(errorFile, "\"*\"");
+			i += 2;
+            break;
+        case 'D':
+            fprintf(errorFile, "\"//\"");
+			i += 2;
+            break;
+        case 'R':
+            fprintf(errorFile, "\")\"");
+			i += 5;
+            break;
+        case 'L':
+            fprintf(errorFile, "\"(\"");
+			i += 5;
+            break;
+        case 'P':
+            fprintf(errorFile, "print");
+			i += 4;
+            break;
+		case 'E':
+			if (msg[i + 1] == 'R')
+			{
+				fprintf(errorFile, "character");
+				i += 4;
+			}
+			else if (msg[i + 1] == 'N')
+			{
+				fprintf(errorFile, "newline");
+				i += 3;
+			}
+			break;
+		case 'N':
+			fprintf(errorFile, "number");
+			i += 2;
+			break;
+        default:
+            fputc(msg[i], errorFile);
+            break;
+		
+		}
+		
+	}
+	fprintf(errorFile, " (line %d)", yylineno);
+	fputc('\n', errorFile);
+    return 0;
+}
+
+
+
+
+
 

@@ -394,9 +394,9 @@ char *yytext;
 #define INITIAL 0
 #line 2 "lexer.l"
 #include "parser.tab.h"
+int yylineno = 1; 
 #include <stdio.h>
-
-FILE* inputFile;
+#include <string.h>
 FILE* outputFile;
 
 void set_input_file(FILE* file) {
@@ -716,12 +716,12 @@ YY_RULE_SETUP
 case 15:
 YY_RULE_SETUP
 #line 36 "lexer.l"
-{ fprintf(outputFile, "ENDL\n"); return ENDL;}
+{ fprintf(outputFile, "ENDL\n"); yylineno++; return ENDL;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 37 "lexer.l"
-{ fprintf(outputFile, "ERROR %s\n", yytext); return ERROR;}
+{ yylval.str = yytext; fprintf(outputFile, "ERROR %s\n", yytext); return ERROR;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP

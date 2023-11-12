@@ -1,7 +1,8 @@
 %{
 #include "parser.tab.h"
+int yylineno = 1; 
 #include <stdio.h>
-
+#include <string.h>
 FILE* outputFile;
 
 void set_input_file(FILE* file) {
@@ -32,8 +33,8 @@ void set_output_file(FILE* file) {
 ")"       { fprintf(outputFile, "RPAREN\n"); return RPAREN;}
 [0-9]+    { fprintf(outputFile, "NUM %s\n", yytext); return NUM;}
 [ \t]     ; // Ignore whitespace and newline characters
-[\n]      { fprintf(outputFile, "ENDL\n"); return ENDL;}
-.         { fprintf(outputFile, "ERROR %s\n", yytext); return ERROR;}
+[\n]      { fprintf(outputFile, "ENDL\n"); yylineno++; return ENDL;}
+.         { yylval.str = yytext; fprintf(outputFile, "ERROR %s\n", yytext); return ERROR;}
 
 %%
 
