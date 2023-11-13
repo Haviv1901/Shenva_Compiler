@@ -1,0 +1,1 @@
+hadpasa(5 + 5 - 2 kaful 3 veod 2 - (2 - 2))

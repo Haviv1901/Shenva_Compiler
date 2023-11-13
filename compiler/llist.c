@@ -19,12 +19,14 @@ llist* llist_create(void* new_data)
     return new_list;
 }
 
+// TODO: free the values of the nodes
 void llist_free(llist* list)
 {
     struct node* curr = *list;
     struct node* next;
 
-    while (curr != NULL) {
+    while (curr != NULL)
+    {
         next = curr->next;
         free(curr);
         curr = next;
@@ -165,7 +167,8 @@ void llist_print_reverse(llist* list, void (*print)(void*))
 void llist_print(llist* list, void (*print)(void*))
 {
     struct node* curr = *list;
-    while (curr != NULL) {
+    while (curr != NULL) 
+    {
         print(curr->data);
         printf(" ");
         curr = curr->next;

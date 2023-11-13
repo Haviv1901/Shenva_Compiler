@@ -1,5 +1,6 @@
 #include "TokenGetter.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 #ifndef LOGMANAGER_H
@@ -28,14 +29,39 @@ llist* extractToken(FILE* file, FILE* logFile)
 		Token* token = (Token*)malloc(sizeof(Token));
 		if( c == NUM)
 		{
+			int numValue = 0;
 			token->type = NUM;
+			bool isNegative = false;
 
-			c = fgetc(file);
+			c = fgetc(file); // skip the space
 			c = fgetc(file);// get the next number from the file
+			if (c == '-')
+			{
+				isNegative = true;
+				c = fgetc(file);
+			}
 			c -= '0';
 
+
+			numValue += c;
+			while(c = fgetc(file))
+			{
+				if(c == 10)
+				{
+					break;
+				}
+
+				numValue *= 10;
+				numValue += c - '0';
+			}
+
+			if(isNegative)
+			{
+				numValue *= -1;
+			}
+
 			token->value = (int*)malloc(sizeof(int));
-			*((int*)(token->value)) = c;
+			*((int*)(token->value)) = numValue;
 		}
 		else if (c == ADD)
 		{
@@ -84,7 +110,6 @@ llist* extractToken(FILE* file, FILE* logFile)
 		}
 
 		llist_append(tokenList, token);
-		//llist_add_inorder((void*)(numbers + i), my_list, numcmp);
 	}
 
 	printTokensToLog(tokenList, logFile);

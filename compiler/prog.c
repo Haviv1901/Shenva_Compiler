@@ -1,13 +1,21 @@
 #include "Compiler.h"
 
-#define INPUT_FILE_NAME "input.txt"
-#define OUTPUT_FILE_NAME "runnable.exe"
 
 
-void tokenPrint(void*);
+#include <stdio.h>
 
-int main()
+
+int main(int argc, char* argv[])
 {
-	Compile(INPUT_FILE_NAME, OUTPUT_FILE_NAME);
-}
+    // Check if there are enough command line arguments
+    if (argc < 3)
+    {
+        fprintf(stderr, "Usage: %s <input_file> <output_file>\n", argv[0]);
+        return 1; // Exit with an error code
+    }
 
+    // Pass the input and output file names to the Compile function
+    Compile(argv[1], argv[2]);
+
+    return 0; // Exit successfully
+}
