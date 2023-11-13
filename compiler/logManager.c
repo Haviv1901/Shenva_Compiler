@@ -3,7 +3,7 @@
 
 
 /* log_open: open log file */
-FILE* log_open()
+FILE* logOpen()
 {
 	FILE* logFile = fopen(LOG_FILE_NAME, "w");
 	if (logFile == NULL)
@@ -15,7 +15,7 @@ FILE* log_open()
 }
 
 /* log_close: close log file */
-void log_close(FILE* logFile)
+void logClose(FILE* logFile)
 {
 	if(fclose(logFile) == EOF)
 	{
@@ -24,7 +24,7 @@ void log_close(FILE* logFile)
 }
 
 /* write char* to log file */
-void log_write(FILE* logFile, char* str)
+void logWrite(FILE* logFile, char* str)
 {
 	if (fprintf(logFile, "%s\n", str) < 0)
 	{

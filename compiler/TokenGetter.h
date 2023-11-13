@@ -1,8 +1,6 @@
 #ifndef TOKENGETTER_H  
 #define TOKENGETTER_H
 #include <stdio.h>
-#include <stdlib.h>
-
 #include "llist.h"
 
 #ifdef DEBUG
@@ -10,6 +8,8 @@
 #else
 # define DEBUG_PRINT(x) do {} while (0)
 #endif
+
+
 
 enum TokenTypes {ERROR = '0', NUM = '1', ADD = '2',SUB = '3', 
 				 MUL = '4', DIV = '5', LPARN = '6', RPARN = '7', 
@@ -26,7 +26,8 @@ struct Token
 
 
 
-llist* extractToken(FILE* file);
+llist* extractToken(FILE* file, FILE* logFile);
+void printTokensToLog(llist list, FILE* file);
 void printToken(Token* token);
 
 

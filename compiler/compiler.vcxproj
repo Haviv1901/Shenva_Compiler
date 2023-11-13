@@ -138,23 +138,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Compiler.c" />
     <ClCompile Include="llist.c" />
     <ClCompile Include="logManager.c" />
     <ClCompile Include="prog.c" />
     <ClCompile Include="TokenGetter.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Compiler.h" />
     <ClInclude Include="llist.h" />
     <ClInclude Include="logManager.h" />
     <ClInclude Include="TokenGetter.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="input.lol" />
-    <None Include="lexicalAndSyntaxAnalisys.exe" />
     <None Include="output.tok" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="errors.log" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -27,6 +27,9 @@
     <ClCompile Include="logManager.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Compiler.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TokenGetter.h">
@@ -38,21 +41,13 @@
     <ClInclude Include="logManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Compiler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="input.lol">
-      <Filter>Source Files</Filter>
-    </None>
     <None Include="output.tok">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="lexicalAndSyntaxAnalisys.exe">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="errors.log">
-      <Filter>Source Files</Filter>
-    </Text>
   </ItemGroup>
 </Project>

@@ -1,30 +1,13 @@
-#include "TokenGetter.h"
+#include "Compiler.h"
 
-#define FILE_NAME "output.txt"
+#define INPUT_FILE_NAME "input.txt"
+#define OUTPUT_FILE_NAME "runnable.exe"
 
 
 void tokenPrint(void*);
 
 int main()
 {
-
-	FILE* file = fopen(FILE_NAME, "r");
-	if (file == NULL)
-	{
-		printf("Error opening file %s\n", FILE_NAME);
-		return 1;
-	}
-	llist* tokenList = extractToken(file);
-	fclose(file);
-
-
-	llist_print(tokenList, tokenPrint);
-	llist_free(tokenList);
-
+	Compile(INPUT_FILE_NAME, OUTPUT_FILE_NAME);
 }
 
-void tokenPrint(void* data)
-{
-	Token* token = (Token*)data;
-	printToken(token);
-}

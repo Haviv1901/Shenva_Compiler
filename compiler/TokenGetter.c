@@ -2,6 +2,10 @@
 
 #include <stdlib.h>
 
+#ifndef LOGMANAGER_H
+#include "logManager.h"
+#endif
+
 
 
 /*
@@ -9,7 +13,7 @@
  * file: FILE*, an opened file
  * ret: llist*, a linked list of tokens
  */
-llist* extractToken(FILE* file)
+llist* extractToken(FILE* file, FILE* logFile)
 {
 	llist tokenList = llist_create(NULL);
 	char c;
@@ -78,16 +82,20 @@ llist* extractToken(FILE* file)
 			token->type = ERROR;
 			token->value = NULL;
 		}
-		
-
-
 
 		llist_append(tokenList, token);
 		//llist_add_inorder((void*)(numbers + i), my_list, numcmp);
 	}
 
+	printTokensToLog(tokenList, logFile);
 	return tokenList;
 
+}
+
+/* prints Token list that is in memory to log file */
+void printTokensToLog(llist list, FILE* file)
+{
+	
 }
 
 /*
