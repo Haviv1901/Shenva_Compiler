@@ -139,11 +139,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="llist.c" />
+    <ClCompile Include="logManager.c" />
     <ClCompile Include="prog.c" />
     <ClCompile Include="TokenGetter.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="llist.h" />
+    <ClInclude Include="logManager.h" />
     <ClInclude Include="TokenGetter.h" />
   </ItemGroup>
   <ItemGroup>
