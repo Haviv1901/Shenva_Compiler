@@ -1,3 +1,4 @@
+#pragma once
 #ifndef TOKENGETTER_H  
 #define TOKENGETTER_H
 #include <stdio.h>

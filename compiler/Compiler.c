@@ -16,10 +16,14 @@ void Compile(char* inputFileName, char* outputFileName)
 	llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME, logFile);
 
 
-	llist_print(tokenList, tokenPrint);
+	//llist_print(tokenList, tokenPrint);
 	llist_free(tokenList);
-	logClose(logFile);
+	
 	// TODO: build AST !!!
+
+
+
+	logClose(logFile);
 }
 
 void lex(char* inputFileName)
@@ -60,9 +64,6 @@ void lex(char* inputFileName)
 	{
 		logWrite(logFile, "Could not start lexer\n");
 	}
-
-
-
 
 }
 

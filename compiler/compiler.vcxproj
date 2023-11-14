@@ -145,6 +145,8 @@
     <ClCompile Include="TokenGetter.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ASTManager.h" />
+    <ClInclude Include="ASTObjects.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="llist.h" />
     <ClInclude Include="logManager.h" />
