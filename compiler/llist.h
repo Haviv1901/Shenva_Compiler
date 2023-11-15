@@ -41,3 +41,5 @@ void llist_print_reverse(llist* list, void (*print)(void*));
 
 /* addes to the back of the list */
 void llist_append(llist* list, void* data);
+
+void token_llist_free(llist* list);

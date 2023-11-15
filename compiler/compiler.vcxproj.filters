@@ -24,10 +24,13 @@
     <ClCompile Include="llist.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="logManager.c">
+    <ClCompile Include="Compiler.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Compiler.c">
+    <ClCompile Include="lexer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fileHelper.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,9 +41,6 @@
     <ClInclude Include="llist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="logManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Compiler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -48,6 +48,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ASTObjects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lexer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fileHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

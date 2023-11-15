@@ -19,8 +19,21 @@ llist* llist_create(void* new_data)
     return new_list;
 }
 
-// TODO: free the values of the nodes
 void llist_free(llist* list)
+{
+    struct node* curr = *list;
+    struct node* next;
+
+    while (curr != NULL) {
+        next = curr->next;
+        free(curr);
+        curr = next;
+    }
+
+    free(list);
+}
+
+void token_llist_free(llist* list)
 {
     struct node* curr = *list;
     struct node* next;

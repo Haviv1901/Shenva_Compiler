@@ -5,12 +5,6 @@
 struct node;
 typedef struct node* llist;
 
-#ifdef DEBUG
-# define DEBUG_PRINT(x) printf x
-#else
-# define DEBUG_PRINT(x) do {} while (0)
-#endif
-
 
 
 enum TokenTypes {ERROR = '0', NUM = '1', ADD = '2',SUB = '3', 
@@ -28,8 +22,7 @@ struct Token
 
 
 
-llist* extractToken(FILE* file, FILE* logFile);
-void printTokensToLog(llist list, FILE* file);
+llist* extractToken(FILE* file);
 void printToken(Token* token);
 
 

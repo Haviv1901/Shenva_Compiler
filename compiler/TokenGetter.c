@@ -15,7 +15,7 @@
  * file: FILE*, an opened file
  * ret: llist*, a linked list of tokens
  */
-llist* extractToken(FILE* file, FILE* logFile)
+llist* extractToken(FILE* file)
 {
 	llist* tokenList = llist_create(NULL);
 	char c;
@@ -114,15 +114,8 @@ llist* extractToken(FILE* file, FILE* logFile)
 		
 	}
 	fclose(file);
-	printTokensToLog(tokenList, logFile);
 	return tokenList;
 
-}
-
-/* prints Token list that is in memory to log file */
-void printTokensToLog(llist list, FILE* file)
-{
-	
 }
 
 /*

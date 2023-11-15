@@ -139,8 +139,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Compiler.c" />
+    <ClCompile Include="fileHelper.c" />
+    <ClCompile Include="lexer.c" />
     <ClCompile Include="llist.c" />
-    <ClCompile Include="logManager.c" />
     <ClCompile Include="prog.c" />
     <ClCompile Include="TokenGetter.c" />
   </ItemGroup>
@@ -148,8 +149,9 @@
     <ClInclude Include="ASTManager.h" />
     <ClInclude Include="ASTObjects.h" />
     <ClInclude Include="Compiler.h" />
+    <ClInclude Include="fileHelper.h" />
+    <ClInclude Include="lexer.h" />
     <ClInclude Include="llist.h" />
-    <ClInclude Include="logManager.h" />
     <ClInclude Include="TokenGetter.h" />
   </ItemGroup>
   <ItemGroup>
