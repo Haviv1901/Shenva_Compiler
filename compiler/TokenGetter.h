@@ -2,7 +2,8 @@
 #ifndef TOKENGETTER_H  
 #define TOKENGETTER_H
 #include <stdio.h>
-#include "llist.h"
+struct node;
+typedef struct node* llist;
 
 #ifdef DEBUG
 # define DEBUG_PRINT(x) printf x

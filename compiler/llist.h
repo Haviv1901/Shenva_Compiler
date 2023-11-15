@@ -5,6 +5,7 @@
  * https://gist.github.com/meylingtaing/11018042
  *
  */
+#include "TokenGetter.h"
 
 struct node {
     void* data;

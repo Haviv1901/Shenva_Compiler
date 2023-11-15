@@ -27,6 +27,11 @@ void llist_free(llist* list)
 
     while (curr != NULL)
     {
+        if (((Token*)(curr->data))->type == NUM)
+        {
+            free(((Token*)(curr->data))->value);
+        }
+        free(curr->data);
         next = curr->next;
         free(curr);
         curr = next;

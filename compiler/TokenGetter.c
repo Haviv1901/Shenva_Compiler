@@ -1,7 +1,8 @@
 #include "TokenGetter.h"
-
+#include "llist.h"
 #include <stdbool.h>
 #include <stdlib.h>
+
 
 #ifndef LOGMANAGER_H
 #include "logManager.h"
@@ -16,7 +17,7 @@
  */
 llist* extractToken(FILE* file, FILE* logFile)
 {
-	llist tokenList = llist_create(NULL);
+	llist* tokenList = llist_create(NULL);
 	char c;
 
 	while ((c = fgetc(file)) != EOF)
@@ -110,8 +111,9 @@ llist* extractToken(FILE* file, FILE* logFile)
 		}
 
 		llist_append(tokenList, token);
+		
 	}
-
+	fclose(file);
 	printTokensToLog(tokenList, logFile);
 	return tokenList;
 

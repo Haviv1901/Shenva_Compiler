@@ -1,6 +1,5 @@
 #include "Compiler.h"
 
-#include <stdbool.h>
 
 FILE* logFile;
 
@@ -11,13 +10,13 @@ void Compile(char* inputFileName, char* outputFileName)
 {
 	logFile = logOpen(); // open log file
 
-	lex(inputFileName);
-
-	llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME, logFile);
-
-
-	//llist_print(tokenList, tokenPrint);
-	llist_free(tokenList);
+	if (lex(inputFileName))
+	{
+		llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME);
+		
+		llist_print(tokenList, tokenPrint);
+		llist_free(tokenList);
+	}
 	
 	// TODO: build AST !!!
 
@@ -26,20 +25,24 @@ void Compile(char* inputFileName, char* outputFileName)
 	logClose(logFile);
 }
 
-void lex(char* inputFileName)
+bool lex(char* inputFileName)
 {
+	int errorSize = 0;
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
-
+	
 	// Set up the STARTUPINFO structure
 	ZeroMemory(&si, sizeof(si));
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
 
-	char cmdLine[MAX_PATH] = "lexicalAndSyntaxAnalysis.exe ";
-	strcat(cmdLine, inputFileName);
-	strcat(cmdLine, " ");
-	strcat(cmdLine, LEXER_OUTPUT_FILE_NAME);
+	char* cmdLine = (char*)calloc(41 + strlen(inputFileName), 1);
+	if (cmdLine == NULL)
+	{
+		logWrite(logFile, "error with path allocation\n");
+		return false;
+	}
+	sprintf(cmdLine, "lexicalAndSyntaxAnalysis.exe %s %s", inputFileName, LEXER_OUTPUT_FILE_NAME);
 
 	if(CreateProcessA(NULL,
 		cmdLine,
@@ -52,17 +55,32 @@ void lex(char* inputFileName)
 		&si,
 		&pi))
 	{
+		
 		// Wait until child process exits.
 		WaitForSingleObject(pi.hProcess, INFINITE);
 
+		free(cmdLine);
 		// Close process and thread handles. 
 		CloseHandle(pi.hProcess);
 		CloseHandle(pi.hThread);
-		logWrite(logFile, "Successfully activated lexer\n");
+		errorSize = fileSize(ERROR_LOG_FILE);
+		if (errorSize == 0)
+		{
+			logWrite(logFile, "Successfully activated lexer\n");
+			return true;
+		}
+		else if (errorSize > 0)
+		{
+			logWrite(logFile, "Syntax errors were found:\n");
+			writeLexErrorsIntoLog(errorSize);
+			return false;
+		}
 	}
 	else // did not open file
 	{
+		free(cmdLine);
 		logWrite(logFile, "Could not start lexer\n");
+		return false;
 	}
 
 }
@@ -101,3 +119,65 @@ void tokenPrint(void* data)
 	Token* token = (Token*)data;
 	printToken(token);
 }
+
+
+
+
+
+
+
+/*
+fileSize: a function to get the size of a file
+input: the file name
+output: the file size
+*/
+long fileSize(const char* filename) 
+{
+	FILE* file = fopen(filename, "r"); 
+
+	if (file == NULL) {
+		return -1; // Return -1 to indicate an error
+	}
+	fseek(file, 0, SEEK_END);
+	long size = ftell(file);  
+
+	fclose(file); 
+
+	return size;
+}
+
+
+
+
+/*
+writeLexErrorsIntoLog: this function will log the errors of the lex
+input: non
+output: non
+*/
+void writeLexErrorsIntoLog(int sizeOfFile)
+{
+	char* fileContent = NULL;
+	FILE* errFile = fopen(ERROR_LOG_FILE, "r");
+	if (errFile == NULL)
+	{
+		logWrite(logFile, "couldn't open error file\n");
+		return;
+	}
+	fileContent = (char*)calloc(sizeOfFile + 1, 1);
+	if (fileContent != NULL)
+	{
+		fread(fileContent, sizeof(char), sizeOfFile, errFile);
+		logWrite(logFile, fileContent);
+		free(fileContent);
+	}
+	fclose(errFile);
+
+
+
+
+
+}
+
+
+
+
