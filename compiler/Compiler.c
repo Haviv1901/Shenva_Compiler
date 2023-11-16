@@ -16,7 +16,13 @@ void Compile(char* inputFileName, char* outputFileName)
 
 		llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME);
 		
+
 		llist_print(tokenList, tokenPrint);
+
+
+
+		/*ASTNode* tree = parseExpression(*tokenList);
+		deleteAST(tree);*/
 		token_llist_free(tokenList);
 	}
 	

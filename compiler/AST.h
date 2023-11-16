@@ -2,7 +2,7 @@
 
 
 #include "llist.h"
-
+struct Token;
 #ifndef AST_H
 #define AST_H
 

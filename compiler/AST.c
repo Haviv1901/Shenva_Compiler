@@ -80,7 +80,72 @@ void deleteAST(ASTNode* head)
 }
 
 
+// Function to parse an expression.
+ASTNode* parseExpression(struct node* curr)
+{
+	ASTNode* holder = parseTerm(curr), * node = NULL;
+	if (!(curr != NULL && ((Token*)curr->data)->type != ENDL && (((Token*)curr->data)->type == ADD || ((Token*)curr->data)->type == SUB)))
+	{
+		return holder;
+	}
+	while (curr != NULL && ((Token*)curr->data)->type != ENDL && (((Token*)curr->data)->type == ADD || ((Token*)curr->data)->type == SUB))
+	{
+		
+		 node = createASTNode((Token*)curr->data);
+		 node->children[0] = holder;
+		 curr = curr->next;
+		 node->children[1] = parseTerm(curr);
+		
+	}
+	return node;
+}
 
+// Function to parse a term.
+ASTNode* parseTerm(struct node* curr)
+{
+	ASTNode* holder = parseFactor(curr), * node = NULL;
+	if (!(curr != NULL && ((Token*)curr->data)->type != ENDL && (((Token*)curr->data)->type == DIV || ((Token*)curr->data)->type == MUL)))
+	{
+		return holder;
+	}
+	while (curr != NULL && ((Token*)curr->data)->type != ENDL && (((Token*)curr->data)->type == DIV || ((Token*)curr->data)->type == MUL))
+	{
+
+		node = createASTNode((Token*)curr->data);
+		node->children[0] = holder;
+		curr = curr->next;
+		node->children[1] = parseFactor(curr);
+
+
+	}
+	return node;
+}
+
+// Function to parse a factor.
+ASTNode* parseFactor(struct node* curr)
+{
+	if (curr != NULL && ((Token*)curr->data)->type != ENDL)
+	{
+		if (((Token*)curr->data)->type ==  LPARN) 
+		{
+			curr = curr->next; // Consume the opening parenthesis.
+			ASTNode* node = parseExpression(curr);
+
+			if (((Token*)curr->data)->type == RPARN)
+			{
+				curr = curr->next; // Consume the closing parenthesis.
+				return node;
+			}
+		}
+		else
+		{
+			// It's a number.
+			ASTNode* node = createASTNode((Token*)curr->data);
+			curr = curr->next;
+			return node;
+		}
+	}
+}
 
 
 

@@ -13,6 +13,7 @@
 
 
 
+
 /* main function, compile a txt file into a .exe file */
 void Compile(char* inputFileName, char* outputFileName);
 
