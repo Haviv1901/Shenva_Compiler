@@ -138,6 +138,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AST.c" />
     <ClCompile Include="Compiler.c" />
     <ClCompile Include="fileHelper.c" />
     <ClCompile Include="lexer.c" />
@@ -146,8 +147,7 @@
     <ClCompile Include="TokenGetter.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ASTManager.h" />
-    <ClInclude Include="ASTObjects.h" />
+    <ClInclude Include="AST.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="fileHelper.h" />
     <ClInclude Include="lexer.h" />
