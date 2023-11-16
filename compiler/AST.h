@@ -24,9 +24,10 @@ struct ASTNode
 ASTNode* createNewASTnode(Token* token);
 void deleteAST(ASTNode* head);
 
-ASTNode* parseExpression(struct node* curr);
-ASTNode* parseTerm(struct node* curr);
-ASTNode* parseFactor(struct node* curr);
+ASTNode* parseExpression(struct node** curr);
+ASTNode* parseTerm(struct node** curr);
+ASTNode* parseFactor(struct node** curr);
+
 
 
 #endif

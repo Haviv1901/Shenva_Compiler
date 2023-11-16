@@ -1,5 +1,6 @@
 #include "AST.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 
 
 /*
@@ -74,6 +75,11 @@ void deleteAST(ASTNode* head)
 		}
 		free(head->children);
 	}
+	else
+	{
+		free(head->children);
+	}
+
 	free(head);
 
 
@@ -81,39 +87,40 @@ void deleteAST(ASTNode* head)
 
 
 // Function to parse an expression.
-ASTNode* parseExpression(struct node* curr)
+ASTNode* parseExpression(struct node** curr)
 {
 	ASTNode* holder = parseTerm(curr), * node = NULL;
-	if (!(curr != NULL && ((Token*)curr->data)->type != ENDL && (((Token*)curr->data)->type == ADD || ((Token*)curr->data)->type == SUB)))
+	if (!((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == ADD || ((Token*)(*curr)->data)->type == SUB)))
 	{
 		return holder;
 	}
-	while (curr != NULL && ((Token*)curr->data)->type != ENDL && (((Token*)curr->data)->type == ADD || ((Token*)curr->data)->type == SUB))
+	while ((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == ADD || ((Token*)(*curr)->data)->type == SUB))
 	{
 		
-		 node = createNewASTnode((Token*)curr->data);
+		 node = createNewASTnode((Token*)(*curr)->data);
 		 node->children[0] = holder;
-		 curr = curr->next;
+		 (*curr) = (*curr)->next;
 		 node->children[1] = parseTerm(curr);
+		 holder = node;
 		
 	}
 	return node;
 }
 
 // Function to parse a term.
-ASTNode* parseTerm(struct node* curr)
+ASTNode* parseTerm(struct node** curr)
 {
 	ASTNode* holder = parseFactor(curr), * node = NULL;
-	if (!(curr != NULL && ((Token*)curr->data)->type != ENDL && (((Token*)curr->data)->type == DIV || ((Token*)curr->data)->type == MUL)))
+	if (!((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == DIV || ((Token*)(*curr)->data)->type == MUL)))
 	{
 		return holder;
 	}
-	while (curr != NULL && ((Token*)curr->data)->type != ENDL && (((Token*)curr->data)->type == DIV || ((Token*)curr->data)->type == MUL))
+	while ((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == DIV || ((Token*)(*curr)->data)->type == MUL))
 	{
 
-		node = createNewASTnode((Token*)curr->data);
+		node = createNewASTnode((Token*)(*curr)->data);
 		node->children[0] = holder;
-		curr = curr->next;
+		(*curr) = (*curr)->next;
 		node->children[1] = parseFactor(curr);
 
 
@@ -122,26 +129,26 @@ ASTNode* parseTerm(struct node* curr)
 }
 
 // Function to parse a factor.
-ASTNode* parseFactor(struct node* curr)
+ASTNode* parseFactor(struct node** curr)
 {
-	if (curr != NULL && ((Token*)curr->data)->type != ENDL)
+	if ((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL)
 	{
-		if (((Token*)curr->data)->type ==  LPARN) 
+		if (((Token*)(*curr)->data)->type ==  LPARN)
 		{
-			curr = curr->next; // Consume the opening parenthesis.
+			(*curr) = (*curr)->next; // Consume the opening parenthesis.
 			ASTNode* node = parseExpression(curr);
 
-			if (((Token*)curr->data)->type == RPARN)
+			if (((Token*)(*curr)->data)->type == RPARN)
 			{
-				curr = curr->next; // Consume the closing parenthesis.
+				(*curr) = (*curr)->next; // Consume the closing parenthesis.
 				return node;
 			}
 		}
 		else
 		{
 			// It's a number.
-			ASTNode* node = createNewASTnode((Token*)curr->data);
-			curr = curr->next;
+			ASTNode* node = createNewASTnode((Token*)(*curr)->data);
+			(*curr) = (*curr)->next;
 			return node;
 		}
 	}
