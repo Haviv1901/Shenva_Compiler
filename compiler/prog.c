@@ -1,9 +1,8 @@
 #include "Compiler.h"
 #include <stdio.h>
-#include <crtdbg.h>
 
 #include "llist.h"
-#define _CRTDBG_MAP_ALLOC
+
 
 int main(int argc, char* argv[])
 {
@@ -18,6 +17,5 @@ int main(int argc, char* argv[])
     Compile(argv[1], argv[2]);
 
 
-    printf("%d\n", _CrtDumpMemoryLeaks());
     return 0; // Exit successfully
 }

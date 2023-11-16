@@ -42,7 +42,7 @@ void token_llist_free(llist* list)
     {
         if (((Token*)(curr->data))->type == NUM)
         {
-            free(((Token*)(curr->data))->value);
+            free((int*)(((Token*)(curr->data))->value));
         }
         free(curr->data);
         next = curr->next;
@@ -114,6 +114,7 @@ void llist_append(llist* list, void* data)
     {
         // If the list is empty, set the new node as the head
         head->data = data;
+        free(new_node);
     }
     else
     {

@@ -13,10 +13,11 @@ void Compile(char* inputFileName, char* outputFileName)
 
 	if (activateLexer(inputFileName))
 	{
+
 		llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME);
 		
 		llist_print(tokenList, tokenPrint);
-		llist_free(tokenList);
+		token_llist_free(tokenList);
 	}
 	
 	// TODO: build AST !!!
