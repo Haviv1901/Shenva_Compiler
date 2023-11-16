@@ -1,7 +1,6 @@
 #include "Compiler.h"
 
 #include "fileHelper.h"
-#include "llist.h"
 #include "lexer.h"
 
 
@@ -21,8 +20,8 @@ void Compile(char* inputFileName, char* outputFileName)
 
 
 
-		/*ASTNode* tree = parseExpression(*tokenList);
-		deleteAST(tree);*/
+		ASTNode* tree = parseExpression(*tokenList);
+		deleteAST(tree);
 		token_llist_free(tokenList);
 	}
 	

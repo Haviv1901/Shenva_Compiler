@@ -4,11 +4,12 @@
 #define COMPILER_H
 #include <stdbool.h>
 #endif
-
+struct node;
+typedef struct node* llist;
 #ifndef TOKENGETTER_H
 #include "TokenGetter.h"
 #endif
-
+#include "AST.h"
 
 
 

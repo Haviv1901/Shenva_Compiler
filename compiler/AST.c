@@ -91,7 +91,7 @@ ASTNode* parseExpression(struct node* curr)
 	while (curr != NULL && ((Token*)curr->data)->type != ENDL && (((Token*)curr->data)->type == ADD || ((Token*)curr->data)->type == SUB))
 	{
 		
-		 node = createASTNode((Token*)curr->data);
+		 node = createNewASTnode((Token*)curr->data);
 		 node->children[0] = holder;
 		 curr = curr->next;
 		 node->children[1] = parseTerm(curr);
@@ -111,7 +111,7 @@ ASTNode* parseTerm(struct node* curr)
 	while (curr != NULL && ((Token*)curr->data)->type != ENDL && (((Token*)curr->data)->type == DIV || ((Token*)curr->data)->type == MUL))
 	{
 
-		node = createASTNode((Token*)curr->data);
+		node = createNewASTnode((Token*)curr->data);
 		node->children[0] = holder;
 		curr = curr->next;
 		node->children[1] = parseFactor(curr);
@@ -140,7 +140,7 @@ ASTNode* parseFactor(struct node* curr)
 		else
 		{
 			// It's a number.
-			ASTNode* node = createASTNode((Token*)curr->data);
+			ASTNode* node = createNewASTnode((Token*)curr->data);
 			curr = curr->next;
 			return node;
 		}
