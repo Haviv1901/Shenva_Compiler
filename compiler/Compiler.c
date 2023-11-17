@@ -10,20 +10,19 @@ void tokenPrint(void* data);
 void Compile(char* inputFileName, char* outputFileName)
 {
 
-	if (activateLexer(inputFileName))
+	if (activateLexer(inputFileName)) // lex inpput file
 	{
 
-		llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME);
+		llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME); // extract tokens to c memory
 		llist hold = *tokenList;
 
-		llist_print(tokenList, tokenPrint);
+		llist_print(tokenList, tokenPrint); // print for debugging
 
 
 
-		ASTNode* tree = makeTree(tokenList);
-		deleteAST(tree);
-		*tokenList = hold;
-		token_llist_free(tokenList);
+		ASTNode* tree = buildTree(tokenList); // build AST
+		deleteAST(tree); // free allocated memory of AST	
+		token_llist_free(hold); // free allocated memory of tokens
 	}
 	
 	// TODO: build AST !!!

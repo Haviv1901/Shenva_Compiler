@@ -4,6 +4,8 @@
 #include "llist.h"
 struct Token;
 #ifndef AST_H
+
+
 #define AST_H
 
 
@@ -19,15 +21,11 @@ struct ASTNode
 } typedef ASTNode;
 
 
-
-
 ASTNode* createNewASTnode(Token* token);
 void deleteAST(ASTNode* head);
 
-ASTNode* parseExpression(struct node** curr);
-ASTNode* parseTerm(struct node** curr);
-ASTNode* parseFactor(struct node** curr);
-ASTNode* makeTree(struct node** curr);
+
+
 
 
 
