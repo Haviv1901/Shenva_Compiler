@@ -1,0 +1,18 @@
+
+#define ASTMANAGER_H
+
+#ifndef ASTNUMERIC_H
+#include "ASTnumeric.h"
+#endif
+
+#ifndef AST_H
+#include "AST.h"
+#endif
+
+#ifndef ASTFUNCTIONS_H
+#include "ASTfunctions.h"
+#endif
+
+
+
+ASTNode* buildTree(struct node** FirstNode);

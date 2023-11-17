@@ -1630,7 +1630,7 @@ int main(int argc, char *argv[])
         fclose(inputFile);
         return 1;
     }
-	errorFile = fopen("errors.log", "w");
+	errorFile = fopen("errors.txt", "w");
     if (!errorFile) 
 	{
         perror("Error opening error file");

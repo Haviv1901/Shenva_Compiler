@@ -337,11 +337,11 @@ static yyconst int yy_meta[27] =
 
 static yyconst short int yy_base[46] =
     {   0,
-        0,    0,   55,   56,   56,   56,   56,   56,   56,   56,
-       56,   56,   44,   16,   42,   17,   39,   41,   38,   31,
+        0,    0,   56,   57,   57,   57,   57,   57,   57,   57,
+       45,   57,   44,   16,   42,   17,   39,   41,   38,   31,
        34,   32,   30,   25,   23,   26,   17,   21,   21,   26,
-       26,   23,   17,   10,    9,   56,    9,   15,   56,   56,
-       56,   19,   56,   56,   56
+       26,   23,   17,   10,    9,   57,    9,   15,   57,   57,
+       57,   19,   57,   57,   57
     } ;
 
 static yyconst short int yy_def[46] =
@@ -353,30 +353,30 @@ static yyconst short int yy_def[46] =
        45,   45,   45,   45,    0
     } ;
 
-static yyconst short int yy_nxt[83] =
+static yyconst short int yy_nxt[84] =
     {   0,
         4,    5,    6,    7,    8,    9,   10,   11,   12,   13,
         4,    4,    4,    4,   14,    4,   15,    4,    4,    4,
        16,    4,    4,    4,    4,   17,   19,   22,   20,   44,
        43,   42,   41,   40,   39,   38,   37,   36,   23,   35,
        34,   33,   32,   31,   30,   29,   28,   27,   26,   25,
-       18,   24,   21,   18,   45,    3,   45,   45,   45,   45,
+       18,   24,   21,   18,   18,   45,    3,   45,   45,   45,
        45,   45,   45,   45,   45,   45,   45,   45,   45,   45,
        45,   45,   45,   45,   45,   45,   45,   45,   45,   45,
-       45,   45
+       45,   45,   45
     } ;
 
-static yyconst short int yy_chk[83] =
+static yyconst short int yy_chk[84] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,   14,   16,   14,   42,
        38,   37,   35,   34,   33,   32,   31,   30,   16,   29,
        28,   27,   26,   25,   24,   23,   22,   21,   20,   19,
-       18,   17,   15,   13,    3,   45,   45,   45,   45,   45,
+       18,   17,   15,   13,   11,    3,   45,   45,   45,   45,
        45,   45,   45,   45,   45,   45,   45,   45,   45,   45,
        45,   45,   45,   45,   45,   45,   45,   45,   45,   45,
-       45,   45
+       45,   45,   45
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -617,7 +617,7 @@ yy_match:
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 56 );
+		while ( yy_base[yy_current_state] != 57 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -646,67 +646,67 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 22 "lexer.l"
-{ fprintf(outputFile, "PRINT\n"); return PRINT;}
+{ fprintf(outputFile, "8\n"); return PRINT;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 23 "lexer.l"
-{ fprintf(outputFile, "PRINT\n"); return PRINT;}
+{ fprintf(outputFile, "8\n"); return PRINT;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 24 "lexer.l"
-{ fprintf(outputFile, "ADD\n"); return ADD;}
+{ fprintf(outputFile, "2\n"); return ADD;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 25 "lexer.l"
-{ fprintf(outputFile, "ADD\n"); return ADD;}
+{ fprintf(outputFile, "2\n"); return ADD;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 26 "lexer.l"
-{ fprintf(outputFile, "SUB\n"); return SUB;}
+{ fprintf(outputFile, "3\n"); return SUB;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
 #line 27 "lexer.l"
-{ fprintf(outputFile, "SUB\n"); return SUB;}
+{ fprintf(outputFile, "3\n"); return SUB;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 28 "lexer.l"
-{ fprintf(outputFile, "MUL\n"); return MUL;}
+{ fprintf(outputFile, "4\n"); return MUL;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 29 "lexer.l"
-{ fprintf(outputFile, "MUL\n"); return MUL;}
+{ fprintf(outputFile, "4\n"); return MUL;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 30 "lexer.l"
-{ fprintf(outputFile, "DIV\n"); return DIV;}
+{ fprintf(outputFile, "5\n"); return DIV;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 31 "lexer.l"
-{ fprintf(outputFile, "DIV\n"); return DIV;}
+{ fprintf(outputFile, "5\n"); return DIV;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 32 "lexer.l"
-{ fprintf(outputFile, "LPAREN\n"); return LPAREN;}
+{ fprintf(outputFile, "6\n"); return LPAREN;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 33 "lexer.l"
-{ fprintf(outputFile, "RPAREN\n"); return RPAREN;}
+{ fprintf(outputFile, "7\n"); return RPAREN;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 34 "lexer.l"
-{ fprintf(outputFile, "NUM %s\n", yytext); return NUM;}
+{ fprintf(outputFile, "1 %s\n", yytext); return NUM;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
@@ -716,12 +716,12 @@ YY_RULE_SETUP
 case 15:
 YY_RULE_SETUP
 #line 36 "lexer.l"
-{ fprintf(outputFile, "ENDL\n"); yylineno++; return ENDL;}
+{ fprintf(outputFile, "9\n"); yylineno++; return ENDL;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 37 "lexer.l"
-{ yylval.str = yytext; fprintf(outputFile, "ERROR %s\n", yytext); return ERROR;}
+{ yylval.str = yytext; fprintf(outputFile, "0 %s\n", yytext); return ERROR;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
