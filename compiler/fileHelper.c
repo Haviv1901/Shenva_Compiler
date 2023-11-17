@@ -10,11 +10,11 @@ output: the file size
 */
 long fileSize(char* filename)
 {
-	FILE* file = openFile(filename, "r");
+	FILE* file = openFile(filename, "rb");
 
 	fseek(file, 0, SEEK_END);
 	long size = ftell(file);
-
+	fseek(file, 0, SEEK_SET);
 	fclose(file);
 
 	return size;

@@ -5,7 +5,6 @@
 
 int main(int argc, char* argv[])
 {
-    printf("hello world");
 
 
 	// Check if there are enough command line arguments

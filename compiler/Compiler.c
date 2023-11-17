@@ -67,11 +67,11 @@ void writeLexErrorsIntoLog(int sizeOfFile)
 	FILE* errFile = openFile(ERROR_LOG_FILE, "r");
 
 
-	fileContent = (char*)malloc(sizeOfFile + 1 * sizeof(char));
+	fileContent = (char*)calloc(sizeOfFile, sizeof(char));
 	if (fileContent != NULL)
 	{
 		fread(fileContent, sizeof(char), sizeOfFile, errFile);
-		printf(fileContent);
+		printf("%s\n", fileContent);
 		free(fileContent);
 	}
 	fclose(errFile);

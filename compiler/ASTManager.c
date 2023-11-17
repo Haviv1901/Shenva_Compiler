@@ -7,16 +7,20 @@ ASTNode* buildTree(struct node** FirstNode)
 	{
 		return NULL;
 	}
-
-
+	Token* firstToken = (Token*)(*FirstNode)->data, * currentToken = NULL;
+	ASTNode* result = NULL;
 	struct node* currentNode = *FirstNode;
-	ASTNode* result = createNewASTnode(NULL);
+	if (((Token*)currentNode->data)->type != ENDL)
+	{
+		result = createNewASTnode(NULL);
+	}
+
 	// create tokenless node with 2 sons
 	// EXPRESSION = 1, NEXT = 0
 	// first son ( ->children[EXPRESSION] ) is the next expression.
 	// second son ( ->children[NEXT] ) is the current expression.
 
-	Token* firstToken = (Token*)(*FirstNode)->data, *currentToken = NULL;
+
 
 
 	if (firstToken->type == NUM || firstToken->type == LPARN) // if numeric expression
@@ -30,6 +34,7 @@ ASTNode* buildTree(struct node** FirstNode)
 				currentToken = ((Token*)currentNode->data); // take the next token
 			}
 		}
+
 		result->children[EXPRESSION] = buildASTNumeric(FirstNode); // first son: the numeric expresion
 		result->children[NEXT] = buildTree(&currentNode); // second son: the continuation of the tree
 	}

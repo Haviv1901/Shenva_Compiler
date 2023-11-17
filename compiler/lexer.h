@@ -1,8 +1,8 @@
 #pragma once
 
 #define LEXER_OUTPUT_FILE_NAME "output.tok"
-#define ERROR_LOG_FILE "errors.log"
-
+#define ERROR_LOG_FILE "errors.txt"
+#include <string.h>
 
 
 

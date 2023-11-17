@@ -30,9 +30,9 @@ ASTNode* parseLast(struct node** curr)
 	while ((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == ADD || ((Token*)(*curr)->data)->type == SUB))
 	{
 		node = createNewASTnode((Token*)(*curr)->data);
-		node->children[1] = holder;
+		node->children[0] = holder;
 		(*curr) = (*curr)->next;
-		node->children[0] = parseSecond(curr);
+		node->children[1] = parseLast(curr);
 		holder = node;
 
 	}
@@ -55,9 +55,10 @@ ASTNode* parseSecond(struct node** curr)
 	{
 
 		node = createNewASTnode((Token*)(*curr)->data);
-		node->children[1] = holder;
+		node->children[0] = holder;
 		(*curr) = (*curr)->next;
-		node->children[0] = parseFirst(curr);
+		node->children[1] = parseSecond(curr);
+		holder = node;
 
 
 	}
