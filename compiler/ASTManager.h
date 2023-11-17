@@ -9,7 +9,10 @@
 #include "AST.h"
 #endif
 
+#ifndef ASTFUNCTIONS_H
+#include "ASTfunctions.h"
+#endif
 
 
 
-ASTNode* buildTree(struct node** curr);
+ASTNode* buildTree(struct node** FirstNode);

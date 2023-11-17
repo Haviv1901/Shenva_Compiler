@@ -36,13 +36,13 @@
     <ClCompile Include="AST.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ASTnumeric.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ASTManager.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ASTfunctions.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -69,6 +69,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ASTManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ASTfunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

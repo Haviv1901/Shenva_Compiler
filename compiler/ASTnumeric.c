@@ -22,14 +22,13 @@ ASTNode* buildASTNumeric(struct node** curr)
 /// <returns></returns>
 ASTNode* parseLast(struct node** curr)
 {
-	ASTNode* holder = parseSecond(curr), * node = NULL;
+	ASTNode* holder = parseSecond(curr), *node = NULL;
 	if (!((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == ADD || ((Token*)(*curr)->data)->type == SUB)))
 	{
 		return holder;
 	}
 	while ((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == ADD || ((Token*)(*curr)->data)->type == SUB))
 	{
-
 		node = createNewASTnode((Token*)(*curr)->data);
 		node->children[1] = holder;
 		(*curr) = (*curr)->next;

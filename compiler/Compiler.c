@@ -21,8 +21,9 @@ void Compile(char* inputFileName, char* outputFileName)
 
 
 		ASTNode* tree = buildTree(tokenList); // build AST
-		deleteAST(tree); // free allocated memory of AST	
-		token_llist_free(hold); // free allocated memory of tokens
+		deleteAST(tree); // free allocated memory of AST
+		*tokenList = hold; // ?
+		token_llist_free(tokenList); // free allocated memory of tokens
 	}
 	
 	// TODO: build AST !!!

@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AST.c" />
+    <ClCompile Include="ASTfunctions.c" />
     <ClCompile Include="ASTManager.c" />
     <ClCompile Include="ASTnumeric.c" />
     <ClCompile Include="Compiler.c" />
@@ -146,11 +147,11 @@
     <ClCompile Include="lexer.c" />
     <ClCompile Include="llist.c" />
     <ClCompile Include="prog.c" />
-    <ClCompile Include="Source.cpp" />
     <ClCompile Include="TokenGetter.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST.h" />
+    <ClInclude Include="ASTfunctions.h" />
     <ClInclude Include="ASTManager.h" />
     <ClInclude Include="ASTnumeric.h" />
     <ClInclude Include="Compiler.h" />
