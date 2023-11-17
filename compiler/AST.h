@@ -8,10 +8,11 @@ struct Token;
 
 #define AST_H
 
+enum { LEAF=0,ONE_CHILD_NODE=1,TWO_CHILDREN_NODE=2};
 
-#define TWO_CHILDREN_NODE 2
-#define ONE_CHILD_NODE 1
-#define LEAF 0
+
+// when handling with tokenless nodes
+enum {NEXT=0, EXPRESSION};
 
 struct ASTNode
 {
