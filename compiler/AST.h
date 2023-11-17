@@ -27,6 +27,7 @@ void deleteAST(ASTNode* head);
 ASTNode* parseExpression(struct node** curr);
 ASTNode* parseTerm(struct node** curr);
 ASTNode* parseFactor(struct node** curr);
+ASTNode* makeTree(struct node** curr);
 
 
 

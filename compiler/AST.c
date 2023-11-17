@@ -98,9 +98,9 @@ ASTNode* parseExpression(struct node** curr)
 	{
 		
 		 node = createNewASTnode((Token*)(*curr)->data);
-		 node->children[0] = holder;
+		 node->children[1] = holder;
 		 (*curr) = (*curr)->next;
-		 node->children[1] = parseTerm(curr);
+		 node->children[0] = parseTerm(curr);
 		 holder = node;
 		
 	}
@@ -119,9 +119,9 @@ ASTNode* parseTerm(struct node** curr)
 	{
 
 		node = createNewASTnode((Token*)(*curr)->data);
-		node->children[0] = holder;
+		node->children[1] = holder;
 		(*curr) = (*curr)->next;
-		node->children[1] = parseFactor(curr);
+		node->children[0] = parseFactor(curr);
 
 
 	}
@@ -153,6 +153,79 @@ ASTNode* parseFactor(struct node** curr)
 		}
 	}
 }
+
+
+ASTNode* makeTree(struct node** curr)
+{
+	if (*curr == NULL)
+	{
+		return NULL;
+	}
+	struct node* nodeHolder = *curr;
+	ASTNode* result = NULL;
+	Token* temp = (Token*)(*curr)->data, *holderTok = NULL;
+	if (temp->type == NUM || temp->type == LPARN)
+	{
+		result = createNewASTnode(NULL);
+		holderTok = ((Token*)nodeHolder->data);
+		while (nodeHolder != NULL && holderTok->type != ENDL)
+		{
+			nodeHolder = nodeHolder->next;
+			if (nodeHolder != NULL)
+			{
+				holderTok = ((Token*)nodeHolder->data);
+			}
+		}
+		result->children[1] = parseExpression(curr);
+		*curr = nodeHolder;
+		result->children[0] = makeTree(curr);
+	}
+	else if (temp->type == ENDL)
+	{
+		result = createNewASTnode(temp);
+		*curr = (*curr)->next;
+		result->children[0] = makeTree(curr);
+	}
+	else if (temp->type == PRINT)
+	{
+		int parenthasisEqualizer = 0;
+		result = createNewASTnode(temp);
+		*curr = (*curr)->next;
+		temp = (Token*)(*curr)->data;
+		nodeHolder = *curr;
+		holderTok = ((Token*)nodeHolder->data);
+		result->children[0] = createNewASTnode(temp);
+		parenthasisEqualizer--;
+		while (holderTok->type != RPARN || parenthasisEqualizer != 0)
+		{
+			nodeHolder = nodeHolder->next;
+			holderTok = ((Token*)nodeHolder->data);
+			if (holderTok->type == LPARN)
+			{
+				parenthasisEqualizer--;
+			}
+			else if (holderTok->type == RPARN)
+			{
+				parenthasisEqualizer++;
+			}
+		}
+		holderTok->type = ENDL;
+		*curr = (*curr)->next;
+		result->children[0]->children[0] = makeTree(curr);
+		holderTok->type = RPARN;
+		curr = nodeHolder;
+		*curr = (*curr)->next;
+		result->children[0]->children[0]->children[0]->children[0] = makeTree(curr);
+	}
+
+	return result;
+
+
+
+
+}
+
+
 
 
 

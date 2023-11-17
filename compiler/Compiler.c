@@ -1,5 +1,5 @@
 #include "Compiler.h"
-
+#include <stdlib.h>
 #include "fileHelper.h"
 #include "lexer.h"
 
@@ -20,7 +20,7 @@ void Compile(char* inputFileName, char* outputFileName)
 
 
 
-		ASTNode* tree = parseExpression(tokenList);
+		ASTNode* tree = makeTree(tokenList);
 		deleteAST(tree);
 		*tokenList = hold;
 		token_llist_free(tokenList);
@@ -68,7 +68,7 @@ void writeLexErrorsIntoLog(int sizeOfFile)
 	FILE* errFile = openFile(ERROR_LOG_FILE, "r");
 
 
-	fileContent = (char*)calloc(sizeOfFile + 1, 1);
+	fileContent = (char*)malloc(sizeOfFile + 1 * sizeof(char));
 	if (fileContent != NULL)
 	{
 		fread(fileContent, sizeof(char), sizeOfFile, errFile);
