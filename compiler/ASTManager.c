@@ -31,22 +31,16 @@ ASTNode* buildTree(struct node** FirstNode)
 			}
 		}
 		result->children[EXPRESSION] = buildASTNumeric(FirstNode); // first son: the numeric expresion
-		*FirstNode = currentNode;
-		result->children[NEXT] = buildTree(FirstNode); // second son: the continuation of the tree
+		result->children[NEXT] = buildTree(&currentNode); // second son: the continuation of the tree
 	}
 	else if (firstToken->type == ENDL) // if new line continue
 	{
-		*FirstNode = (*FirstNode)->next;
-		result = buildTree(FirstNode);
-		//result = createNewASTnode(firstToken);
-		//*FirstNode = (*FirstNode)->next;
-		//result->children[0] = buildTree(FirstNode);
+		result = buildTree(&(*FirstNode)->next);
 	}
 	else if (firstToken->type == PRINT) // if print  , in the future we will add function support
 	{
 		
 		int parenthesesEqualizer = 0;
-		result->children[EXPRESSION] = createNewASTnode(firstToken); // create first node with PRINT token
 
 		currentNode = currentNode->next; // skipping the PRINT token
 		currentToken = ((Token*)currentNode->data);
@@ -67,13 +61,14 @@ ASTNode* buildTree(struct node** FirstNode)
 			{
 				currentToken = ((Token*)currentNode->data); // take the next token
 			}
-		} while (currentNode != NULL && currentToken->type != ENDL && parenthesesEqualizer != 0); // while not the end of list nor the end of the parentheses
+		} while (currentNode != NULL && currentToken->type != ENDL && parenthesesEqualizer != 0);
+		// while not the end of list nor the end of the parentheses and not end of line
+
 
 		// first node is first node in the current expression
 		// currentNode is the endl that differs between expresions.
-		result->children[EXPRESSION] = buildASTFunctions(FirstNode);
+		result->children[EXPRESSION] = buildASTFunctions(FirstNode);  
 		result->children[NEXT] = buildTree(&currentNode);
 	}
-
 	return result;
 }

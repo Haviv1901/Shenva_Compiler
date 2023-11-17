@@ -17,7 +17,7 @@ ASTNode* createNewASTnode(Token* token)
 		return NULL;
 	}
 	result->token = token;//setting token
-	if (token == NULL || token->type == ADD || token->type == SUB || token->type == MUL || token->type == DIV || token->type == PRINT)// 2 children types
+	if (token == NULL || token->type == ADD || token->type == SUB || token->type == MUL || token->type == DIV)// 2 children types
 	{
 		result->children = (ASTNode**)malloc(TWO_CHILDREN_NODE * sizeof(ASTNode*));
 		if (result->children == NULL)
@@ -29,7 +29,7 @@ ASTNode* createNewASTnode(Token* token)
 		result->children[1] = NULL;
 
 	}
-	else if (token->type == ENDL || token->type == LPARN || token->type == RPARN)// 1 kid type
+	else if (token->type == ENDL || token->type == LPARN || token->type == RPARN || token->type == PRINT)// 1 kid type
 	{
 		result->children = (ASTNode**)malloc(ONE_CHILD_NODE * sizeof(ASTNode*));
 		if (result->children == NULL)
@@ -55,8 +55,9 @@ output: non
 */
 void deleteAST(ASTNode* head)
 {
-	if (head->token == NULL || head->token->type == ADD || head->token->type == SUB || head->token->type == MUL || head->token->type == DIV || head->token->type == PRINT)
-	{//2 child scenario
+	if (head->token == NULL || head->token->type == ADD || head->token->type == SUB || head->token->type == MUL || head->token->type == DIV)
+	{
+		// 2 child
 		if (head->children[0] != NULL)
 		{
 			deleteAST(head->children[0]);
@@ -68,15 +69,16 @@ void deleteAST(ASTNode* head)
 		}
 		free(head->children);
 	}
-	else if (head->token->type == ENDL || head->token->type == LPARN || head->token->type == RPARN)
-	{//1 child scenario
+	else if (head->token->type == ENDL || head->token->type == LPARN || head->token->type == RPARN || head->token->type == PRINT)
+	{
+		// 1 child
 		if (head->children[0] != NULL)
 		{
 			deleteAST(head->children[0]);
 		}
 		free(head->children);
 	}
-	else
+	else // no child
 	{
 		free(head->children);
 	}

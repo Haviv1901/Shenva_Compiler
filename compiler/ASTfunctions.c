@@ -10,14 +10,19 @@
 ASTNode* buildASTFunctions(struct node** curr)
 {
 	struct node* currentNode = (*curr);
-	Token* currentToken = currentNode->data;
+	Token* currentToken = currentNode->data; 
+
+
+	ASTNode* result = createNewASTnode(currentToken); // PRINT token node
+
 
 	if(currentToken->type == PRINT)
 	{
-		return buildASTFunctions_print(&currentNode);
+		result->children[ONLY_CHILD] = buildASTFunctions_print(&currentNode);
 	}
 	// in the future add support to more built-in functions or custom functions
 
+	return result;
 }
 
 ASTNode* buildASTFunctions_print(struct node** curr)

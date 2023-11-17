@@ -12,7 +12,7 @@ enum { LEAF=0,ONE_CHILD_NODE=1,TWO_CHILDREN_NODE=2};
 
 
 // when handling with tokenless nodes
-enum {NEXT=0, EXPRESSION};
+enum {ONLY_CHILD = 0, NEXT=0, EXPRESSION = 1};
 
 struct ASTNode
 {
