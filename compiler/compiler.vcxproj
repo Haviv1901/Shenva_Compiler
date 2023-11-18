@@ -144,6 +144,7 @@
     <ClCompile Include="ASTnumeric.c" />
     <ClCompile Include="Compiler.c" />
     <ClCompile Include="fileHelper.c" />
+    <ClCompile Include="InstructionWriting.c" />
     <ClCompile Include="lexer.c" />
     <ClCompile Include="llist.c" />
     <ClCompile Include="prog.c" />

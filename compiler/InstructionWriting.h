@@ -1,12 +1,24 @@
 #pragma once
+
 #ifndef INSTRUCTIONWRITING_H
 #define INSTRUCTIONWRITING_H
+
+#include <stdbool.h>
 #include <stdio.h>
 #include "AST.h"
-FILE* makeASMBoneFile(const char* fileName);
-void writeInstructions(ASTNode* tree);
-void writeNumericBranch(ASTNode* branch);
-void writeFunctionBranch(ASTNode* branch);
+
+#define FIRST_BONE_FILE "boneFile1.asm"
+#define SECOND_BONE_FILE "boneFile2.asm"
+
+#define FIRST false
+#define SECOND true
+
+void copyBoneFile(FILE* asmFile, bool boneFileNumber);
+void convertASTToASM(ASTNode* tree, const char* fileName);
+
+void writeInstructions(ASTNode* tree, FILE* asmFile);
+void writeNumericBranch(ASTNode* branch, FILE* asmFile);
+void writeFunctionBranch(ASTNode* branch, FILE* asmFile);
 
 
 #endif
