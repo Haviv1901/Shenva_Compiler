@@ -134,6 +134,11 @@ main:
 push ebp
 mov ebp, esp
 
+mov eax, 3
+mov ebx, 3
+idiv ebx
+imul eax, 2
+add eax, 4
 
 mov esp, ebp
 pop ebp

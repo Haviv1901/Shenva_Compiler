@@ -20,6 +20,7 @@ void convertASTToASM(ASTNode* tree, const char* fileName);
 
 void writeInstructions(ASTNode* tree, FILE* asmFile);
 void writeNumericBranch(ASTNode* branch, FILE* asmFile);
+void writeNumericInstruction(Token* operand, Token* value, FILE* asmFile);
 void writeFunctionBranch(ASTNode* branch, FILE* asmFile);
 
 
