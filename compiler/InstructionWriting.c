@@ -85,8 +85,10 @@ void writeInstructions(ASTNode* tree, FILE* asmFile)
 	}
 	else if (currentToken->type == PRINT)// checking for function branch
 	{
-
+		writeFunctionBranch(tree->children[1], asmFile);
 	}
+	writeInstructions(tree->children[0], asmFile);
+	return;
 }
 
 
@@ -114,6 +116,7 @@ void writeNumericBranch(ASTNode * branch, FILE * asmFile)
 		writeNumericInstruction(branch->token, branch->children[0]->token, asmFile);//writing instruction
 
 	}
+	return;
 
 
 
@@ -151,10 +154,20 @@ void writeNumericInstruction(Token* operand, Token* value, FILE* asmFile)
 
 
 
-
+/*
+writeFunctionBranch: this function will write the branches of functions
+input: the branch and the asm file
+output:non
+*/
 void writeFunctionBranch(ASTNode* branch, FILE* asmFile)
 {
 
+	if (branch->token->type == PRINT)// checking for print (in the futer there will be )
+	{
+		writeNumericBranch(branch->children[0], asmFile);
+		fprintf(asmFile, "push eax\ncall print_number_signed\n");
+	}
+	return;
 }
 
 
