@@ -20,12 +20,11 @@ void Compile(char* inputFileName, char* outputFileName)
 
 		ASTNode* tree = buildTree(tokenList); // build AST
 
+		convertASTToASM(tree, outputFileName); // convert AST to ASM code.
+
+		deleteAST(tree); // free alocated memory of AST
 		*tokenList = hold;
 		token_llist_free(tokenList);
-
-		convertASTToASM(tree, outputFileName); // convert AST to ASM code.
-		deleteAST(tree); // free alocated memory of AST
-
 		// Assembly to .exe and finish sprint 1 :)
 
 	}

@@ -46,11 +46,21 @@ void copyBoneFile(FILE* asmFile, bool boneFileNumber)
  */
 void convertASTToASM(ASTNode* tree, const char* fileName)
 {
-	FILE* asmFile = openFile(fileName, "w");
+	char* asmPath = NULL;
+	asmPath = (char*)calloc(strlen(fileName) + 5, sizeof(char));
+	if (asmPath == NULL)
+	{
+		printf("could not open file: %s\n", fileName);
+		return;
+	}
+	strcpy(asmPath, fileName);
+	strcat(asmPath, ".asm");
+	FILE* asmFile = openFile(asmPath, "w");
 	copyBoneFile(asmFile, FIRST); // copy first half of the basic functions and start of main
 
-	writeInstructions(tree, asmFile); // write instructions from the ast
+	//writeInstructions(tree, asmFile); // write instructions from the ast
 	copyBoneFile(asmFile, SECOND); // copy the second half
+	free(asmPath);
 	fclose(asmFile);
 }
 
@@ -80,5 +90,12 @@ void writeInstructions(ASTNode* tree, FILE* asmFile)
 void writeNumericBranch(ASTNode * branch, FILE * asmFile)
 {
 	
+
 }
-void writeFunctionBranch(ASTNode* branch, FILE* asmFile);
+
+void writeFunctionBranch(ASTNode* branch, FILE* asmFile)
+{
+
+}
+
+

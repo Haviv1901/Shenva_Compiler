@@ -5,6 +5,8 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "AST.h"
 
 #define FIRST_BONE_FILE "boneFile1.asm"
