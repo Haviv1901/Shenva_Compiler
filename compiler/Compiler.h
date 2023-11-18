@@ -11,7 +11,13 @@ typedef struct node* llist;
 #include "TokenGetter.h"
 #endif
 
+#ifndef ASTMANAGER_H
 #include "ASTManager.h"
+#endif
+
+#ifndef INSTRUCTIONWRITING_H
+#include "InstructionWriting.h"
+#endif
 
 
 

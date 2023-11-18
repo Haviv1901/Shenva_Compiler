@@ -45,6 +45,9 @@
     <ClCompile Include="ASTfunctions.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InstructionWriting.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TokenGetter.h">
@@ -72,6 +75,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ASTfunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InstructionWriting.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

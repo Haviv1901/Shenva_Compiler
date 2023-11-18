@@ -1,6 +1,11 @@
 #pragma once
 #include <stdio.h>
 
+#ifndef FILEHELPER_H
+#define FILEHELPER_H
+#endif
+
+
 
 /* open input file and return handler */
 FILE* openFile(char* inputFileName, char* mode);

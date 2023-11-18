@@ -19,13 +19,15 @@ void Compile(char* inputFileName, char* outputFileName)
 		llist_print(tokenList, tokenPrint); // print for debugging
 
 		ASTNode* tree = buildTree(tokenList); // build AST
-		deleteAST(tree); // free alocated memory of AST	
-		*tokenList = hold;
 
+		convertASTToASM(tree, outputFileName); // convert AST to ASM code.
+
+		deleteAST(tree); // free alocated memory of AST
+		*tokenList = hold;
 		token_llist_free(tokenList);
+		// Assembly to .exe and finish sprint 1 :)
+
 	}
-	
-	// TODO: build AST !!!
 
 
 }
