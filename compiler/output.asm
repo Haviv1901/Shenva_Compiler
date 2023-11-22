@@ -138,17 +138,7 @@ push 5
 push 5
 pop ebx
 pop eax
-imul eax, ebx
-push eax
-push 5
-push 5
-pop ebx
-pop eax
-imul eax, ebx
-push eax
-pop ebx
-pop eax
-add eax, ebx
+idiv eax
 push eax
 call print_number_signed
 
