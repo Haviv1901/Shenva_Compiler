@@ -1,2 +1,1 @@
-print(5)
-print(5 - 2)
+print((2 veod 2)helkei(1 kaful (1 veod 1)))
