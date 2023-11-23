@@ -134,11 +134,28 @@ main:
 push ebp
 mov ebp, esp
 
-mov eax, 5
+push 2
+push 2
+pop ebx
+pop eax
+add eax, ebx
 push eax
-call print_number_signed
-mov eax, 5
-sub eax, 2
+push 1
+push 1
+push 1
+pop ebx
+pop eax
+add eax, ebx
+push eax
+pop ebx
+pop eax
+xor edx, edx
+imul eax, ebx
+push eax
+pop ebx
+pop eax
+xor edx, edx
+idiv ebx
 push eax
 call print_number_signed
 
