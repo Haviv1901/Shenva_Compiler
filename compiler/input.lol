@@ -1,1 +1,1 @@
-print((2 veod 2)helkei(1 kaful (1 veod 1)))
+hadpasa(20 helkei (5 veod 5))

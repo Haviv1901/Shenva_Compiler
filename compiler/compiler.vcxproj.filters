@@ -48,6 +48,9 @@
     <ClCompile Include="InstructionWriting.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="masmAndLink.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TokenGetter.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="InstructionWriting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="masmAndLink.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

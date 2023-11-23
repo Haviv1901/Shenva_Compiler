@@ -134,23 +134,12 @@ main:
 push ebp
 mov ebp, esp
 
-push 2
-push 2
+push 20
+push 5
+push 5
 pop ebx
 pop eax
 add eax, ebx
-push eax
-push 1
-push 1
-push 1
-pop ebx
-pop eax
-add eax, ebx
-push eax
-pop ebx
-pop eax
-xor edx, edx
-imul eax, ebx
 push eax
 pop ebx
 pop eax
