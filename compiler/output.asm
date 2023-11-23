@@ -135,16 +135,231 @@ push ebp
 mov ebp, esp
 
 push 20
+push 6
 push 5
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
+pop ebx
+pop eax
+sub eax, ebx
+push eax
+push 21
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+push 0
+push -15
+push 8
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
+push 3
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+push -16
+push 2
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
+push 20
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+push 20
+push 6
 push 5
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
+pop ebx
+pop eax
+sub eax, ebx
+push eax
+push 21
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+push 0
+push -15
+push 8
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
+push 3
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+push -16
+push 2
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
+push 20
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
 pop ebx
 pop eax
 add eax, ebx
 push eax
 pop ebx
 pop eax
-xor edx, edx
+add eax, ebx
+push eax
+pop ebx
+pop eax
+add eax, ebx
+push eax
+pop ebx
+pop eax
+add eax, ebx
+push eax
+pop ebx
+pop eax
+add eax, ebx
+push eax
+pop ebx
+pop eax
+add eax, ebx
+push eax
+pop ebx
+pop eax
+add eax, ebx
+push eax
+call print_number_signed
+push 20
+push 6
+push 5
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
+pop ebx
+pop eax
+sub eax, ebx
+push eax
+push 21
+pop ebx
+pop eax
+cdq
 idiv ebx
+push eax
+push 0
+push -15
+push 8
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
+push 3
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+push -16
+push 2
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
+push 20
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+push 20
+push 6
+push 5
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
+pop ebx
+pop eax
+sub eax, ebx
+push eax
+push 21
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+push 8
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
+push 3
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+push -16
+push 2
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
+push 20
+pop ebx
+pop eax
+cdq
+idiv ebx
+push eax
+pop ebx
+pop eax
+add eax, ebx
+push eax
+pop ebx
+pop eax
+add eax, ebx
+push eax
+pop ebx
+pop eax
+add eax, ebx
+push eax
+pop ebx
+pop eax
+add eax, ebx
+push eax
+pop ebx
+pop eax
+add eax, ebx
 push eax
 call print_number_signed
 
