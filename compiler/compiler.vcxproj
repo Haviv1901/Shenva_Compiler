@@ -147,6 +147,7 @@
     <ClCompile Include="InstructionWriting.c" />
     <ClCompile Include="lexer.c" />
     <ClCompile Include="llist.c" />
+    <ClCompile Include="masmAndLink.c" />
     <ClCompile Include="prog.c" />
     <ClCompile Include="TokenGetter.c" />
   </ItemGroup>
@@ -157,6 +158,7 @@
     <ClInclude Include="ASTnumeric.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="fileHelper.h" />
+    <ClInclude Include="masmAndLink.h" />
     <ClInclude Include="InstructionWriting.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="llist.h" />

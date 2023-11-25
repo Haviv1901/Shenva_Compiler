@@ -159,11 +159,11 @@ void writeNumericInstruction(Token* operand, FILE* asmFile)
 	}
 	else if (operand->type == MUL)
 	{
-		fprintf(asmFile, "xor edx, edx\nimul eax, ebx\n");
+		fprintf(asmFile, "cdq\nimul eax, ebx\n");
 	}
 	else if (operand->type == DIV)//using ebx seince idiv cannot use immidiates
 	{
-		fprintf(asmFile, "xor edx, edx\nidiv ebx\n");
+		fprintf(asmFile, "cdq\nidiv ebx\n");
 	}
 	return;
 }

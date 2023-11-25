@@ -57,7 +57,7 @@ ASTNode* parseSecond(struct node** curr)
 		node = createNewASTnode((Token*)(*curr)->data);
 		node->children[0] = holder;
 		(*curr) = (*curr)->next;
-		node->children[1] = parseSecond(curr);
+		node->children[1] = parseFirst(curr);
 		holder = node;
 
 

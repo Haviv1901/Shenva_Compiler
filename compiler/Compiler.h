@@ -19,7 +19,9 @@ typedef struct node* llist;
 #include "InstructionWriting.h"
 #endif
 
-
+#ifndef MASMANDLINK_H
+#include "masmAndLink.h"
+#endif
 
 
 

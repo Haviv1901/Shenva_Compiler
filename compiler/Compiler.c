@@ -16,12 +16,12 @@ void Compile(char* inputFileName, char* outputFileName)
 		llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME); // extract tokens to c memory
 		llist hold = *tokenList;
 
-		llist_print(tokenList, tokenPrint); // print for debugging
+	//	llist_print(tokenList, tokenPrint); // print for debugging
 
 		ASTNode* tree = buildTree(tokenList); // build AST
 
 		convertASTToASM(tree, outputFileName); // convert AST to ASM code.
-
+		runMasmAndLink(outputFileName);
 		deleteAST(tree); // free alocated memory of AST
 		*tokenList = hold;
 		token_llist_free(tokenList);
