@@ -47,11 +47,11 @@ ASTNode* parseLast(struct node** curr)
 ASTNode* parseSecond(struct node** curr)
 {
 	ASTNode* holder = parseFirst(curr), * node = NULL;
-	if (!((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == DIV || ((Token*)(*curr)->data)->type == MUL)))
+	if (!((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == DIV || ((Token*)(*curr)->data)->type == MUL || ((Token*)(*curr)->data)->type == MOD)))
 	{
 		return holder;
 	}
-	while ((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == DIV || ((Token*)(*curr)->data)->type == MUL))
+	while ((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == DIV || ((Token*)(*curr)->data)->type == MUL || ((Token*)(*curr)->data)->type == MOD))
 	{
 
 		node = createNewASTnode((Token*)(*curr)->data);

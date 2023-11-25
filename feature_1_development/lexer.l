@@ -29,6 +29,8 @@ void set_output_file(FILE* file) {
 "*"       { fprintf(outputFile, "4\n"); return MUL;}
 "helkei"  { fprintf(outputFile, "5\n"); return DIV;}
 "/"       { fprintf(outputFile, "5\n"); return DIV;}
+"%"		  { fprintf(outputFile, "%%\n"); return MOD;}
+"sheerit"		  { fprintf(outputFile, "%%\n"); return MOD;}
 "("       { fprintf(outputFile, "6\n"); return LPAREN;}
 ")"       { fprintf(outputFile, "7\n"); return RPAREN;}
 [-]?[0-9]+    { fprintf(outputFile, "1 %s\n", yytext); return NUM;}
