@@ -91,7 +91,7 @@ void writeBranch(ASTNode* tree, FILE* asmFile)
 	}
 	
 
-	if (currentToken->type == NUM || currentToken->type == ADD || currentToken->type == SUB || currentToken->type == MUL || currentToken->type == DIV)// checking for numeric branch
+	if (currentToken->type == NUM || currentToken->type == ADD || currentToken->type == SUB || currentToken->type == MUL || currentToken->type == DIV || currentToken->type == MOD)// checking for numeric branch
 	{
 		writeNumericBranch(tree, asmFile);
 		fprintf(asmFile, "pop eax\n");
@@ -164,6 +164,10 @@ void writeNumericInstruction(Token* operand, FILE* asmFile)
 	else if (operand->type == DIV)//using ebx seince idiv cannot use immidiates
 	{
 		fprintf(asmFile, "cdq\nidiv ebx\n");
+	}
+	else if (operand->type == MOD)//using ebx seince idiv cannot use immidiates
+	{
+		fprintf(asmFile, "xor edx, edx\ncdq\nidiv ebx\nmov eax, edx\n");
 	}
 	return;
 }

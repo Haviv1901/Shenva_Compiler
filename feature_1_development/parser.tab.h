@@ -44,11 +44,12 @@
      SUB = 260,
      MUL = 261,
      DIV = 262,
-     LPAREN = 263,
-     RPAREN = 264,
-     ERROR = 265,
-     PRINT = 266,
-     ENDL = 267
+     MOD = 263,
+     LPAREN = 264,
+     RPAREN = 265,
+     ERROR = 266,
+     PRINT = 267,
+     ENDL = 268
    };
 #endif
 
@@ -67,7 +68,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 71 "parser.tab.h"
+#line 72 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

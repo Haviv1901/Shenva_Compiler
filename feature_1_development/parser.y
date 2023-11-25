@@ -12,13 +12,13 @@ FILE* errorFile;
     char *str;  // Add a string field
 }
 %token NUM
-%token ADD SUB MUL DIV
+%token ADD SUB MUL DIV MOD
 %token LPAREN RPAREN
 %token <str> ERROR
 %token PRINT
 %token ENDL
 %left ADD SUB
-%left MUL DIV
+%left MUL DIV MOD
 
 %%
 
@@ -41,6 +41,7 @@ expression : NUM
            | expression SUB expression { /* Handle subtraction here */ }
            | expression MUL expression { /* Handle multiplication here */ }
            | expression DIV expression { /* Handle division here */ }
+		   | expression MOD expression {}
            | LPAREN expression RPAREN   { /* Handle parentheses here */ }
 		   | error 
            ;
@@ -102,8 +103,16 @@ int yyerror(char *msg)
 			i += 2;
             break;
         case 'M':
-            fprintf(errorFile, "\"*\"");
-			i += 2;
+			if (msg[i + 1] == 'U')
+			{
+				fprintf(errorFile, "\"*\"");
+				i += 2;
+			}
+			else if (msg[i + 1] == 'O')
+			{
+				fprintf(errorFile, "\"%%\"");
+				i += 2;	
+			}
             break;
         case 'D':
             fprintf(errorFile, "\"//\"");

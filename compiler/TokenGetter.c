@@ -84,6 +84,11 @@ llist* extractToken(FILE* file)
 			token->type = DIV;
 			token->value = NULL;
 		}
+		else if (c == MOD)
+		{
+			token->type = MOD;
+			token->value = NULL;
+		}
 		else if (c == LPARN)
 		{
 			token->type = LPARN;
