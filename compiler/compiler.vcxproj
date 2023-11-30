@@ -150,6 +150,7 @@
     <ClCompile Include="masmAndLink.c" />
     <ClCompile Include="prog.c" />
     <ClCompile Include="TokenGetter.c" />
+    <ClCompile Include="VariableManager.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="lexer.h" />
     <ClInclude Include="llist.h" />
     <ClInclude Include="TokenGetter.h" />
+    <ClInclude Include="VariableManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="output.tok" />
