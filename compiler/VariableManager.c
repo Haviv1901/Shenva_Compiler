@@ -74,14 +74,23 @@ void addNewVariable(VariableList* varList, char* identifier, enum VarTypes type)
 	
 	newVarNode->next = NULL;
 
-	// finding the next empty place in the list
-	while (varList->next != NULL)
-	{
-		varList = varList->next;
-	}
+	
 
-	// assiging the new value to the list
-	varList->next = newVarNode;
+	if(varList == NULL) // list is empty
+	{
+		varList = newVarNode;
+	}
+	else
+	{
+		// finding the next empty place in the list
+		while (varList->next != NULL)
+		{
+			varList = varList->next;
+		}
+
+		// assiging the new value to the list
+		varList->next = newVarNode;
+	}
 
 }
 
@@ -143,6 +152,23 @@ void removeVariable(VariableList* varList, char* identifier) // deletes allocate
 	}
 
 	removeVariable(varList->next, identifier);
+}
+
+VariableList* createVariableListFromToken(llist* tokenList)
+{
+	VariableList* varList = NULL;
+
+	if (tokenList == NULL)
+	{
+		return NULL;
+	}
+
+	node* currentNode = *tokenList;
+
+
+
+	while()
+
 }
 
 void printVariable(Variable* var)

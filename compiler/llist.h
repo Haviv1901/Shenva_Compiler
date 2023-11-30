@@ -10,7 +10,7 @@
 struct node {
     void* data;
     struct node* next;
-};
+}typedef node;
 
 typedef struct node* llist;
 
