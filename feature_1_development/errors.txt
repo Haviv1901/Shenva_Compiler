@@ -1,0 +1,2 @@
+syntax error, unexpected "%", expecting number or "(" (line 1)
+syntax error, unrecognized "s" in the code (line 1)
