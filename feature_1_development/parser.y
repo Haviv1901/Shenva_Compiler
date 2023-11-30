@@ -17,6 +17,9 @@ FILE* errorFile;
 %token <str> ERROR
 %token PRINT
 %token ENDL
+%token ASSIGN
+%token INT
+%token VAR
 %left ADD SUB
 %left MUL DIV MOD
 
@@ -31,12 +34,22 @@ statements : statement
            ;
 
 statement : PRINT LPAREN expression RPAREN  { /* Handle print statement */ }
-		  | ENDL
 		  | expression 
+          | declaration
+          | assignment
+		  | ENDL
           | ERROR {fprintf(errorFile, "syntax error, unrecognized \"%s\" in the code (line %d)\n", $1, yylineno);}
           ;
 
+declaration : INT VAR
+			| INT VAR ASSIGN expression 
+            ;
+
+assignment : VAR ASSIGN expression
+           ;
+
 expression : NUM
+		   | VAR
            | expression ADD expression { /* Handle addition here */ }
            | expression SUB expression { /* Handle subtraction here */ }
            | expression MUL expression { /* Handle multiplication here */ }
@@ -93,10 +106,19 @@ int yyerror(char *msg)
 	int i = 0;
 	for (i = 0; i < strlen(msg); i++)
 	{
-    switch (msg[i]) {
+    switch (msg[i]) 
+	{
         case 'A':
-            fprintf(errorFile, "\"+\"");
-			i += 2;
+			if (msg[i + 1] == 'D')
+			{
+				fprintf(errorFile, "\"+\"");
+				i += 2;
+			}
+			else if (msg[i + 1] == 'S')
+			{
+				fprintf(errorFile, "\"=\"");
+				i += 5;	
+			}
             break;
         case 'S':
             fprintf(errorFile, "\"-\"");
@@ -144,6 +166,14 @@ int yyerror(char *msg)
 			break;
 		case 'N':
 			fprintf(errorFile, "number");
+			i += 2;
+			break;
+		case 'I':
+			fprintf(errorFile, "integer");
+			i += 2;
+			break;
+		case 'V':
+			fprintf(errorFile, "variable");
 			i += 2;
 			break;
         default:
