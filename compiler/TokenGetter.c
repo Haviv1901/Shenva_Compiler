@@ -2,6 +2,7 @@
 #include "llist.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 #ifndef LOGMANAGER_H
@@ -22,7 +23,7 @@ llist* extractToken(FILE* file)
 
 	while ((c = fgetc(file)) != EOF)
 	{
-		if (c == 10) // if newline
+		if (c == NEW_LINE_CHARACTER) // if newline
 		{
 			continue;
 		}
@@ -47,7 +48,7 @@ llist* extractToken(FILE* file)
 			numValue += c;
 			while(c = fgetc(file))
 			{
-				if(c == 10)
+				if(c == NEW_LINE_CHARACTER)
 				{
 					break;
 				}
@@ -107,6 +108,32 @@ llist* extractToken(FILE* file)
 		else if (c == ENDL)
 		{
 			token->type = ENDL;
+			token->value = NULL;
+		}
+		else if(c == TOKEN_INT)
+		{
+			token->type = TOKEN_INT;
+			char* id = calloc(MAX_VARIABLE_SIZE, sizeof(char));
+			while (c = fgetc(file))
+			{
+				if (c == NEW_LINE_CHARACTER)
+				{
+					break;
+				}
+
+				// add c to id
+				strncat(id, &c, 1);
+			}
+			token->value = id;
+		}
+		else if (c == ASSIGN)
+		{
+			token->type = ASSIGN;
+			token->value = NULL;
+		}
+		else if (c == VAR)
+		{
+			token->type = VAR;
 			token->value = NULL;
 		}
 		else
@@ -171,3 +198,5 @@ void printToken(Token* token)
 		printf("ERROR");
 	}
 }
+
+

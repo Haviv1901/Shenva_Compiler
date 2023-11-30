@@ -4,7 +4,7 @@
 #ifndef VARIABLE_MANAGER_H
 #define VARIABLE_MANAGER_H
 
-enum VarTypes {INT, STRING, BOOL, CHAR, FLOLAT, DOUBLE};
+enum VarTypes {TYPE_INT, TYPE_STRING, TYPE_BOOL, TYPE_CHAR, TYPE_FLOLAT, TYPE_DOUBLE}; // types of variables
 
 
 struct Variable
