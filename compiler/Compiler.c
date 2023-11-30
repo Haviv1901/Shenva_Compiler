@@ -18,6 +18,8 @@ void Compile(char* inputFileName, char* outputFileName)
 
 		llist_print(tokenList, tokenPrint); // print for debugging
 
+
+
 		ASTNode* tree = buildTree(tokenList); // build AST
 
 		convertASTToASM(tree, outputFileName); // convert AST to ASM code.

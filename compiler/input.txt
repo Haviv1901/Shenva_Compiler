@@ -1,1 +1,1 @@
-int num = 5
+hadpasa( 5 + 5 - 4)

@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef TOKENGETTER_H
+#include "TokenGetter.h"
+#endif
+
 
 #ifndef VARIABLE_MANAGER_H
 #define VARIABLE_MANAGER_H
@@ -33,6 +37,9 @@ void removeVariable(VariableList* varList, char* identifier); // deletes allocat
 
 void printVariable(Variable* var);
 void printVariableList(VariableList* varList);
+
+VariableList* createVariableListFromToken(llist tokenList);
+// creates a variable list from a token list and run simple checks on the variable declarations
 
 
 

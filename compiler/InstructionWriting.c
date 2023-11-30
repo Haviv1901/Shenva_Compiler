@@ -172,35 +172,6 @@ void writeNumericInstruction(Token* operand, FILE* asmFile)
 	return;
 }
 
-//
-///*
-//writeNumericInstruction: this function will get the operand and value of a numeric type, and write the correct instruction
-//input: the tokens of the operand and value, and the asm file
-//output: non
-//*/
-//void writeNumericInstruction(Token* operand, Token* value, FILE* asmFile)
-//{
-//	if (operand->type == ADD)//checking for the correct operand, and preforming it on eax
-//	{
-//		fprintf(asmFile, "add eax, %d\n", *(int*)value->value);
-//	}
-//	else if (operand->type == SUB)
-//	{
-//		fprintf(asmFile, "sub eax, %d\n", *(int*)value->value);
-//	}
-//	else if (operand->type == MUL)
-//	{
-//		fprintf(asmFile, "imul eax, %d\n", *(int*)value->value);
-//	}
-//	else if (operand->type == DIV)//using ebx sience idiv cannot use immidiates
-//	{
-//		fprintf(asmFile, "mov ebx, %d\nidiv ebx\n", *(int*)value->value);
-//	}
-//	return;
-//}
-
-
-
 
 /*
 writeFunctionBranch: this function will write the branches of functions
@@ -209,10 +180,10 @@ output:non
 */
 void writeFunctionBranch(ASTNode* branch, FILE* asmFile)
 {
-
 	if (branch->token->type == PRINT)// checking for print (in the futer there will be )
 	{
-		writeNumericBranch(branch->children[0], asmFile);
+		writeBranch(branch->children[0], asmFile);
+		fprintf(asmFile, "push eax\n");
 		fprintf(asmFile, "call print_number_signed\n");
 	}
 	return;
