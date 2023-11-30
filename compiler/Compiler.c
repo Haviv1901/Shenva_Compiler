@@ -16,7 +16,7 @@ void Compile(char* inputFileName, char* outputFileName)
 		llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME); // extract tokens to c memory
 		llist hold = *tokenList;
 
-	//	llist_print(tokenList, tokenPrint); // print for debugging
+		llist_print(tokenList, tokenPrint); // print for debugging
 
 		ASTNode* tree = buildTree(tokenList); // build AST
 

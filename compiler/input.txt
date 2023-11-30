@@ -1,1 +1,1 @@
-hadpasa( 5 / 5)
+int num = 5

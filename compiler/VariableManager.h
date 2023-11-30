@@ -10,7 +10,8 @@ enum VarTypes {TYPE_INT, TYPE_STRING, TYPE_BOOL, TYPE_CHAR, TYPE_FLOLAT, TYPE_DO
 struct Variable
 {
 	char* Id; // identifier
-	enum VarTypes Type; 
+	enum VarTypes Type;
+	int size; // size in bytes
 	int placeInMemory; 
 } typedef Variable;
 
@@ -20,9 +21,11 @@ struct VariableList
 	struct VariableList* next;
 } typedef VariableList;
 
+int reformattedStackPointer = 0; // new stack pointer that works with variables in size of less then 4 bytes
+
 void deleteVariableList(VariableList* varList); // deletes allocated memory for the list
 
-void addNewVariableWithMemory(VariableList* varList, char* identifier, enum VarTypes type, int placeInMemory);
+int getSizeByType(enum VarTypes type); // returns the size of the type in bytes
 void addNewVariable(VariableList* varList, char* identifier, enum VarTypes type); // call the upper function with placeInMemory = 0
 int isVariableExist(VariableList* varList, char* identifier);
 Variable* getVariable(VariableList* varList, char* identifier);

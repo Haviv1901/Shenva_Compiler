@@ -8,6 +8,27 @@
 #include <stdlib.h>
 #include <string.h>
 
+int getSizeByType(enum VarTypes type)
+{
+	switch (type) // in bytes
+	{
+	case TYPE_INT:
+		return 4;
+	case TYPE_STRING:
+		return 4;
+	case TYPE_BOOL:
+		return 1;
+	case TYPE_CHAR:
+		return 1;
+	case TYPE_FLOLAT:
+		return 4;
+	case TYPE_DOUBLE:
+		return 8;
+	default:
+		return 0;
+	}
+
+}
 
 void deleteVariableList(VariableList* varList) // deletes allocated memory for the list
 {
@@ -25,6 +46,7 @@ void deleteVariableList(VariableList* varList) // deletes allocated memory for t
 	free(varList); // free current node
 }
 
+
 /**
  * \brief adds new variable to the list
  * \param varList variable list
@@ -32,7 +54,7 @@ void deleteVariableList(VariableList* varList) // deletes allocated memory for t
  * \param type type of new var
  * \param placeInMemory place in memory of new var
  */
-void addNewVariableWithMemory(VariableList* varList, char* identifier, enum VarTypes type, int placeInMemory)
+void addNewVariable(VariableList* varList, char* identifier, enum VarTypes type)
 {
 	if (isVariableExist(varList, identifier))
 	{
@@ -46,7 +68,10 @@ void addNewVariableWithMemory(VariableList* varList, char* identifier, enum VarT
 	newVarNode->var->Id = (char*)malloc(sizeof(char) * (strlen(identifier) + 1));
 	strcpy(newVarNode->var->Id, identifier);
 	newVarNode->var->Type = type;
-	newVarNode->var->placeInMemory = placeInMemory;
+	newVarNode->var->size = getSizeByType(type);
+	reformattedStackPointer += newVarNode->var->size; // update the stack pointer
+	newVarNode->var->placeInMemory = reformattedStackPointer;
+	
 	newVarNode->next = NULL;
 
 	// finding the next empty place in the list
@@ -58,11 +83,6 @@ void addNewVariableWithMemory(VariableList* varList, char* identifier, enum VarT
 	// assiging the new value to the list
 	varList->next = newVarNode;
 
-}
-// call the upper function with placeInMemory = 0
-void addNewVariable(VariableList* varList, char* identifier, enum VarTypes type) 
-{
-	addNewVariableWithMemory(varList, identifier, type, 0);
 }
 
 

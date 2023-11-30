@@ -113,6 +113,16 @@ llist* extractToken(FILE* file)
 		else if(c == TOKEN_INT)
 		{
 			token->type = TOKEN_INT;
+			token->value = NULL;
+		}
+		else if (c == ASSIGN)
+		{
+			token->type = ASSIGN;
+			token->value = NULL;
+		}
+		else if (c == VAR)
+		{
+			token->type = VAR;
 			c = fgetc(file); // skip the space
 			char* id = calloc(MAX_VARIABLE_SIZE, sizeof(char));
 			while (c = fgetc(file)) // get the identifier
@@ -126,16 +136,6 @@ llist* extractToken(FILE* file)
 				strncat(id, &c, 1);
 			}
 			token->value = id;
-		}
-		else if (c == ASSIGN)
-		{
-			token->type = ASSIGN;
-			token->value = NULL;
-		}
-		else if (c == VAR)
-		{
-			token->type = VAR;
-			token->value = NULL;
 		}
 		else
 		{
@@ -194,9 +194,9 @@ void printToken(Token* token)
 	{
 		printf("endl");
 	}
-else if (token->type == TOKEN_INT)
+	else if (token->type == TOKEN_INT)
 	{
-		printf("%s", (char*)(token->value));
+		printf("int");
 	}
 	else if (token->type == ASSIGN)
 	{
@@ -204,11 +204,15 @@ else if (token->type == TOKEN_INT)
 	}
 	else if (token->type == VAR)
 	{
-		printf("var");
+		printf("%s", (char*)(token->value));
 	}
 	else if (token->type == ERROR)
 	{
 		printf("ERROR");
+	}
+	else if (token->type == MOD)
+	{
+		printf("%%");
 	}
 	else
 	{
