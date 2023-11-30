@@ -1,3 +1,3 @@
-hadpasa(-2 pahot -2)
+int num = 5
 
-
+print(num)

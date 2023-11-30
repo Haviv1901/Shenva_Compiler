@@ -17,9 +17,16 @@ void Compile(char* inputFileName, char* outputFileName)
 		llist hold = *tokenList;
 
 		llist_print(tokenList, tokenPrint); // print for debugging
-
-
-
+		VariableList* varList = NULL;
+		if (isVars(tokenList))
+		{
+			varList = createVariableListFromToken(tokenList);
+			if (varList == NULL)
+			{
+				token_llist_free(tokenList);
+				return;
+			}
+		}
 		ASTNode* tree = buildTree(tokenList); // build AST
 
 		convertASTToASM(tree, outputFileName); // convert AST to ASM code.
@@ -27,7 +34,8 @@ void Compile(char* inputFileName, char* outputFileName)
 		deleteAST(tree); // free alocated memory of AST
 		*tokenList = hold;
 		token_llist_free(tokenList);
-		// Assembly to .exe and finish sprint 1 :)
+		deleteVariableList(varList);
+		return;
 
 	}
 

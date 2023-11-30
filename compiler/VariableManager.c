@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+
+
 int getSizeByType(enum VarTypes type)
 {
 	switch (type) // in bytes
@@ -39,7 +42,7 @@ void deleteVariableList(VariableList* varList) // deletes allocated memory for t
 
 	if (varList->var != NULL) // if variable have not already been deleted.
 	{
-		removeVariable(varList, varList->var->Id);
+		free(varList->var);
 	}
 
 	deleteVariableList(varList->next); // cal on next node
@@ -54,44 +57,36 @@ void deleteVariableList(VariableList* varList) // deletes allocated memory for t
  * \param type type of new var
  * \param placeInMemory place in memory of new var
  */
-void addNewVariable(VariableList* varList, char* identifier, enum VarTypes type)
+void createNewVariable(char* identifier, enum VarTypes type, VariableList** list)
 {
-	if (isVariableExist(varList, identifier))
-	{
-		printf("Error: variable %s already exist\n", identifier);
-		return;
-	}
 
 	// create new veriable
+
 	VariableList* newVarNode = (VariableList*)malloc(sizeof(VariableList));
+	VariableList* curr = NULL;
 	newVarNode->var = (Variable*)malloc(sizeof(Variable));
-	newVarNode->var->Id = (char*)malloc(sizeof(char) * (strlen(identifier) + 1));
-	strcpy(newVarNode->var->Id, identifier);
+	newVarNode->var->Id = identifier;
 	newVarNode->var->Type = type;
 	newVarNode->var->size = getSizeByType(type);
 	reformattedStackPointer += newVarNode->var->size; // update the stack pointer
 	newVarNode->var->placeInMemory = reformattedStackPointer;
 	
 	newVarNode->next = NULL;
-
-	
-
-	if(varList == NULL) // list is empty
+	if (*list == NULL)
 	{
-		varList = newVarNode;
+		*list = newVarNode;
 	}
 	else
 	{
-		// finding the next empty place in the list
-		while (varList->next != NULL)
+		curr = *list;
+		while (curr->next != NULL)
 		{
-			varList = varList->next;
+			curr = curr->next;
 		}
-
-		// assiging the new value to the list
-		varList->next = newVarNode;
+		curr->next = newVarNode;
 	}
 
+	return;
 }
 
 
@@ -103,17 +98,15 @@ void addNewVariable(VariableList* varList, char* identifier, enum VarTypes type)
  */
 int isVariableExist(VariableList* varList, char* identifier)
 {
-	if (varList == NULL)
+	Variable* var = getVariable(varList, identifier);
+	if (var == NULL)
 	{
 		return 0;
 	}
-
-	if (varList->var != NULL && strcmp(varList->var->Id, identifier) == 0) // if the variable is the first in the list
+	else
 	{
 		return 1;
 	}
-
-	return isVariableExist(varList->next, identifier);
 }
 
 /**
@@ -124,36 +117,25 @@ int isVariableExist(VariableList* varList, char* identifier)
  */
 Variable* getVariable(VariableList* varList, char* identifier)
 {
-	if (varList == NULL)
+	VariableList* curr = varList;
+	while (curr != NULL)
 	{
-		return NULL;
+		if (strcmp(curr->var->Id, identifier) == 0)
+		{
+			return curr->var;
+		}
+		curr = curr->next;
 	}
-
-	if (varList->var != NULL && strcmp(varList->var->Id, identifier) == 0) // if the variable is the first in the list
-	{
-		return varList->var;
-	}
-
-	return getVariable(varList->next, identifier);
+	return NULL;
 }
 
-void removeVariable(VariableList* varList, char* identifier) // deletes allocated memory for the variable
-{
-	if (varList == NULL)
-	{
-		return;
-	}
 
-	if (varList->var != NULL && strcmp(varList->var->Id, identifier) == 0) // if the variable is the first in the list
-	{
-		free(varList->var->Id);
-		free(varList->var);
-		return;
-	}
 
-	removeVariable(varList->next, identifier);
-}
-
+/*
+createVariableListFromToken: this function will produce the var list from the tokens
+input; the token list. 
+output: a variable list, or NULL if there is a semantic error, or if there are no vars
+*/
 VariableList* createVariableListFromToken(llist* tokenList)
 {
 	VariableList* varList = NULL;
@@ -163,13 +145,69 @@ VariableList* createVariableListFromToken(llist* tokenList)
 		return NULL;
 	}
 
-	node* currentNode = *tokenList;
+	struct node* curr = *tokenList;
+	char* identifier = NULL;
+	enum varTypes type;
+	while (curr != NULL)// going through the token list
+	{
+		type = ((Token*)(curr->data))->type;//getting the current token's type
+		if (type == TOKEN_INT)//decleration
+		{
+			curr = curr->next;
+			identifier = (char*)(((Token*)(curr->data))->value);//getting identifier
+			if (isVariableExist(varList, identifier) == 0)//checking if its already declared
+			{
+				createNewVariable(identifier, type, &varList);//adding var
+			}
+			else
+			{
+				printf("Semantic error: variable %s is already defined\n", identifier);
+				deleteVariableList(varList);
+				return NULL;
+			}
+		}
+		else if (type == VAR)//if its a variable
+		{
+			identifier = (char*)(((Token*)(curr->data))->value);
+			if (isVariableExist(varList, identifier) == 0)//checking if it was ever declared
+			{
+				printf("Semantic error: %s is undefined\n", identifier);
+				deleteVariableList(varList);
+				return NULL;
+			}
+		}
+		curr = curr->next;
+	}
 
-
-
-	while()
+	return varList;
 
 }
+
+
+/*
+isVars: this function will check if there are Variables in the token list
+input:the token list
+output: true or false
+*/
+bool isVars(llist* tokenList)
+{
+	struct node* curr = *tokenList;
+	enum varTypes type;
+	while (curr != NULL)
+	{
+		type = ((Token*)(curr->data))->type;
+		if (type == VAR)// checking for a decleration
+		{
+			return true;
+		}
+		curr = curr->next;
+	}
+	return false;
+
+
+}
+
+
 
 void printVariable(Variable* var)
 {
@@ -190,3 +228,7 @@ void printVariableList(VariableList* varList)
 	printVariable(varList->var);
 	printVariableList(varList->next);
 }
+
+
+
+
