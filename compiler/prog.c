@@ -14,6 +14,7 @@ int main(int argc, char* argv[])
         return 1; // Exit with an error code
     }
 
+
     // Pass the input and output file names to the Compile function
 	Compile(argv[1], argv[2]); 
 //    printf("%d\n", _CrtDumpMemoryLeaks());
