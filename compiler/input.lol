@@ -1,1 +1,3 @@
-print(-10 % 21)
+hadpasa(-2 pahot -2)
+
+

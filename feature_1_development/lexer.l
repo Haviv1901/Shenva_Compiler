@@ -33,6 +33,11 @@ void set_output_file(FILE* file) {
 "sheerit"		  { fprintf(outputFile, "%%\n"); return MOD;}
 "("       { fprintf(outputFile, "6\n"); return LPAREN;}
 ")"       { fprintf(outputFile, "7\n"); return RPAREN;}
+"="		  { fprintf(outputFile, "=\n"); return ASSIGN;}
+"shave"	  { fprintf(outputFile, "=\n"); return ASSIGN;}
+"int"	  { fprintf(outputFile, "i\n"); return INT;}
+"mispar"	  { fprintf(outputFile, "i\n"); return INT;}
+[a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); return VAR; }
 [-]?[0-9]+    { fprintf(outputFile, "1 %s\n", yytext); return NUM;}
 [ \t]     ; // Ignore whitespace and newline characters
 [\n]      { fprintf(outputFile, "9\n"); yylineno++; return ENDL;}
