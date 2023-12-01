@@ -45,7 +45,8 @@ ASTNode* buildTree(struct node** FirstNode)
 	}
 	else if (firstToken->type == ENDL) // if new line continue
 	{
-		result = buildTree(&(*FirstNode)->next);
+		*FirstNode = (*FirstNode)->next;
+		result = buildTree(FirstNode);
 	}
 	else if (firstToken->type == PRINT) // if print  , in the future we will add function support
 	{
@@ -85,8 +86,8 @@ ASTNode* buildTree(struct node** FirstNode)
 		result->children[EXPRESSION] = buildASTVariables(FirstNode);
 		if(result->children[EXPRESSION]->children[1] == NULL)
 		{
-
-			result->children[NEXT] = buildTree(&(*FirstNode)->next);
+			*FirstNode = (*FirstNode)->next;
+			result->children[NEXT] = buildTree(FirstNode);
 		}
 		else
 		{

@@ -39,7 +39,7 @@ ASTNode* buildASTVariablesAssign(node** curr)
 	// skip current twice
 	(*curr) = (*curr)->next->next;
 
-	//result->children[1] = buildASTNumeric(curr); // currentNode->next->next is the number assigned to the variable
+	result->children[1] = buildASTNumeric(curr); // currentNode->next->next is the number assigned to the variable
 
 	return result;
 

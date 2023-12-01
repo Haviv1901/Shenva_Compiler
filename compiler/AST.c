@@ -53,34 +53,29 @@ ASTNode* createNewASTnode(Token* token)
 }
 
 
-/*
-deleteAST: this function will delete an AST
-input: the tree
-output: non
-*/
 void deleteAST(ASTNode* head)
 {
-
-	if(head == NULL)
-	{
-		return;
-	}
-
-	Token* currentToken = head->token;
-	if (head->token == NULL || head->token->type == ADD || head->token->type == SUB ||
-		head->token->type == MUL || head->token->type == DIV || head->token->type == MOD ||
-		head->token->type == TOKEN_INT || head->token->type == ASSIGN)// 2 children types
+	if (head->token == NULL || head->token->type == ADD || head->token->type == SUB || head->token->type == MUL || head->token->type == DIV || head->token->type == MOD || head->token->type == TOKEN_INT || head->token->type == ASSIGN)
 	{
 		// 2 child
-		deleteAST(head->children[0]);
-		deleteAST(head->children[1]);
+		if (head->children[0] != NULL)
+		{
+			deleteAST(head->children[0]);
+		}
+
+		if (head->children[1] != NULL)
+		{
+			deleteAST(head->children[1]);
+		}
 		free(head->children);
 	}
-	else if (head->token->type == ENDL || head->token->type == LPARN ||
-		head->token->type == RPARN || head->token->type == PRINT)
+	else if (head->token->type == ENDL || head->token->type == LPARN || head->token->type == RPARN || head->token->type == PRINT)
 	{
 		// 1 child
-		deleteAST(head->children[0]);
+		if (head->children[0] != NULL)
+		{
+			deleteAST(head->children[0]);
+		}
 		free(head->children);
 	}
 	else // no child
@@ -92,9 +87,6 @@ void deleteAST(ASTNode* head)
 
 
 }
-
-
-
 
 
 
