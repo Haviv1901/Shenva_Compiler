@@ -1,21 +1,16 @@
 i
-v a
-9
-i
-v b
-9
-v a
-=
-v b
-9
-v b
-=
-v a
-9
-v a
+v num
 =
 1 5
-4
-v b
+9
+8
+6
+v num
 2
-v a
+1 5
+7
+9
+8
+6
+v num
+7
