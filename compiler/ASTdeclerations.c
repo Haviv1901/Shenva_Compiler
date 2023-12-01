@@ -8,7 +8,9 @@
 #include "ASTnumeric.h"
 
 
-ASTNode* buildASTDeclerations(struct node** curr)
+
+
+ASTNode* buildASTVariables(struct node** curr)
 {
 	Token* currentToken = (*curr)->data;
 	ASTNode* result = NULL;
@@ -16,14 +18,34 @@ ASTNode* buildASTDeclerations(struct node** curr)
 	if(currentToken->type == TOKEN_INT)
 	{
 		result = buildASTDeclerationsInt(curr);
-		currentToken = (*curr)->data;
 	}
-
-
-
+	else if (currentToken->type == VAR)
+	{
+		result = buildASTVariablesAssign(curr);
+	}
 
 	return result;
 }
+
+ASTNode* buildASTVariablesAssign(node** curr)
+{
+
+	struct node* currentNode = (*curr);
+	Token* currentToken = currentNode->data;
+
+	ASTNode* result = createNewASTnode(currentNode->next->data); // ASSIGN token node
+
+	result->children[0] = createNewASTnode(currentNode->data); // ID token node
+	// skip current twice
+	(*curr) = (*curr)->next->next;
+
+	//result->children[1] = buildASTNumeric(curr); // currentNode->next->next is the number assigned to the variable
+
+	return result;
+
+
+}
+
 
 ASTNode* buildASTDeclerationsInt(struct node** curr)
 {
@@ -37,9 +59,7 @@ ASTNode* buildASTDeclerationsInt(struct node** curr)
 		// currentNode->next->next is the assign token, if exist
 	{
 		(*curr) = (*curr)->next->next->next;
-		currentToken = (*curr)->data;
 		result->children[1] = buildASTNumeric(curr); // currentNode->next->next->next is the number assigned to the variable
-		currentToken = (*curr)->data;
 	}
 	else
 	{

@@ -16,9 +16,11 @@
 #endif
 
 
-ASTNode* buildASTDeclerations(struct node** curr);
+ASTNode* buildASTVariables(struct node** curr);
 
 ASTNode* buildASTDeclerationsInt(struct node** curr);
+
+ASTNode* buildASTVariablesAssign(node** node);
 
 
 

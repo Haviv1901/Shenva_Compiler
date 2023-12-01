@@ -1,2 +1,2 @@
-int num = 4*4
-hadpasa(5)
+int a
+a = 5

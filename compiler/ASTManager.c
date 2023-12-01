@@ -25,8 +25,11 @@ ASTNode* buildTree(struct node** FirstNode)
 
 
 
-	if (firstToken->type == NUM || firstToken->type == LPARN) // if numeric expression
+	if (firstToken->type == NUM ||
+		firstToken->type == LPARN || // if numeric expression
+		(firstToken->type == VAR && ((Token*)currentNode->next->data)->type != ASSIGN)) // or a variable
 	{
+
 		currentToken = ((Token*)currentNode->data);
 		while (currentNode != NULL && currentToken->type != ENDL) // while not the end of list nor the end of line
 		{
@@ -79,11 +82,11 @@ ASTNode* buildTree(struct node** FirstNode)
 	}
 	else if (firstToken->type == TOKEN_INT)
 	{
-		result->children[EXPRESSION] = buildASTDeclerations(FirstNode);
-		currentToken = (*FirstNode)->data;
+		result->children[EXPRESSION] = buildASTVariables(FirstNode);
 		if(result->children[EXPRESSION]->children[1] == NULL)
 		{
-			result->children[NEXT] = buildTree(&(*FirstNode)->next->next);
+
+			result->children[NEXT] = buildTree(&(*FirstNode)->next);
 		}
 		else
 		{
@@ -91,6 +94,17 @@ ASTNode* buildTree(struct node** FirstNode)
 		}
 		
 		
+	}
+	else if (firstToken->type == VAR)
+	{
+
+		result->children[EXPRESSION] = buildASTVariables(FirstNode);
+
+
+		result->children[NEXT] = buildTree(FirstNode);
+
+
+
 	}
 	return result;
 }

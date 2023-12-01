@@ -30,7 +30,7 @@ ASTNode* createNewASTnode(Token* token)
 			free(result);
 			return NULL;
 		}
-		result->children[0] = NULL;//setting children to NULL, the outer function can change that
+		result->children[0] = NULL; // setting children to NULL, the outer function can change that
 		result->children[1] = NULL;
 
 	}
@@ -61,29 +61,26 @@ output: non
 void deleteAST(ASTNode* head)
 {
 
+	if(head == NULL)
+	{
+		return;
+	}
+
+	Token* currentToken = head->token;
 	if (head->token == NULL || head->token->type == ADD || head->token->type == SUB ||
 		head->token->type == MUL || head->token->type == DIV || head->token->type == MOD ||
 		head->token->type == TOKEN_INT || head->token->type == ASSIGN)// 2 children types
 	{
 		// 2 child
-		if (head->children[0] != NULL)
-		{
-			deleteAST(head->children[0]);
-		}
-
-		if (head->children[1] != NULL)
-		{
-			deleteAST(head->children[1]);
-		}
+		deleteAST(head->children[0]);
+		deleteAST(head->children[1]);
 		free(head->children);
 	}
-	else if (head->token->type == ENDL || head->token->type == LPARN || head->token->type == RPARN || head->token->type == PRINT)
+	else if (head->token->type == ENDL || head->token->type == LPARN ||
+		head->token->type == RPARN || head->token->type == PRINT)
 	{
 		// 1 child
-		if (head->children[0] != NULL)
-		{
-			deleteAST(head->children[0]);
-		}
+		deleteAST(head->children[0]);
 		free(head->children);
 	}
 	else // no child
