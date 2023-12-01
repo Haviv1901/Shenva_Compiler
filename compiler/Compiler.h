@@ -36,5 +36,8 @@ int activateLexer(char* inputFileName);
 /* extract tokens from lexer result */
 llist* extractTokensFromLexResult(char* fileName);
 
+/* creates a variable list from token list */
+VariableList* createVariableList(llist* tokenList);
+
 
 

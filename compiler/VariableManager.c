@@ -15,17 +15,17 @@ int getSizeByType(enum VarTypes type)
 {
 	switch (type) // in bytes
 	{
-	case TYPE_INT:
+	case VAR_INT:
 		return 4;
-	case TYPE_STRING:
+	case VAR_STRING:
 		return 4;
-	case TYPE_BOOL:
+	case VAR_BOOL:
 		return 1;
-	case TYPE_CHAR:
+	case VAR_CHAR:
 		return 1;
-	case TYPE_FLOLAT:
+	case VAR_FLOLAT:
 		return 4;
-	case TYPE_DOUBLE:
+	case VAR_DOUBLE:
 		return 8;
 	default:
 		return 0;
@@ -86,7 +86,6 @@ void createNewVariable(char* identifier, enum VarTypes type, VariableList** list
 		curr->next = newVarNode;
 	}
 
-	return;
 }
 
 
@@ -103,10 +102,8 @@ int isVariableExist(VariableList* varList, char* identifier)
 	{
 		return 0;
 	}
-	else
-	{
-		return 1;
-	}
+	return 1;
+
 }
 
 /**
@@ -147,31 +144,29 @@ VariableList* createVariableListFromToken(llist* tokenList)
 
 	struct node* curr = *tokenList;
 	char* identifier = NULL;
-	enum varTypes type;
 	while (curr != NULL)// going through the token list
 	{
-		type = ((Token*)(curr->data))->type;//getting the current token's type
-		if (type == TOKEN_INT)//decleration
+		enum TokenTypes currentToken = ((Token*)(curr->data))->type;
+		if (currentToken == TOKEN_INT) // if its an int token
 		{
 			curr = curr->next;
 			identifier = (char*)(((Token*)(curr->data))->value);//getting identifier
-			if (isVariableExist(varList, identifier) == 0)//checking if its already declared
-			{
-				createNewVariable(identifier, type, &varList);//adding var
-			}
-			else
+			if (isVariableExist(varList, identifier)) // checking if id already exists
 			{
 				printf("Semantic error: variable %s is already defined\n", identifier);
 				deleteVariableList(varList);
 				return NULL;
 			}
+			// identifier has the allocated memory from the token list wich is goint to be deallocated soon -
+			// so we are allocating new memory for the id.
+			createNewVariable(identifier, VAR_INT, &varList);//adding var
 		}
-		else if (type == VAR)//if its a variable
+		else if (currentToken == VAR)//if its a variable
 		{
 			identifier = (char*)(((Token*)(curr->data))->value);
-			if (isVariableExist(varList, identifier) == 0)//checking if it was ever declared
+			if (!isVariableExist(varList, identifier)) // checking if variable has been declared before
 			{
-				printf("Semantic error: %s is undefined\n", identifier);
+				printf("Semantic error: '%s' is undefined\n", identifier);
 				deleteVariableList(varList);
 				return NULL;
 			}
@@ -189,7 +184,7 @@ isVars: this function will check if there are Variables in the token list
 input:the token list
 output: true or false
 */
-bool isVars(llist* tokenList)
+bool isVars(llist* tokenList) // what for ?
 {
 	struct node* curr = *tokenList;
 	enum varTypes type;

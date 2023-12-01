@@ -1,5 +1,7 @@
 #include "ASTManager.h"
 
+#include "ASTdeclerations.h"
+
 
 ASTNode* buildTree(struct node** FirstNode)
 {
@@ -74,6 +76,21 @@ ASTNode* buildTree(struct node** FirstNode)
 		// currentNode is the endl that differs between expresions.
 		result->children[EXPRESSION] = buildASTFunctions(FirstNode);  
 		result->children[NEXT] = buildTree(&currentNode);
+	}
+	else if (firstToken->type == TOKEN_INT)
+	{
+		result->children[EXPRESSION] = buildASTDeclerations(FirstNode);
+		currentToken = (*FirstNode)->data;
+		if(result->children[EXPRESSION]->children[1] == NULL)
+		{
+			result->children[NEXT] = buildTree(&(*FirstNode)->next->next);
+		}
+		else
+		{
+			result->children[NEXT] = buildTree(FirstNode);
+		}
+		
+		
 	}
 	return result;
 }

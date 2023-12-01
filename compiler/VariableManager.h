@@ -10,7 +10,7 @@
 #include "llist.h"
 
 #include <stdbool.h>
-enum VarTypes {TYPE_INT = 'i', TYPE_STRING, TYPE_BOOL, TYPE_CHAR, TYPE_FLOLAT, TYPE_DOUBLE }; // types of variables
+enum VarTypes {VAR_INT, VAR_STRING, VAR_BOOL, VAR_CHAR, VAR_FLOLAT, VAR_DOUBLE }; // types of variables
 
 
 struct Variable

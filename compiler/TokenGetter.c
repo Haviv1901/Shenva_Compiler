@@ -192,7 +192,7 @@ void printToken(Token* token)
 	}
 	else if (token->type == ENDL)
 	{
-		printf("endl");
+		printf("endl\n");
 	}
 	else if (token->type == TOKEN_INT)
 	{

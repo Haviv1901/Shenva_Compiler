@@ -14,5 +14,9 @@
 #endif
 
 
+#ifndef ASTFUNCTIONS_H
+#include "ASTdeclerations.h"
+#endif
+
 
 ASTNode* buildTree(struct node** FirstNode);
