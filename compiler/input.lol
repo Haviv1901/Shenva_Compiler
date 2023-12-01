@@ -1,5 +1,3 @@
-int a
-int b 
-a = b
-b = a
-a = 5 * b veod a
+mispar num shave 5
+print (num veod 5)
+print(num)
