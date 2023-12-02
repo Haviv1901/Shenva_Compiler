@@ -138,14 +138,19 @@ push 5
 pop eax
 push eax
 push [ebp - 4]
-push 5
+push [ebp - 4]
+push [ebp - 4]
+pop ebx
+pop eax
+cdq
+imul eax, ebx
+push eax
 pop ebx
 pop eax
 add eax, ebx
 push eax
 pop eax
-push eax
-call print_number_signed
+mov [ebp - 4], eax
 push [ebp - 4]
 pop eax
 push eax

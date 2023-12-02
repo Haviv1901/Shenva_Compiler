@@ -1,3 +1,3 @@
 mispar num shave 5
-print (num veod 5)
-print(num)
+num veodShave num kaful num
+hadpasa(num)

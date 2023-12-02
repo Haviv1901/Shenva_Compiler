@@ -4,6 +4,7 @@ int yylineno = 1;
 #include <stdio.h>
 #include <string.h>
 FILE* outputFile;
+char lastIdentifier[256] = {0};
 
 void set_input_file(FILE* file) {
     yyin = file;
@@ -34,10 +35,20 @@ void set_output_file(FILE* file) {
 "("       { fprintf(outputFile, "6\n"); return LPAREN;}
 ")"       { fprintf(outputFile, "7\n"); return RPAREN;}
 "="		  { fprintf(outputFile, "=\n"); return ASSIGN;}
+"+="	  { fprintf(outputFile, "=\nv %s\n2\n", lastIdentifier); return ADDEQ;}
+"veodShave"	  { fprintf(outputFile, "=\nv %s\n2\n", lastIdentifier); return ADDEQ;}
+"-="	  { fprintf(outputFile, "=\nv %s\n3\n", lastIdentifier); return SUBEQ;}
+"pahotShave"	  { fprintf(outputFile, "=\nv %s\n3\n", lastIdentifier); return SUBEQ;}
+"*="	  { fprintf(outputFile, "=\nv %s\n4\n", lastIdentifier); return MULEQ;}
+"kafulShave"	  { fprintf(outputFile, "=\nv %s\n4\n", lastIdentifier); return MULEQ;}
+"/="	  { fprintf(outputFile, "=\nv %s\n5\n", lastIdentifier); return DIVEQ;}
+"helkeiShave"	  { fprintf(outputFile, "=\nv %s\n5\n", lastIdentifier); return DIVEQ;}
+"%="	  { fprintf(outputFile, "=\nv %s\n%%\n", lastIdentifier); return MODEQ;}
+"sheeritShave"	  { fprintf(outputFile, "=\nv %s\n%%\n", lastIdentifier); return MODEQ;}
 "shave"	  { fprintf(outputFile, "=\n"); return ASSIGN;}
 "int"	  { fprintf(outputFile, "i\n"); return INT;}
 "mispar"	  { fprintf(outputFile, "i\n"); return INT;}
-[a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); return VAR; }
+[a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); strcpy(lastIdentifier, yytext); return VAR; }
 [-]?[0-9]+    { fprintf(outputFile, "1 %s\n", yytext); return NUM;}
 [ \t]     ; // Ignore whitespace and newline characters
 [\n]      { fprintf(outputFile, "9\n"); yylineno++; return ENDL;}

@@ -20,6 +20,7 @@ FILE* errorFile;
 %token ASSIGN
 %token INT
 %token VAR
+%token ADDEQ SUBEQ MULEQ DIVEQ MODEQ
 %left ADD SUB
 %left MUL DIV MOD
 
@@ -33,10 +34,10 @@ statements : statement
            | statements statement
            ;
 
-statement : PRINT LPAREN expression RPAREN  { /* Handle print statement */ }
-		  | expression 
-          | declaration
-          | assignment
+statement : PRINT LPAREN expression RPAREN ENDL { /* Handle print statement */ }
+		  | expression ENDL
+          | declaration ENDL
+          | assignment ENDL
 		  | ENDL
           | ERROR {fprintf(errorFile, "syntax error, unrecognized \"%s\" in the code (line %d)\n", $1, yylineno);}
           ;
@@ -46,6 +47,11 @@ declaration : INT VAR
             ;
 
 assignment : VAR ASSIGN expression
+			| VAR ADDEQ expression
+			| VAR SUBEQ expression
+			| VAR MULEQ expression
+			| VAR DIVEQ expression
+			| VAR MODEQ expression
            ;
 
 expression : NUM
@@ -106,80 +112,109 @@ int yyerror(char *msg)
 	int i = 0;
 	for (i = 0; i < strlen(msg); i++)
 	{
-    switch (msg[i]) 
-	{
-        case 'A':
-			if (msg[i + 1] == 'D')
-			{
-				fprintf(errorFile, "\"+\"");
-				i += 2;
-			}
-			else if (msg[i + 1] == 'S')
-			{
-				fprintf(errorFile, "\"=\"");
-				i += 5;	
-			}
-            break;
-        case 'S':
-            fprintf(errorFile, "\"-\"");
-			i += 2;
-            break;
-        case 'M':
-			if (msg[i + 1] == 'U')
-			{
-				fprintf(errorFile, "\"*\"");
-				i += 2;
-			}
-			else if (msg[i + 1] == 'O')
-			{
-				fprintf(errorFile, "\"%%\"");
-				i += 2;	
-			}
-            break;
-        case 'D':
-            fprintf(errorFile, "\"//\"");
-			i += 2;
-            break;
-        case 'R':
-            fprintf(errorFile, "\")\"");
+		if (strncmp(msg + i, "ASSIGN", 6) == 0)
+		{
+			fprintf(errorFile, "\"=\"");
 			i += 5;
-            break;
-        case 'L':
-            fprintf(errorFile, "\"(\"");
-			i += 5;
-            break;
-        case 'P':
-            fprintf(errorFile, "print");
+		}
+		else if (strncmp(msg + i, "ADDEQ", 5) == 0)
+		{
+			fprintf(errorFile, "\"+=\"");
 			i += 4;
-            break;
-		case 'E':
-			if (msg[i + 1] == 'R')
-			{
-				fprintf(errorFile, "character");
-				i += 4;
-			}
-			else if (msg[i + 1] == 'N')
-			{
-				fprintf(errorFile, "newline");
-				i += 3;
-			}
-			break;
-		case 'N':
+		}
+		else if (strncmp(msg + i, "SUBEQ", 5) == 0)
+		{
+			fprintf(errorFile, "\"-=\"");
+			i += 4;
+		}
+		else if (strncmp(msg + i, "MULEQ", 5) == 0)
+		{
+			fprintf(errorFile, "\"*=\"");
+			i += 4;
+		}
+		else if (strncmp(msg + i, "DIVEQ", 5) == 0)
+		{
+			fprintf(errorFile, "\"//=\"");
+			i += 4;
+		}
+		else if (strncmp(msg + i, "MODEQ", 5) == 0)
+		{
+			fprintf(errorFile, "\"%%=\"");
+			i += 4;
+		}
+		else if (strncmp(msg + i, "ADD", 3) == 0)
+		{
+			fprintf(errorFile, "\"+\"");
+			i += 2;
+		}
+		else if (strncmp(msg + i, "SUB", 3) == 0)
+		{
+			fprintf(errorFile, "\"-\"");
+			i += 2;
+		}
+		else if (strncmp(msg + i, "MUL", 3) == 0)
+		{
+			fprintf(errorFile, "\"*\"");
+			i += 2;
+		}
+		else if (strncmp(msg + i, "DIV", 3) == 0)
+		{
+			fprintf(errorFile, "\"//\"");
+			i += 2;
+		}
+		else if (strncmp(msg + i, "MOD", 3) == 0)
+		{
+			fprintf(errorFile, "\"%%\"");
+			i += 2;
+		}
+		else if (strncmp(msg + i, "NUM", 3) == 0)
+		{
 			fprintf(errorFile, "number");
 			i += 2;
-			break;
-		case 'I':
-			fprintf(errorFile, "integer");
+		}
+		else if (strncmp(msg + i, "INT", 3) == 0)
+		{
+			fprintf(errorFile, "int");
 			i += 2;
-			break;
-		case 'V':
+		}
+		else if (strncmp(msg + i, "VAR", 3) == 0)
+		{
 			fprintf(errorFile, "variable");
 			i += 2;
-			break;
-        default:
-            fputc(msg[i], errorFile);
-            break;
-		
+		}
+		else if (strncmp(msg + i, "INT", 3) == 0)
+		{
+			fprintf(errorFile, "int");
+			i += 2;
+		}
+		else if (strncmp(msg + i, "PRINT", 5) == 0)
+		{
+			fprintf(errorFile, "print");
+			i += 4;
+		}
+		else if (strncmp(msg + i, "ENDL", 4) == 0)
+		{
+			fprintf(errorFile, "newline");
+			i += 3;
+		}
+		else if (strncmp(msg + i, "LPAREN", 6) == 0)
+		{
+			fprintf(errorFile, "\"(\"");
+			i += 5;
+		}
+		else if (strncmp(msg + i, "RPAREN", 6) == 0)
+		{
+			fprintf(errorFile, "\")\"");
+			i += 5;
+		}
+		else if (strncmp(msg + i, "ERROR", 6) == 0)
+		{
+			fprintf(errorFile, "\"character\"");
+			i += 5;
+		}
+		else
+		{
+			fprintf(errorFile, "%c", msg[i]);
 		}
 		
 	}
@@ -187,6 +222,8 @@ int yyerror(char *msg)
 	fputc('\n', errorFile);
     return 0;
 }
+
+
 
 
 
