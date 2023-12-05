@@ -67,6 +67,67 @@ char* extractIdentifier(char charFromfile, FILE* file)
 	return identifier;
 }
 
+void* extractLetter(char charFromfile, FILE* file)
+{
+
+	charFromfile = fgetc(file); // skip the space
+	charFromfile = fgetc(file); // skip the first '
+	charFromfile = fgetc(file);
+	bool specialCharacter = false;
+
+	char* character = calloc(1, sizeof(char));
+
+
+	if (charFromfile == '\\')
+	{
+		specialCharacter = true;
+		charFromfile = fgetc(file);
+	}
+
+
+	if(specialCharacter)
+	{
+		if (charFromfile == 'n')
+		{
+			*character = '\n';
+		}
+		else if (charFromfile == 'r')
+		{
+			*character = '\r';
+		}
+		else if (charFromfile == '\\')
+		{
+			*character = '\\';
+		}
+		else if (charFromfile == '\'')
+		{
+			*character = '\'';
+		}
+		else if (charFromfile == '\"')
+		{
+			*character = '\"';
+		}
+		else if (charFromfile == 'b')
+		{
+			*character = '\b';
+		}
+		else if (charFromfile == 'f')
+		{
+			*character = '\f';
+		}
+		else
+		{
+			*character = charFromfile;
+		}
+	}
+	else
+	{
+		*character = charFromfile;
+	}
+
+	charFromfile = fgetc(file); // skip the last '
+	return character;
+}
 /*
  * extracting tokens from a file.
  * file: FILE*, an opened file
@@ -149,18 +210,17 @@ llist* extractToken(FILE* file)
 		else if (charFromfile == VAR)
 		{
 			token->type = VAR;
-
-			token->value = extractIdentifier;
+			token->value = extractIdentifier(charFromfile, file);;
 		}
 		else if (charFromfile == TOKEN_CHAR)
 		{
-			token->type = ENDL;
+			token->type = TOKEN_CHAR;
 			token->value = NULL;
 		}
 		else if (charFromfile == LETTER)
 		{
-			token->type = ENDL;
-			token->value = NULL;
+			token->type = LETTER;
+			token->value = extractLetter(charFromfile, file);
 		}
 		else
 		{
@@ -230,6 +290,14 @@ void printToken(Token* token)
 	else if (token->type == VAR)
 	{
 		printf("%s", (char*)(token->value));
+	}
+	else if (token->type == TOKEN_CHAR)
+	{
+		printf("char");
+	}
+	else if (token->type == LETTER)
+	{
+		printf("%c", *((char*)(token->value)));
 	}
 	else if (token->type == ERROR)
 	{

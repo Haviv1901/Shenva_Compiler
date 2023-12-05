@@ -49,6 +49,11 @@ void token_llist_free(llist* list)
         {
             free((char*)(((Token*)(curr->data))->value));
         }
+        if ((((Token*)(curr->data))->type == LETTER))
+        {
+            free((char*)(((Token*)(curr->data))->value));
+        }
+        
         free(curr->data);
         next = curr->next;
         free(curr);

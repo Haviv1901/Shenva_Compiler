@@ -38,14 +38,15 @@ main:
     push ebp
     mov ebp, esp
 
-push 0
-push 5
+sub esp, 1
+push 97
 pop eax
-mov [ebp - 4], eax
-push [ebp - 4]
+mov byte ptr [ebp - 1], al
+push 53
 pop eax
-push eax
-call print_number_signed
+mov byte ptr [ebp - 1], al
+mov al, byte ptr [ebp - 1]
+call WriteChar
 
 mov esp, ebp
 pop ebp

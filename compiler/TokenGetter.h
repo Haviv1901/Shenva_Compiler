@@ -15,8 +15,8 @@ enum TokenTypes {ERROR = '0', NUM = '1', ADD = '2',SUB = '3',
 				 PRINT = '8', ENDL = '9', MOD = '%',
 				 ASSIGN = '=', VAR = 'v', TOKEN_INT = 'i',
 				TOKEN_CHAR = 'c', TOKEN_STRING = 's', TOKEN_FLOAT = 'f',
-				LETTER = 'l'
-};
+				LETTER = 'l', TOKEN_DOUBLE = 'd', TOKEN_BOOL = 'b'
+}; // types of tokens
 
 #endif 
 
