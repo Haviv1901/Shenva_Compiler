@@ -22,7 +22,7 @@ ASTNode* createNewASTnode(Token* token)
 	//TODO: CLEAN THIS
 	if (token == NULL || token->type == ADD || token->type == SUB ||
 		token->type == MUL || token->type == DIV || token->type == MOD ||
-		token->type == TOKEN_INT || token->type == ASSIGN)// 2 children types
+		token->type == TOKEN_INT || token->type == ASSIGN || token->type == TOKEN_CHAR)// 2 children types
 	{
 		result->children = (ASTNode**)malloc(TWO_CHILDREN_NODE * sizeof(ASTNode*));
 		if (result->children == NULL)
@@ -45,7 +45,7 @@ ASTNode* createNewASTnode(Token* token)
 		result->children[0] = NULL;
 
 	}
-	else// if its a raw value, like a number, they dont have children
+	else // else:   char / int / 
 	{
 		result->children = NULL;
 	}
@@ -55,7 +55,15 @@ ASTNode* createNewASTnode(Token* token)
 
 void deleteAST(ASTNode* head)
 {
-	if (head->token == NULL || head->token->type == ADD || head->token->type == SUB || head->token->type == MUL || head->token->type == DIV || head->token->type == MOD || head->token->type == TOKEN_INT || head->token->type == ASSIGN)
+	if (head->token == NULL ||
+		head->token->type == ADD ||
+		head->token->type == SUB ||
+		head->token->type == MUL ||
+		head->token->type == DIV ||
+		head->token->type == MOD ||
+		head->token->type == TOKEN_INT ||
+		head->token->type == ASSIGN ||
+		head->token->type == TOKEN_CHAR)
 	{
 		// 2 child
 		if (head->children[0] != NULL)
