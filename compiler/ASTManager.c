@@ -1,5 +1,7 @@
 #include "ASTManager.h"
 
+#include "ASTdeclerations.h"
+
 
 ASTNode* buildTree(struct node** FirstNode)
 {
@@ -23,8 +25,11 @@ ASTNode* buildTree(struct node** FirstNode)
 
 
 
-	if (firstToken->type == NUM || firstToken->type == LPARN) // if numeric expression
+	if (firstToken->type == NUM ||
+		firstToken->type == LPARN || // if numeric expression
+		(firstToken->type == VAR && ((Token*)currentNode->next->data)->type != ASSIGN)) // or a variable
 	{
+
 		currentToken = ((Token*)currentNode->data);
 		while (currentNode != NULL && currentToken->type != ENDL) // while not the end of list nor the end of line
 		{
@@ -40,7 +45,8 @@ ASTNode* buildTree(struct node** FirstNode)
 	}
 	else if (firstToken->type == ENDL) // if new line continue
 	{
-		result = buildTree(&(*FirstNode)->next);
+		*FirstNode = (*FirstNode)->next;
+		result = buildTree(FirstNode);
 	}
 	else if (firstToken->type == PRINT) // if print  , in the future we will add function support
 	{
@@ -74,6 +80,32 @@ ASTNode* buildTree(struct node** FirstNode)
 		// currentNode is the endl that differs between expresions.
 		result->children[EXPRESSION] = buildASTFunctions(FirstNode);  
 		result->children[NEXT] = buildTree(&currentNode);
+	}
+	else if (firstToken->type == TOKEN_INT)
+	{
+		result->children[EXPRESSION] = buildASTVariables(FirstNode);
+		if(result->children[EXPRESSION]->children[1] == NULL)
+		{
+			*FirstNode = (*FirstNode)->next;
+			result->children[NEXT] = buildTree(FirstNode);
+		}
+		else
+		{
+			result->children[NEXT] = buildTree(FirstNode);
+		}
+		
+		
+	}
+	else if (firstToken->type == VAR)
+	{
+
+		result->children[EXPRESSION] = buildASTVariables(FirstNode);
+
+
+		result->children[NEXT] = buildTree(FirstNode);
+
+
+
 	}
 	return result;
 }

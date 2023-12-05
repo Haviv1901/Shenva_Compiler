@@ -1,1 +1,2 @@
-hadpasa( 5 / 5)
+int a
+a = 5

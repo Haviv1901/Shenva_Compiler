@@ -2,6 +2,7 @@
 #include "llist.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 
 #ifndef LOGMANAGER_H
@@ -22,7 +23,7 @@ llist* extractToken(FILE* file)
 
 	while ((c = fgetc(file)) != EOF)
 	{
-		if (c == 10) // if newline
+		if (c == NEW_LINE_CHARACTER) // if newline
 		{
 			continue;
 		}
@@ -47,7 +48,7 @@ llist* extractToken(FILE* file)
 			numValue += c;
 			while(c = fgetc(file))
 			{
-				if(c == 10)
+				if(c == NEW_LINE_CHARACTER)
 				{
 					break;
 				}
@@ -109,6 +110,33 @@ llist* extractToken(FILE* file)
 			token->type = ENDL;
 			token->value = NULL;
 		}
+		else if(c == TOKEN_INT)
+		{
+			token->type = TOKEN_INT;
+			token->value = NULL;
+		}
+		else if (c == ASSIGN)
+		{
+			token->type = ASSIGN;
+			token->value = NULL;
+		}
+		else if (c == VAR)
+		{
+			token->type = VAR;
+			c = fgetc(file); // skip the space
+			char* id = calloc(MAX_VARIABLE_SIZE, sizeof(char));
+			while (c = fgetc(file)) // get the identifier
+			{
+				if (c == NEW_LINE_CHARACTER)
+				{
+					break;
+				}
+
+				// add c to id
+				strncat(id, &c, 1);
+			}
+			token->value = id;
+		}
 		else
 		{
 			token->type = ERROR;
@@ -164,10 +192,32 @@ void printToken(Token* token)
 	}
 	else if (token->type == ENDL)
 	{
-		printf("endl");
+		printf("endl\n");
+	}
+	else if (token->type == TOKEN_INT)
+	{
+		printf("int");
+	}
+	else if (token->type == ASSIGN)
+	{
+		printf("=");
+	}
+	else if (token->type == VAR)
+	{
+		printf("%s", (char*)(token->value));
+	}
+	else if (token->type == ERROR)
+	{
+		printf("ERROR");
+	}
+	else if (token->type == MOD)
+	{
+		printf("%%");
 	}
 	else
 	{
 		printf("ERROR");
 	}
 }
+
+

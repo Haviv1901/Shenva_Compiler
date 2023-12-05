@@ -37,12 +37,17 @@ void token_llist_free(llist* list)
 {
     struct node* curr = *list;
     struct node* next;
-
+    Token* tok = NULL; 
     while (curr != NULL)
     {
+        tok = curr->data;
         if (((Token*)(curr->data))->type == NUM)
         {
             free((int*)(((Token*)(curr->data))->value));
+        }
+        if ((((Token*)(curr->data))->type == VAR))
+        {
+            free((char*)(((Token*)(curr->data))->value));
         }
         free(curr->data);
         next = curr->next;

@@ -5,12 +5,15 @@
  * https://gist.github.com/meylingtaing/11018042
  *
  */
-#include "TokenGetter.h"
+#pragma once
 
+#ifndef LLIST_H
+#define LLIST_H
+#include "TokenGetter.h"
 struct node {
-    void* data;
+    void* data; // TODO: check if possible to change to token
     struct node* next;
-};
+}typedef node;
 
 typedef struct node* llist;
 
@@ -43,3 +46,5 @@ void llist_print_reverse(llist* list, void (*print)(void*));
 void llist_append(llist* list, void* data);
 
 void token_llist_free(llist* list);
+
+#endif

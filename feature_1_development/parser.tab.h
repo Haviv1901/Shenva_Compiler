@@ -49,7 +49,15 @@
      RPAREN = 265,
      ERROR = 266,
      PRINT = 267,
-     ENDL = 268
+     ENDL = 268,
+     ASSIGN = 269,
+     INT = 270,
+     VAR = 271,
+     ADDEQ = 272,
+     SUBEQ = 273,
+     MULEQ = 274,
+     DIVEQ = 275,
+     MODEQ = 276
    };
 #endif
 
@@ -68,7 +76,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 72 "parser.tab.h"
+#line 80 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

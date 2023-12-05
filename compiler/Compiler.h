@@ -23,7 +23,9 @@ typedef struct node* llist;
 #include "masmAndLink.h"
 #endif
 
-
+#ifndef VARIABLE_MANAGER_H
+#include "VariableManager.h"
+#endif
 
 /* main function, compile a txt file into a .exe file */
 void Compile(char* inputFileName, char* outputFileName);
@@ -33,4 +35,9 @@ int activateLexer(char* inputFileName);
 
 /* extract tokens from lexer result */
 llist* extractTokensFromLexResult(char* fileName);
+
+/* creates a variable list from token list */
+VariableList* createVariableList(llist* tokenList);
+
+
 

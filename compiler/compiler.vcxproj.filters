@@ -51,6 +51,12 @@
     <ClCompile Include="masmAndLink.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VariableManager.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ASTdeclerations.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TokenGetter.h">
@@ -84,6 +90,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="masmAndLink.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ASTdeclerations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

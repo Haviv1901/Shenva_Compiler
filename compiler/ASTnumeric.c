@@ -83,7 +83,7 @@ ASTNode* parseFirst(struct node** curr)
 		}
 		else
 		{
-			// It's a number.
+			// It's a number or var
 			ASTNode* node = createNewASTnode((Token*)(*curr)->data);
 			(*curr) = (*curr)->next;
 			return node;

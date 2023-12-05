@@ -1,1 +1,2 @@
-print(-10 % 21)
+mispar num shave 5
+hadpasa(num)
