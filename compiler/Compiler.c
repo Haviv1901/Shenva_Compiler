@@ -28,6 +28,8 @@ void Compile(char* inputFileName, char* outputFileName)
 		return;
 	}
 
+
+
 	
 	ASTNode* tree = buildTree(tokenList); // build AST
 
@@ -38,7 +40,6 @@ void Compile(char* inputFileName, char* outputFileName)
 
 	token_llist_free(tokenList);
 	deleteVariableList(varList);
-
 
 
 }
