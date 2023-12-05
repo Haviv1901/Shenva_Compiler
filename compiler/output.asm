@@ -38,9 +38,10 @@ main:
     push ebp
     mov ebp, esp
 
+push 0
 push 5
 pop eax
-push eax
+mov [ebp - 4], eax
 push [ebp - 4]
 pop eax
 push eax

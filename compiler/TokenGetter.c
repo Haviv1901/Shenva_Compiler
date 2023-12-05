@@ -11,6 +11,62 @@
 
 
 
+int extractNumber(char charFromfile, FILE* file)
+{
+	int numValue = 0;
+
+	bool isNegative = false;
+
+	charFromfile = fgetc(file); // skip the space
+	charFromfile = fgetc(file);// get the next number from the file
+	if (charFromfile == '-')
+	{
+		isNegative = true;
+		charFromfile = fgetc(file);
+	}
+	charFromfile -= '0';
+
+
+	numValue += charFromfile;
+	while (charFromfile = fgetc(file))
+	{
+		if (charFromfile == NEW_LINE_CHARACTER)
+		{
+			break;
+		}
+
+		numValue *= 10;
+		numValue += charFromfile - '0';
+	}
+
+	if (isNegative)
+	{
+		numValue *= -1;
+	}
+
+
+	return numValue;
+}
+
+
+char* extractIdentifier(char charFromfile, FILE* file)
+{
+	charFromfile = fgetc(file); // skip the space
+	char* identifier = calloc(MAX_VARIABLE_SIZE, sizeof(char));
+	while (charFromfile = fgetc(file)) // get the identifier
+	{
+		if (charFromfile == NEW_LINE_CHARACTER)
+		{
+			break;
+		}
+
+		// add c to id
+		strncat(identifier, &charFromfile, 1);
+	}
+
+	return identifier;
+}
+
 /*
  * extracting tokens from a file.
  * file: FILE*, an opened file
@@ -19,123 +75,92 @@
 llist* extractToken(FILE* file)
 {
 	llist* tokenList = llist_create(NULL);
-	char c;
+	char charFromfile;
 
-	while ((c = fgetc(file)) != EOF)
+	while ((charFromfile = fgetc(file)) != EOF)
 	{
-		if (c == NEW_LINE_CHARACTER) // if newline
+		if (charFromfile == NEW_LINE_CHARACTER) // if newline
 		{
 			continue;
 		}
 
 		Token* token = (Token*)malloc(sizeof(Token));
-		if( c == NUM)
+		if( charFromfile == NUM)
 		{
-			int numValue = 0;
 			token->type = NUM;
-			bool isNegative = false;
-
-			c = fgetc(file); // skip the space
-			c = fgetc(file);// get the next number from the file
-			if (c == '-')
-			{
-				isNegative = true;
-				c = fgetc(file);
-			}
-			c -= '0';
-
-
-			numValue += c;
-			while(c = fgetc(file))
-			{
-				if(c == NEW_LINE_CHARACTER)
-				{
-					break;
-				}
-
-				numValue *= 10;
-				numValue += c - '0';
-			}
-
-			if(isNegative)
-			{
-				numValue *= -1;
-			}
-
 			token->value = (int*)malloc(sizeof(int));
-			*((int*)(token->value)) = numValue;
+			*((int*)(token->value)) = extractNumber(charFromfile, file);
 		}
-		else if (c == ADD)
+		else if (charFromfile == ADD)
 		{
 			token->type = ADD;
 			token->value = NULL;
 		}
-		else if (c == SUB)
+		else if (charFromfile == SUB)
 		{
 			token->type = SUB;
 			token->value = NULL;
 		}
-		else if (c == MUL)
+		else if (charFromfile == MUL)
 		{
 			token->type = MUL;
 			token->value = NULL;
 		}
-		else if (c == DIV)
+		else if (charFromfile == DIV)
 		{
 			token->type = DIV;
 			token->value = NULL;
 		}
-		else if (c == MOD)
+		else if (charFromfile == MOD)
 		{
 			token->type = MOD;
 			token->value = NULL;
 		}
-		else if (c == LPARN)
+		else if (charFromfile == LPARN)
 		{
 			token->type = LPARN;
 			token->value = NULL;
 		}
-		else if (c == RPARN)
+		else if (charFromfile == RPARN)
 		{
 			token->type = RPARN;
 			token->value = NULL;
 		}
-		else if (c == PRINT)
+		else if (charFromfile == PRINT)
 		{
 			token->type = PRINT;
 			token->value = NULL;
 		}
-		else if (c == ENDL)
+		else if (charFromfile == ENDL)
 		{
 			token->type = ENDL;
 			token->value = NULL;
 		}
-		else if(c == TOKEN_INT)
+		else if(charFromfile == TOKEN_INT)
 		{
 			token->type = TOKEN_INT;
 			token->value = NULL;
 		}
-		else if (c == ASSIGN)
+		else if (charFromfile == ASSIGN)
 		{
 			token->type = ASSIGN;
 			token->value = NULL;
 		}
-		else if (c == VAR)
+		else if (charFromfile == VAR)
 		{
 			token->type = VAR;
-			c = fgetc(file); // skip the space
-			char* id = calloc(MAX_VARIABLE_SIZE, sizeof(char));
-			while (c = fgetc(file)) // get the identifier
-			{
-				if (c == NEW_LINE_CHARACTER)
-				{
-					break;
-				}
 
-				// add c to id
-				strncat(id, &c, 1);
-			}
-			token->value = id;
+			token->value = extractIdentifier;
+		}
+		else if (charFromfile == TOKEN_CHAR)
+		{
+			token->type = ENDL;
+			token->value = NULL;
+		}
+		else if (charFromfile == LETTER)
+		{
+			token->type = ENDL;
+			token->value = NULL;
 		}
 		else
 		{
