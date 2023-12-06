@@ -99,9 +99,4 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="output.tok">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
 </Project>

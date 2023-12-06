@@ -22,13 +22,13 @@ void Compile(char* inputFileName, char* outputFileName)
 	llist_print(tokenList, tokenPrint); // print for debugging
 	VariableList* varList = createVariableList(tokenList);
 
-	if(isVars(tokenList) && varList == NULL)
+	if(isVars(tokenList) && varList == NULL) // checking if there is any undefined variable error.
 	{
 		token_llist_free(tokenList);
 		return;
 	}
 
-	
+
 	ASTNode* tree = buildTree(tokenList); // build AST
 
 	convertASTToASM(tree, outputFileName, varList); // convert AST to ASM code.
@@ -38,7 +38,6 @@ void Compile(char* inputFileName, char* outputFileName)
 
 	token_llist_free(tokenList);
 	deleteVariableList(varList);
-
 
 
 }

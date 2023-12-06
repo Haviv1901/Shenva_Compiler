@@ -40,11 +40,7 @@ void deleteVariableList(VariableList* varList) // deletes allocated memory for t
 		return;
 	}
 
-	if (varList->var != NULL) // if variable have not already been deleted.
-	{
-		free(varList->var);
-	}
-
+	free(varList->var); // its ok to free(null)
 	deleteVariableList(varList->next); // cal on next node
 	free(varList); // free current node
 }
@@ -127,7 +123,36 @@ Variable* getVariable(VariableList* varList, char* identifier)
 }
 
 
+bool callIsVariablexist(VariableList* varList, char* identifier)
+{
+	if (isVariableExist(varList, identifier)) // checking if id already exists
+	{
+		printf("Semantic error: variable %s is already defined\n", identifier);
+		deleteVariableList(varList);
+		return true;
+	}
+	return false;
+}
 
+enum VarTypes getVarByTokenType(enum TokenTypes currentToken)
+{
+	if (currentToken == TOKEN_INT)
+	{
+		return VAR_INT;
+	}
+	else if (currentToken == TOKEN_CHAR)
+	{
+		return VAR_CHAR;
+	}
+	else if (currentToken == TOKEN_FLOAT)
+	{
+		return VAR_FLOLAT;
+	}
+	else if (currentToken == TOKEN_STRING)
+	{
+		return VAR_STRING;
+	}
+}
 /*
 createVariableListFromToken: this function will produce the var list from the tokens
 input; the token list. 
@@ -144,24 +169,20 @@ VariableList* createVariableListFromToken(llist* tokenList)
 
 	struct node* curr = *tokenList;
 	char* identifier = NULL;
-	while (curr != NULL)// going through the token list
+	while (curr != NULL) // going through the token list
 	{
 		enum TokenTypes currentToken = ((Token*)(curr->data))->type;
-		if (currentToken == TOKEN_INT) // if its an int token
+		if (currentToken == TOKEN_INT || currentToken == TOKEN_CHAR) // if its an int token
 		{
 			curr = curr->next;
 			identifier = (char*)(((Token*)(curr->data))->value);//getting identifier
-			if (isVariableExist(varList, identifier)) // checking if id already exists
+			if(callIsVariablexist(varList, identifier))
 			{
-				printf("Semantic error: variable %s is already defined\n", identifier);
-				deleteVariableList(varList);
 				return NULL;
 			}
-			// identifier has the allocated memory from the token list wich is goint to be deallocated soon -
-			// so we are allocating new memory for the id.
-			createNewVariable(identifier, VAR_INT, &varList);//adding var
+			createNewVariable(identifier, getVarByTokenType(currentToken), &varList);//adding var
 		}
-		else if (currentToken == VAR)//if its a variable
+		else if (currentToken == TOKEN_VAR)//if its a variable
 		{
 			identifier = (char*)(((Token*)(curr->data))->value);
 			if (!isVariableExist(varList, identifier)) // checking if variable has been declared before
@@ -170,6 +191,12 @@ VariableList* createVariableListFromToken(llist* tokenList)
 				deleteVariableList(varList);
 				return NULL;
 			}
+		}
+		else if (currentToken == TOKEN_ERROR)
+		{
+			printf("Error occurred.\n");
+			deleteVariableList(varList);
+			return NULL;
 		}
 		curr = curr->next;
 	}
@@ -191,7 +218,7 @@ bool isVars(llist* tokenList) // what for ?
 	while (curr != NULL)
 	{
 		type = ((Token*)(curr->data))->type;
-		if (type == VAR)// checking for a decleration
+		if (type == TOKEN_VAR)// checking for a decleration
 		{
 			return true;
 		}

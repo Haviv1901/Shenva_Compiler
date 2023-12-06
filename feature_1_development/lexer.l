@@ -20,8 +20,10 @@ void set_output_file(FILE* file) {
 
 
 %%
-"hadpasa" { fprintf(outputFile, "8\n"); return PRINT;}
-"print"   { fprintf(outputFile, "8\n"); return PRINT;}
+"hadpasaShelMispar" { fprintf(outputFile, "8\n"); return PRINTINT;}
+"printInt"   { fprintf(outputFile, "8\n"); return PRINTINT;}
+"hadpasaShelOt" { fprintf(outputFile, "h\n"); return PRINTCHAR;}
+"printChar"   { fprintf(outputFile, "h\n"); return PRINTCHAR;}
 "veod"    { fprintf(outputFile, "2\n"); return ADD;}
 "+"       { fprintf(outputFile, "2\n"); return ADD;}
 "pahot"   { fprintf(outputFile, "3\n"); return SUB;}
@@ -48,7 +50,10 @@ void set_output_file(FILE* file) {
 "shave"	  { fprintf(outputFile, "=\n"); return ASSIGN;}
 "int"	  { fprintf(outputFile, "i\n"); return INT;}
 "mispar"	  { fprintf(outputFile, "i\n"); return INT;}
+"char"	  { fprintf(outputFile, "c\n"); return CHAR;}
+"ot"	  { fprintf(outputFile, "c\n"); return CHAR;}
 [a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); strcpy(lastIdentifier, yytext); return VAR; }
+'([^\\'\n"\r\b\t\f]|\\[\\'n"tbrf])'   {fprintf(outputFile, "l %s\n", yytext); return LETTER; }
 [-]?[0-9]+    { fprintf(outputFile, "1 %s\n", yytext); return NUM;}
 [ \t]     ; // Ignore whitespace and newline characters
 [\n]      { fprintf(outputFile, "9\n"); yylineno++; return ENDL;}

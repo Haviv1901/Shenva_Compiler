@@ -11,14 +11,14 @@ FILE* errorFile;
     int num;
     char *str;  // Add a string field
 }
-%token NUM
+%token NUM LETTER
 %token ADD SUB MUL DIV MOD
 %token LPAREN RPAREN
 %token <str> ERROR
-%token PRINT
+%token PRINTINT PRINTCHAR
 %token ENDL
 %token ASSIGN
-%token INT
+%token INT CHAR
 %token VAR
 %token ADDEQ SUBEQ MULEQ DIVEQ MODEQ
 %left ADD SUB
@@ -34,7 +34,8 @@ statements : statement
            | statements statement
            ;
 
-statement : PRINT LPAREN expression RPAREN ENDL { /* Handle print statement */ }
+statement : PRINTINT LPAREN expression RPAREN ENDL { /* Handle print statement */ }
+		  |  PRINTCHAR LPAREN expression RPAREN ENDL { /* Handle print statement */ }
 		  | expression ENDL
           | declaration ENDL
           | assignment ENDL
@@ -44,6 +45,8 @@ statement : PRINT LPAREN expression RPAREN ENDL { /* Handle print statement */ }
 
 declaration : INT VAR
 			| INT VAR ASSIGN expression 
+			| CHAR VAR
+			| CHAR VAR ASSIGN expression
             ;
 
 assignment : VAR ASSIGN expression
@@ -56,6 +59,7 @@ assignment : VAR ASSIGN expression
 
 expression : NUM
 		   | VAR
+		   | LETTER
            | expression ADD expression { /* Handle addition here */ }
            | expression SUB expression { /* Handle subtraction here */ }
            | expression MUL expression { /* Handle multiplication here */ }
@@ -115,6 +119,16 @@ int yyerror(char *msg)
 		if (strncmp(msg + i, "ASSIGN", 6) == 0)
 		{
 			fprintf(errorFile, "\"=\"");
+			i += 5;
+		}
+		else if (strncmp(msg + i, "CHAR", 4) == 0)
+		{
+			fprintf(errorFile, "char");
+			i += 3;
+		}
+		else if (strncmp(msg + i, "LETTER", 6) == 0)
+		{
+			fprintf(errorFile, "letter");
 			i += 5;
 		}
 		else if (strncmp(msg + i, "ADDEQ", 5) == 0)
@@ -187,10 +201,15 @@ int yyerror(char *msg)
 			fprintf(errorFile, "int");
 			i += 2;
 		}
-		else if (strncmp(msg + i, "PRINT", 5) == 0)
+		else if (strncmp(msg + i, "PRINTINT", 8) == 0)
 		{
-			fprintf(errorFile, "print");
-			i += 4;
+			fprintf(errorFile, "printInt");
+			i += 7;
+		}
+		else if (strncmp(msg + i, "PRINTCHAR", 8) == 0)
+		{
+			fprintf(errorFile, "printChar");
+			i += 7;
 		}
 		else if (strncmp(msg + i, "ENDL", 4) == 0)
 		{

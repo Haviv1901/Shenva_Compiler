@@ -91,21 +91,27 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 	}
 	
 
-	if (currentToken->type == NUM  || currentToken->type == VAR || currentToken->type == ADD || currentToken->type == SUB || currentToken->type == MUL || currentToken->type == DIV || currentToken->type == MOD)// checking for numeric branch
+	if (currentToken->type == TOKEN_NUM  ||
+		currentToken->type == TOKEN_VAR ||
+		currentToken->type == TOKEN_ADD ||
+		currentToken->type == TOKEN_SUB ||
+		currentToken->type == TOKEN_MUL ||
+		currentToken->type == TOKEN_DIV ||
+		currentToken->type == TOKEN_MODULO ||
+		currentToken->type == TOKEN_LETTER)// checking for numeric branch
 	{
 		writeNumericBranch(tree, asmFile, varList);
 		fprintf(asmFile, "pop eax\n");
 	}
-	else if (currentToken->type == PRINT)// checking for function branch
+	else if (currentToken->type == TOKEN_PRINT_INT || currentToken->type == TOKEN_PRINT_CHAR)// checking for function branch
 	{
 		writeFunctionBranch(tree, asmFile, varList);
 	}
-	else if (currentToken->type == TOKEN_INT)
+	else if (currentToken->type == TOKEN_INT || currentToken->type == TOKEN_CHAR)
 	{
 		writeDeclerationBranch(tree, asmFile, varList);
-
 	}
-	else if (currentToken->type == ASSIGN)
+	else if (currentToken->type == TOKEN_ASSIGN)
 	{
 		writeAssignBranch(tree, asmFile, varList);
 	}
@@ -125,9 +131,15 @@ output: non
 */
 void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
-
-		writeBranch(branch->children[1], asmFile, varList);
+	writeBranch(branch->children[1], asmFile, varList);
+	if(getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_CHAR)
+	{
+		fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+	}
+	else if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_INT)
+	{
 		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+	}
 
 }
 
@@ -150,6 +162,17 @@ void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varLis
 			fprintf(asmFile, "push 0\n");
 		}
 	}
+	else if (branch->token->type == TOKEN_CHAR)
+	{
+
+		fprintf(asmFile, "sub esp, 1\n");
+
+		if (branch->children[1] != NULL)
+		{
+			writeBranch(branch->children[1], asmFile, varList);
+			fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+		}
+	}
 
 }
 
@@ -160,12 +183,12 @@ output: non
 */
 void writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
-	if(branch->token->type == NUM)
+	if(branch->token->type == TOKEN_NUM || branch->token->type == TOKEN_LETTER)
 	{
-		fprintf(asmFile, "push %d\n", *(int*)branch->token->value);
+		fprintf(asmFile, "push %d\n", *(char*)branch->token->value);
 		return;
 	}
-	else if (branch->token->type == VAR)
+	if (branch->token->type == TOKEN_VAR)
 	{
 		fprintf(asmFile, "push [ebp - %d]\n", getVariable(varList, (char*)(branch->token->value))->placeInMemory);// getting the stack position of this specific var from the var list
 		return;
@@ -197,23 +220,23 @@ output: non
 */
 void writeNumericInstruction(Token* operand, FILE* asmFile)
 {
-	if (operand->type == ADD)//checking for the correct operand, and preforming it on eax
+	if (operand->type == TOKEN_ADD)//checking for the correct operand, and preforming it on eax
 	{
 		fprintf(asmFile, "add eax, ebx\n");
 	}
-	else if (operand->type == SUB)
+	else if (operand->type == TOKEN_SUB)
 	{
 		fprintf(asmFile, "sub eax, ebx\n");
 	}
-	else if (operand->type == MUL)
+	else if (operand->type == TOKEN_MUL)
 	{
 		fprintf(asmFile, "cdq\nimul eax, ebx\n");
 	}
-	else if (operand->type == DIV)//using ebx seince idiv cannot use immidiates
+	else if (operand->type == TOKEN_DIV)//using ebx seince idiv cannot use immidiates
 	{
 		fprintf(asmFile, "cdq\nidiv ebx\n");
 	}
-	else if (operand->type == MOD)//using ebx seince idiv cannot use immidiates
+	else if (operand->type == TOKEN_MODULO)//using ebx seince idiv cannot use immidiates
 	{
 		fprintf(asmFile, "xor edx, edx\ncdq\nidiv ebx\nmov eax, edx\n");
 	}
@@ -228,19 +251,21 @@ output:non
 */
 void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
-	if (branch->token->type == PRINT)// checking for print (in the futer there will be )
+	if (branch->token->type == TOKEN_PRINT_INT)// checking for print (in the futer there will be )
 	{
 		writeBranch(branch->children[0], asmFile, varList);
 		fprintf(asmFile, "push eax\n");
 		fprintf(asmFile, "call print_number_signed\n");
 	}
+	else if (branch->token->type == TOKEN_PRINT_CHAR)
+	{
+		writeBranch(branch->children[0], asmFile, varList);
+		// write branch's result is in eax already
+		// and WriteChar works with al
+		fprintf(asmFile, "call WriteChar\n");
+	}
 	return;
 }
-
-
-
-
-
 
 
 
