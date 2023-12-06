@@ -85,55 +85,60 @@ llist* extractToken(FILE* file)
 		}
 
 		Token* token = (Token*)malloc(sizeof(Token));
-		if( charFromfile == NUM)
+		if( charFromfile == TOKEN_NUM)
 		{
-			token->type = NUM;
+			token->type = TOKEN_NUM;
 			token->value = (int*)malloc(sizeof(int));
 			*((int*)(token->value)) = extractNumber(charFromfile, file);
 		}
-		else if (charFromfile == ADD)
+		else if (charFromfile == TOKEN_ADD)
 		{
-			token->type = ADD;
+			token->type = TOKEN_ADD;
 			token->value = NULL;
 		}
-		else if (charFromfile == SUB)
+		else if (charFromfile == TOKEN_SUB)
 		{
-			token->type = SUB;
+			token->type = TOKEN_SUB;
 			token->value = NULL;
 		}
-		else if (charFromfile == MUL)
+		else if (charFromfile == TOKEN_MUL)
 		{
-			token->type = MUL;
+			token->type = TOKEN_MUL;
 			token->value = NULL;
 		}
-		else if (charFromfile == DIV)
+		else if (charFromfile == TOKEN_DIV)
 		{
-			token->type = DIV;
+			token->type = TOKEN_DIV;
 			token->value = NULL;
 		}
-		else if (charFromfile == MOD)
+		else if (charFromfile == TOKEN_MODULO)
 		{
-			token->type = MOD;
+			token->type = TOKEN_MODULO;
 			token->value = NULL;
 		}
-		else if (charFromfile == LPARN)
+		else if (charFromfile == TOKEN_LPARN)
 		{
-			token->type = LPARN;
+			token->type = TOKEN_LPARN;
 			token->value = NULL;
 		}
-		else if (charFromfile == RPARN)
+		else if (charFromfile == TOKEN_RPARN)
 		{
-			token->type = RPARN;
+			token->type = TOKEN_RPARN;
 			token->value = NULL;
 		}
-		else if (charFromfile == PRINT)
+		else if (charFromfile == TOKEN_PRINT_INT)
 		{
-			token->type = PRINT;
+			token->type = TOKEN_PRINT_INT;
 			token->value = NULL;
 		}
-		else if (charFromfile == ENDL)
+		else if (charFromfile == TOKEN_PRINT_CHAR)
 		{
-			token->type = ENDL;
+			token->type = TOKEN_PRINT_CHAR;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_ENDL)
+		{
+			token->type = TOKEN_ENDL;
 			token->value = NULL;
 		}
 		else if(charFromfile == TOKEN_INT)
@@ -141,30 +146,30 @@ llist* extractToken(FILE* file)
 			token->type = TOKEN_INT;
 			token->value = NULL;
 		}
-		else if (charFromfile == ASSIGN)
+		else if (charFromfile == TOKEN_ASSIGN)
 		{
-			token->type = ASSIGN;
+			token->type = TOKEN_ASSIGN;
 			token->value = NULL;
 		}
-		else if (charFromfile == VAR)
+		else if (charFromfile == TOKEN_VAR)
 		{
-			token->type = VAR;
+			token->type = TOKEN_VAR;
 
-			token->value = extractIdentifier;
+			token->value = extractIdentifier(charFromfile, file);
 		}
 		else if (charFromfile == TOKEN_CHAR)
 		{
-			token->type = ENDL;
+			token->type = TOKEN_ENDL;
 			token->value = NULL;
 		}
-		else if (charFromfile == LETTER)
+		else if (charFromfile == TOKEN_CHARACTER)
 		{
-			token->type = ENDL;
+			token->type = TOKEN_ENDL;
 			token->value = NULL;
 		}
 		else
 		{
-			token->type = ERROR;
+			token->type = TOKEN_ERROR;
 			token->value = NULL;
 		}
 
@@ -183,39 +188,43 @@ llist* extractToken(FILE* file)
  */
 void printToken(Token* token)
 {
-	if (token->type == NUM)
+	if (token->type == TOKEN_NUM)
 	{
 		printf("%d", *((int*)(token->value)));
 	}
-	else if (token->type == ADD)
+	else if (token->type == TOKEN_ADD)
 	{
 		printf("+");
 	}
-	else if (token->type == SUB)
+	else if (token->type == TOKEN_SUB)
 	{
 		printf("-");
 	}
-	else if (token->type == MUL)
+	else if (token->type == TOKEN_MUL)
 	{
 		printf("*");
 	}
-	else if (token->type == DIV)
+	else if (token->type == TOKEN_DIV)
 	{
 		printf("/");
 	}
-	else if (token->type == LPARN)
+	else if (token->type == TOKEN_LPARN)
 	{
 		printf("(");
 	}
-	else if (token->type == RPARN)
+	else if (token->type == TOKEN_RPARN)
 	{
 		printf(")");
 	}
-	else if (token->type == PRINT)
+	else if (token->type == TOKEN_PRINT_INT)
 	{
-		printf("print");
+		printf("printInt");
 	}
-	else if (token->type == ENDL)
+	else if (token->type == TOKEN_PRINT_CHAR)
+	{
+		printf("printChar");
+	}
+	else if (token->type == TOKEN_ENDL)
 	{
 		printf("endl\n");
 	}
@@ -223,25 +232,25 @@ void printToken(Token* token)
 	{
 		printf("int");
 	}
-	else if (token->type == ASSIGN)
+	else if (token->type == TOKEN_ASSIGN)
 	{
 		printf("=");
 	}
-	else if (token->type == VAR)
+	else if (token->type == TOKEN_VAR)
 	{
 		printf("%s", (char*)(token->value));
 	}
-	else if (token->type == ERROR)
+	else if (token->type == TOKEN_ERROR)
 	{
-		printf("ERROR");
+		printf("TOKEN_ERROR");
 	}
-	else if (token->type == MOD)
+	else if (token->type == TOKEN_MODULO)
 	{
 		printf("%%");
 	}
 	else
 	{
-		printf("ERROR");
+		printf("TOKEN_ERROR");
 	}
 }
 

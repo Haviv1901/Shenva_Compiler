@@ -1,2 +1,2 @@
-
-
+int num = 5+5
+printInt(num)

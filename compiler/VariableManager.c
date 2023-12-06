@@ -161,7 +161,7 @@ VariableList* createVariableListFromToken(llist* tokenList)
 			// so we are allocating new memory for the id.
 			createNewVariable(identifier, VAR_INT, &varList);//adding var
 		}
-		else if (currentToken == VAR)//if its a variable
+		else if (currentToken == TOKEN_VAR)//if its a variable
 		{
 			identifier = (char*)(((Token*)(curr->data))->value);
 			if (!isVariableExist(varList, identifier)) // checking if variable has been declared before
@@ -191,7 +191,7 @@ bool isVars(llist* tokenList) // what for ?
 	while (curr != NULL)
 	{
 		type = ((Token*)(curr->data))->type;
-		if (type == VAR)// checking for a decleration
+		if (type == TOKEN_VAR)// checking for a decleration
 		{
 			return true;
 		}
