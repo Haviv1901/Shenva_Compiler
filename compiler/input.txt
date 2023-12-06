@@ -1,2 +1,24 @@
-char ch = 'a'
-hadpasaShelOt(ch)
+char ch1 = 'h'
+char ch2 = 'e'
+char ch3 = 'l'
+char ch4 = 'o'
+char ch5 = ' '
+char ch6 = 'w'
+char ch7 = 'r'
+char ch8 = 'd'
+char ch9 = '!'
+
+hadpasaShelOt(ch1)
+hadpasaShelOt(ch2)
+hadpasaShelOt(ch3)
+hadpasaShelOt(ch3)
+hadpasaShelOt(ch4)
+hadpasaShelOt(ch5)
+hadpasaShelOt(ch6)
+hadpasaShelOt(ch4)
+hadpasaShelOt(ch7)
+hadpasaShelOt(ch3)
+hadpasaShelOt(ch8)
+hadpasaShelOt(ch9)
+
+

@@ -95,6 +95,10 @@ void* extractLetter(char charFromfile, FILE* file)
 		{
 			*character = '\r';
 		}
+		else if (charFromfile == 't')
+		{
+			*character = '\t';
+		}
 		else if (charFromfile == '\\')
 		{
 			*character = '\\';
