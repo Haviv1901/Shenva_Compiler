@@ -90,6 +90,7 @@ int isTwoChildNode(enum TokenTypes token)
 		token == TOKEN_DIV ||
 		token == TOKEN_MODULO ||
 		token == TOKEN_INT ||
+		token == TOKEN_VAR ||
 		token == TOKEN_ASSIGN)
 	{
 		return 1;

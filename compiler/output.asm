@@ -1,5 +1,4 @@
 
-
 include \masm32\include\irvine\Irvine32.inc
 includelib \masm32\include\irvine\Irvine32.lib
 includelib \masm32\lib\kernel32.lib
@@ -39,15 +38,18 @@ main:
     push ebp
     mov ebp, esp
 
-sub esp, 1
-push 97
+push 5
+push 5
+pop ebx
 pop eax
-mov byte ptr [ebp - 1], al
-push 53
+add eax, ebx
+push eax
 pop eax
-mov byte ptr [ebp - 1], al
-mov al, byte ptr [ebp - 1]
-call WriteChar
+push eax
+push [ebp - 4]
+pop eax
+push eax
+call print_number_signed
 
 mov esp, ebp
 pop ebp

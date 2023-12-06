@@ -1,19 +1,10 @@
-i
-v num
 c
 v ch
 =
 l 'a'
 9
-v ch
-=
-1 5
-2
-1 5
-9
-8
+h
 6
-v num
+v ch
 7
-l '5'
 9

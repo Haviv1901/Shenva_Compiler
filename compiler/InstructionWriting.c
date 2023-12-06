@@ -91,14 +91,14 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 	}
 	
 
-	if (currentToken->type == NUM  ||
-		currentToken->type == VAR ||
-		currentToken->type == ADD ||
-		currentToken->type == SUB ||
-		currentToken->type == MUL ||
-		currentToken->type == DIV ||
-		currentToken->type == MOD ||
-		currentToken->type == LETTER)// checking for numeric branch
+	if (currentToken->type == TOKEN_NUM  ||
+		currentToken->type == TOKEN_VAR ||
+		currentToken->type == TOKEN_ADD ||
+		currentToken->type == TOKEN_SUB ||
+		currentToken->type == TOKEN_MUL ||
+		currentToken->type == TOKEN_DIV ||
+		currentToken->type == TOKEN_MODULO ||
+		currentToken->type == TOKEN_LETTER)// checking for numeric branch
 	{
 		writeNumericBranch(tree, asmFile, varList);
 		fprintf(asmFile, "pop eax\n");
@@ -183,13 +183,12 @@ output: non
 */
 void writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
-	if(branch->token->type == NUM || branch->token->type == LETTER)
+	if(branch->token->type == TOKEN_NUM || branch->token->type == TOKEN_LETTER)
 	{
 		fprintf(asmFile, "push %d\n", *(char*)branch->token->value);
 		return;
 	}
-	else if (branch->token->type == TOKEN_VAR)
-	if (branch->token->type == VAR)
+	if (branch->token->type == TOKEN_VAR)
 	{
 		fprintf(asmFile, "push [ebp - %d]\n", getVariable(varList, (char*)(branch->token->value))->placeInMemory);// getting the stack position of this specific var from the var list
 		return;
@@ -257,6 +256,13 @@ void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 		writeBranch(branch->children[0], asmFile, varList);
 		fprintf(asmFile, "push eax\n");
 		fprintf(asmFile, "call print_number_signed\n");
+	}
+	else if (branch->token->type == TOKEN_PRINT_CHAR)
+	{
+		writeBranch(branch->children[0], asmFile, varList);
+		// write branch's result is in eax already
+		// and WriteChar works with al
+		fprintf(asmFile, "call WriteChar\n");
 	}
 	return;
 }

@@ -49,7 +49,7 @@ void token_llist_free(llist* list)
         {
             free((char*)(((Token*)(curr->data))->value));
         }
-        if ((((Token*)(curr->data))->type == LETTER))
+        if ((((Token*)(curr->data))->type == TOKEN_LETTER))
         {
             free((char*)(((Token*)(curr->data))->value));
         }

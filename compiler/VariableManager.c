@@ -148,17 +148,9 @@ enum VarTypes getVarByTokenType(enum TokenTypes currentToken)
 	{
 		return VAR_FLOLAT;
 	}
-	else if (currentToken == TOKEN_DOUBLE)
-	{
-		return VAR_DOUBLE;
-	}
 	else if (currentToken == TOKEN_STRING)
 	{
 		return VAR_STRING;
-	}
-	else if (currentToken == TOKEN_BOOL)
-	{
-		return VAR_BOOL;
 	}
 }
 /*
@@ -199,6 +191,12 @@ VariableList* createVariableListFromToken(llist* tokenList)
 				deleteVariableList(varList);
 				return NULL;
 			}
+		}
+		else if (currentToken == TOKEN_ERROR)
+		{
+			printf("Error occurred.\n");
+			deleteVariableList(varList);
+			return NULL;
 		}
 		curr = curr->next;
 	}

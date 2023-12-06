@@ -215,16 +215,16 @@ llist* extractToken(FILE* file)
 		else if (charFromfile == TOKEN_VAR)
 		{
 			token->type = TOKEN_VAR;
-			token->value = extractIdentifier(charFromfile, file)(charFromfile, file);;
+			token->value = extractIdentifier(charFromfile, file);
 		}
-		else if (charFromfile == TOKEN_CHAR)
+		else if (charFromfile == TOKEN_CHAR) // char variable type
 		{
 			token->type = TOKEN_CHAR;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_CHARACTER)
+		else if (charFromfile == TOKEN_LETTER) // single character. ex: 'a'
 		{
-			token->type = TOKEN_CHARACTER;
+			token->type = TOKEN_LETTER;
 			token->value = extractLetter(charFromfile, file);
 		}
 		else
@@ -295,6 +295,14 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_ASSIGN)
 	{
 		printf("=");
+	}
+	else if (token->type == TOKEN_CHAR)
+	{
+		printf("char");
+	}
+	else if (token->type == TOKEN_LETTER)
+	{
+		printf("%c", *((char*)(token->value)));
 	}
 	else if (token->type == TOKEN_VAR)
 	{
