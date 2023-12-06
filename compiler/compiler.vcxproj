@@ -169,9 +169,6 @@
     <ClInclude Include="TokenGetter.h" />
     <ClInclude Include="VariableManager.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="output.tok" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

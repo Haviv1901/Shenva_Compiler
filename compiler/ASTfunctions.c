@@ -16,7 +16,7 @@ ASTNode* buildASTFunctions(struct node** curr)
 	ASTNode* result = createNewASTnode(currentToken); // PRINT token node
 
 
-	if(currentToken->type == PRINT)
+	if(currentToken->type == TOKEN_PRINT_INT || currentToken->type == TOKEN_PRINT_CHAR)
 	{
 		result->children[ONLY_CHILD] = buildASTFunctions_print(&currentNode);
 	}
@@ -30,6 +30,7 @@ ASTNode* buildASTFunctions_print(struct node** curr)
 	struct node* currentNode = (*curr)->next->next; // current node = first token inside the parenthesis
 	Token* currentToken = currentNode->data;
 
+	// TODO: this will not work with something that is not char / int.
 	return buildASTNumeric(&currentNode); // currently only possible to have numeric expression inside the print function
 
 }

@@ -15,7 +15,7 @@ FILE* errorFile;
 %token ADD SUB MUL DIV MOD
 %token LPAREN RPAREN
 %token <str> ERROR
-%token PRINT
+%token PRINTINT PRINTCHAR
 %token ENDL
 %token ASSIGN
 %token INT CHAR
@@ -34,7 +34,8 @@ statements : statement
            | statements statement
            ;
 
-statement : PRINT LPAREN expression RPAREN ENDL { /* Handle print statement */ }
+statement : PRINTINT LPAREN expression RPAREN ENDL { /* Handle print statement */ }
+		  |  PRINTCHAR LPAREN expression RPAREN ENDL { /* Handle print statement */ }
 		  | expression ENDL
           | declaration ENDL
           | assignment ENDL
@@ -200,10 +201,15 @@ int yyerror(char *msg)
 			fprintf(errorFile, "int");
 			i += 2;
 		}
-		else if (strncmp(msg + i, "PRINT", 5) == 0)
+		else if (strncmp(msg + i, "PRINTINT", 8) == 0)
 		{
-			fprintf(errorFile, "print");
-			i += 4;
+			fprintf(errorFile, "printInt");
+			i += 7;
+		}
+		else if (strncmp(msg + i, "PRINTCHAR", 8) == 0)
+		{
+			fprintf(errorFile, "printChar");
+			i += 7;
 		}
 		else if (strncmp(msg + i, "ENDL", 4) == 0)
 		{

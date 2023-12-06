@@ -1,0 +1,1 @@
+lexicalAndSyntaxAnalysis hey.txt output.tok

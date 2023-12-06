@@ -24,7 +24,6 @@ print_number_signed PROC
 	call writeInt
 	
 	finish_print_num_signed_function:
-	call Crlf
 	popad
 	mov esp, ebp
 	pop ebp

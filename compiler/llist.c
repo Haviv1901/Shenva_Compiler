@@ -41,15 +41,15 @@ void token_llist_free(llist* list)
     while (curr != NULL)
     {
         tok = curr->data;
-        if (((Token*)(curr->data))->type == NUM)
+        if (((Token*)(curr->data))->type == TOKEN_NUM)
         {
             free((int*)(((Token*)(curr->data))->value));
         }
-        if ((((Token*)(curr->data))->type == VAR))
+        if ((((Token*)(curr->data))->type == TOKEN_VAR))
         {
             free((char*)(((Token*)(curr->data))->value));
         }
-        if ((((Token*)(curr->data))->type == LETTER))
+        if ((((Token*)(curr->data))->type == TOKEN_LETTER))
         {
             free((char*)(((Token*)(curr->data))->value));
         }

@@ -148,17 +148,9 @@ enum VarTypes getVarByTokenType(enum TokenTypes currentToken)
 	{
 		return VAR_FLOLAT;
 	}
-	else if (currentToken == TOKEN_DOUBLE)
-	{
-		return VAR_DOUBLE;
-	}
 	else if (currentToken == TOKEN_STRING)
 	{
 		return VAR_STRING;
-	}
-	else if (currentToken == TOKEN_BOOL)
-	{
-		return VAR_BOOL;
 	}
 }
 /*
@@ -190,7 +182,7 @@ VariableList* createVariableListFromToken(llist* tokenList)
 			}
 			createNewVariable(identifier, getVarByTokenType(currentToken), &varList);//adding var
 		}
-		else if (currentToken == VAR)//if its a variable
+		else if (currentToken == TOKEN_VAR)//if its a variable
 		{
 			identifier = (char*)(((Token*)(curr->data))->value);
 			if (!isVariableExist(varList, identifier)) // checking if variable has been declared before
@@ -199,6 +191,12 @@ VariableList* createVariableListFromToken(llist* tokenList)
 				deleteVariableList(varList);
 				return NULL;
 			}
+		}
+		else if (currentToken == TOKEN_ERROR)
+		{
+			printf("Error occurred.\n");
+			deleteVariableList(varList);
+			return NULL;
 		}
 		curr = curr->next;
 	}
@@ -220,7 +218,7 @@ bool isVars(llist* tokenList) // what for ?
 	while (curr != NULL)
 	{
 		type = ((Token*)(curr->data))->type;
-		if (type == VAR)// checking for a decleration
+		if (type == TOKEN_VAR)// checking for a decleration
 		{
 			return true;
 		}
