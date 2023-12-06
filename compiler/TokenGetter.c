@@ -67,6 +67,67 @@ char* extractIdentifier(char charFromfile, FILE* file)
 	return identifier;
 }
 
+void* extractLetter(char charFromfile, FILE* file)
+{
+
+	charFromfile = fgetc(file); // skip the space
+	charFromfile = fgetc(file); // skip the first '
+	charFromfile = fgetc(file);
+	bool specialCharacter = false;
+
+	char* character = calloc(1, sizeof(char));
+
+
+	if (charFromfile == '\\')
+	{
+		specialCharacter = true;
+		charFromfile = fgetc(file);
+	}
+
+
+	if(specialCharacter)
+	{
+		if (charFromfile == 'n')
+		{
+			*character = '\n';
+		}
+		else if (charFromfile == 'r')
+		{
+			*character = '\r';
+		}
+		else if (charFromfile == '\\')
+		{
+			*character = '\\';
+		}
+		else if (charFromfile == '\'')
+		{
+			*character = '\'';
+		}
+		else if (charFromfile == '\"')
+		{
+			*character = '\"';
+		}
+		else if (charFromfile == 'b')
+		{
+			*character = '\b';
+		}
+		else if (charFromfile == 'f')
+		{
+			*character = '\f';
+		}
+		else
+		{
+			*character = charFromfile;
+		}
+	}
+	else
+	{
+		*character = charFromfile;
+	}
+
+	charFromfile = fgetc(file); // skip the last '
+	return character;
+}
 /*
  * extracting tokens from a file.
  * file: FILE*, an opened file
@@ -154,18 +215,17 @@ llist* extractToken(FILE* file)
 		else if (charFromfile == TOKEN_VAR)
 		{
 			token->type = TOKEN_VAR;
-
-			token->value = extractIdentifier(charFromfile, file);
+			token->value = extractIdentifier(charFromfile, file)(charFromfile, file);;
 		}
 		else if (charFromfile == TOKEN_CHAR)
 		{
-			token->type = TOKEN_ENDL;
+			token->type = TOKEN_CHAR;
 			token->value = NULL;
 		}
 		else if (charFromfile == TOKEN_CHARACTER)
 		{
-			token->type = TOKEN_ENDL;
-			token->value = NULL;
+			token->type = TOKEN_CHARACTER;
+			token->value = extractLetter(charFromfile, file);
 		}
 		else
 		{

@@ -1,5 +1,11 @@
 i
 v num
+c
+v ch
+=
+l 'a'
+9
+v ch
 =
 1 5
 2
@@ -9,4 +15,5 @@ v num
 6
 v num
 7
+l '5'
 9

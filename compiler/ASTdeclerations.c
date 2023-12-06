@@ -15,7 +15,7 @@ ASTNode* buildASTVariables(struct node** curr)
 	Token* currentToken = (*curr)->data;
 	ASTNode* result = NULL;
 
-	if(currentToken->type == TOKEN_INT)
+	if(currentToken->type == TOKEN_INT || currentToken->type == TOKEN_CHAR)
 	{
 		result = buildASTDeclerationsInt(curr);
 	}
@@ -27,6 +27,8 @@ ASTNode* buildASTVariables(struct node** curr)
 	return result;
 }
 
+
+
 ASTNode* buildASTVariablesAssign(node** curr)
 {
 
@@ -36,9 +38,9 @@ ASTNode* buildASTVariablesAssign(node** curr)
 	ASTNode* result = createNewASTnode(currentNode->next->data); // TOKEN_ASSIGN token node
 
 	result->children[0] = createNewASTnode(currentNode->data); // ID token node
+
 	// skip current twice
 	(*curr) = (*curr)->next->next;
-
 	result->children[1] = buildASTNumeric(curr); // currentNode->next->next is the number assigned to the variable
 
 	return result;

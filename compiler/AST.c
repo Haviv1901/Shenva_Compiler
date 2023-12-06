@@ -42,7 +42,7 @@ ASTNode* createNewASTnode(Token* token)
 		result->children[0] = NULL;
 
 	}
-	else// if its a raw value, like a number, they dont have children
+	else // else:   char / int / 
 	{
 		result->children = NULL;
 	}
