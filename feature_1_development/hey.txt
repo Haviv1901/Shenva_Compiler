@@ -1,1 +1,3 @@
-hadpasa( (10 * 10 * 10 + 5) / 10 )
+hadpasaShelOt(5)
+printInt(2)
+printChar(2)
