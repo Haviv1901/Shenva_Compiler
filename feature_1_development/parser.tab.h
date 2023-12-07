@@ -51,16 +51,17 @@
      ERROR = 267,
      PRINTINT = 268,
      PRINTCHAR = 269,
-     ENDL = 270,
-     ASSIGN = 271,
-     INT = 272,
-     CHAR = 273,
-     VAR = 274,
-     ADDEQ = 275,
-     SUBEQ = 276,
-     MULEQ = 277,
-     DIVEQ = 278,
-     MODEQ = 279
+     COMMA = 270,
+     ENDL = 271,
+     ASSIGN = 272,
+     INT = 273,
+     CHAR = 274,
+     VAR = 275,
+     ADDEQ = 276,
+     SUBEQ = 277,
+     MULEQ = 278,
+     DIVEQ = 279,
+     MODEQ = 280
    };
 #endif
 
@@ -79,7 +80,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 83 "parser.tab.h"
+#line 84 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -1,1 +1,2 @@
-'\t'
+int a, b, c, d = 3
+printInt(,a, b, c)

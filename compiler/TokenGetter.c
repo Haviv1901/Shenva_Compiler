@@ -141,7 +141,8 @@ llist* extractToken(FILE* file)
 {
 	llist* tokenList = llist_create(NULL);
 	char charFromfile;
-
+	enum TokenTypes lastVoidType;
+	bool isPrintLine = false, isDecLine = false;
 	while ((charFromfile = fgetc(file)) != EOF)
 	{
 		if (charFromfile == NEW_LINE_CHARACTER) // if newline
@@ -194,22 +195,30 @@ llist* extractToken(FILE* file)
 		else if (charFromfile == TOKEN_PRINT_INT)
 		{
 			token->type = TOKEN_PRINT_INT;
+			lastVoidType = TOKEN_PRINT_INT;
 			token->value = NULL;
+			isPrintLine = true;
 		}
 		else if (charFromfile == TOKEN_PRINT_CHAR)
 		{
 			token->type = TOKEN_PRINT_CHAR;
+			lastVoidType = TOKEN_PRINT_CHAR;
 			token->value = NULL;
+			isPrintLine = true;
 		}
 		else if (charFromfile == TOKEN_ENDL)
 		{
 			token->type = TOKEN_ENDL;
 			token->value = NULL;
+			isPrintLine = false;
+			isDecLine = false;
 		}
 		else if(charFromfile == TOKEN_INT)
 		{
 			token->type = TOKEN_INT;
 			token->value = NULL;
+			lastVoidType = TOKEN_INT;
+			isDecLine = true;
 		}
 		else if (charFromfile == TOKEN_ASSIGN)
 		{
@@ -225,11 +234,36 @@ llist* extractToken(FILE* file)
 		{
 			token->type = TOKEN_CHAR;
 			token->value = NULL;
+			lastVoidType = TOKEN_CHAR;
+			isDecLine = true;
 		}
 		else if (charFromfile == TOKEN_LETTER) // single character. ex: 'a'
 		{
 			token->type = TOKEN_LETTER;
 			token->value = extractLetter(charFromfile, file);
+		}
+		else if (charFromfile == TOKEN_COMMA)
+		{
+			if (isPrintLine)
+			{
+				token->type = TOKEN_RPARN;
+				token->value = NULL;
+				llist_append(tokenList, token);
+				token = (Token*)malloc(sizeof(Token));
+				token->type = token->type = lastVoidType;
+				token->value = NULL;
+				llist_append(tokenList, token);
+				token = (Token*)malloc(sizeof(Token));
+				token->type = token->type = TOKEN_LPARN;
+				token->value = NULL;
+			}
+			else if (isDecLine)
+			{
+				token->type = lastVoidType;
+				token->value = NULL;
+			}
+
+
 		}
 		else
 		{

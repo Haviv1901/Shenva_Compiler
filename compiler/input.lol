@@ -1,2 +1,4 @@
-mispar num shave 5
-hadpasa(num)
+ot a = 'h', b = 'e'
+
+hadpasaShelOt(a, b, c)
+

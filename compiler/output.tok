@@ -1,108 +1,20 @@
 c
-v ch1
+v a
 =
 l 'h'
-9
-c
-v ch2
+,
+v b
 =
 l 'e'
 9
-c
-v ch3
-=
-l 'l'
-9
-c
-v ch4
-=
-l 'o'
-9
-c
-v ch5
-=
-l ' '
-9
-c
-v ch6
-=
-l 'w'
-9
-c
-v ch7
-=
-l 'r'
-9
-c
-v ch8
-=
-l 'd'
-9
-c
-v ch9
-=
-l '!'
-9
 9
 h
 6
-v ch1
+v a
+,
+v b
+,
+v c
 7
-9
-h
-6
-v ch2
-7
-9
-h
-6
-v ch3
-7
-9
-h
-6
-v ch3
-7
-9
-h
-6
-v ch4
-7
-9
-h
-6
-v ch5
-7
-9
-h
-6
-v ch6
-7
-9
-h
-6
-v ch4
-7
-9
-h
-6
-v ch7
-7
-9
-h
-6
-v ch3
-7
-9
-h
-6
-v ch8
-7
-9
-h
-6
-v ch9
-7
-9
 9
 9

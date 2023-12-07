@@ -15,7 +15,7 @@ FILE* errorFile;
 %token ADD SUB MUL DIV MOD
 %token LPAREN RPAREN
 %token <str> ERROR
-%token PRINTINT PRINTCHAR
+%token PRINTINT PRINTCHAR COMMA
 %token ENDL
 %token ASSIGN
 %token INT CHAR
@@ -34,8 +34,8 @@ statements : statement
            | statements statement
            ;
 
-statement : PRINTINT LPAREN expression RPAREN ENDL { /* Handle print statement */ }
-		  |  PRINTCHAR LPAREN expression RPAREN ENDL { /* Handle print statement */ }
+statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
+		  |  PRINTCHAR LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
 		  | expression ENDL
           | declaration ENDL
           | assignment ENDL
@@ -43,12 +43,21 @@ statement : PRINTINT LPAREN expression RPAREN ENDL { /* Handle print statement *
           | ERROR {fprintf(errorFile, "syntax error, unrecognized \"%s\" in the code (line %d)\n", $1, yylineno);}
           ;
 
-declaration : INT VAR
-			| INT VAR ASSIGN expression 
-			| CHAR VAR
-			| CHAR VAR ASSIGN expression
+declaration : INT decleration_list
+            | CHAR decleration_list
             ;
 
+decleration_list : VAR
+                 | VAR ASSIGN expression 
+                 | decleration_list COMMA VAR
+                 | decleration_list COMMA VAR ASSIGN expression
+                 ;
+
+expression_list : expression
+               | expression_list COMMA expression
+               ;
+			   
+			   
 assignment : VAR ASSIGN expression
 			| VAR ADDEQ expression
 			| VAR SUBEQ expression
@@ -225,6 +234,11 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "\")\"");
 			i += 5;
+		}
+		else if (strncmp(msg + i, "COMMA", 5) == 0)
+		{
+			fprintf(errorFile, "\",\"");
+			i += 4;
 		}
 		else if (strncmp(msg + i, "ERROR", 6) == 0)
 		{
