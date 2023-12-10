@@ -11,127 +11,6 @@
 
 
 
-int extractNumber(char charFromfile, FILE* file)
-{
-	int numValue = 0;
-
-	bool isNegative = false;
-
-	charFromfile = fgetc(file); // skip the space
-	charFromfile = fgetc(file);// get the next number from the file
-	if (charFromfile == '-')
-	{
-		isNegative = true;
-		charFromfile = fgetc(file);
-	}
-	charFromfile -= '0';
-
-
-	numValue += charFromfile;
-	while (charFromfile = fgetc(file))
-	{
-		if (charFromfile == NEW_LINE_CHARACTER)
-		{
-			break;
-		}
-
-		numValue *= 10;
-		numValue += charFromfile - '0';
-	}
-
-	if (isNegative)
-	{
-		numValue *= -1;
-	}
-
-
-	return numValue;
-}
-
-
-char* extractIdentifier(char charFromfile, FILE* file)
-{
-	charFromfile = fgetc(file); // skip the space
-	char* identifier = calloc(MAX_VARIABLE_SIZE, sizeof(char));
-	while (charFromfile = fgetc(file)) // get the identifier
-	{
-		if (charFromfile == NEW_LINE_CHARACTER)
-		{
-			break;
-		}
-
-		// add c to id
-		strncat(identifier, &charFromfile, 1);
-	}
-
-	return identifier;
-}
-
-void* extractLetter(char charFromfile, FILE* file)
-{
-
-	charFromfile = fgetc(file); // skip the space
-	charFromfile = fgetc(file); // skip the first '
-	charFromfile = fgetc(file);
-	bool specialCharacter = false;
-
-	char* character = calloc(1, sizeof(char));
-
-
-	if (charFromfile == '\\')
-	{
-		specialCharacter = true;
-		charFromfile = fgetc(file);
-	}
-
-
-	if(specialCharacter)
-	{
-		if (charFromfile == 'n')
-		{
-			*character = '\n';
-		}
-		else if (charFromfile == 'r')
-		{
-			*character = '\r';
-		}
-		else if (charFromfile == 't')
-		{
-			*character = '\t';
-		}
-		else if (charFromfile == '\\')
-		{
-			*character = '\\';
-		}
-		else if (charFromfile == '\'')
-		{
-			*character = '\'';
-		}
-		else if (charFromfile == '\"')
-		{
-			*character = '\"';
-		}
-		else if (charFromfile == 'b')
-		{
-			*character = '\b';
-		}
-		else if (charFromfile == 'f')
-		{
-			*character = '\f';
-		}
-		else
-		{
-			*character = charFromfile;
-		}
-	}
-	else
-	{
-		*character = charFromfile;
-	}
-
-	charFromfile = fgetc(file); // skip the last '
-	return character;
-}
 /*
  * extracting tokens from a file.
  * file: FILE*, an opened file
@@ -155,7 +34,7 @@ llist* extractToken(FILE* file)
 		{
 			token->type = TOKEN_NUM;
 			token->value = (int*)malloc(sizeof(int));
-			*((int*)(token->value)) = extractNumber(charFromfile, file);
+			*((int*)(token->value)) = extractNumber(charFromfile, file, false);
 		}
 		else if (charFromfile == TOKEN_ADD)
 		{
@@ -220,6 +99,13 @@ llist* extractToken(FILE* file)
 			lastVoidType = TOKEN_INT;
 			isDecLine = true;
 		}
+		else if (charFromfile == TOKEN_FLOAT)
+		{
+			token->type = TOKEN_FLOAT;
+			token->value = NULL;
+			lastVoidType = TOKEN_FLOAT;
+			isDecLine = true;
+		}
 		else if (charFromfile == TOKEN_ASSIGN)
 		{
 			token->type = TOKEN_ASSIGN;
@@ -278,6 +164,137 @@ llist* extractToken(FILE* file)
 	return tokenList;
 
 }
+
+
+
+
+int extractNumber(char charFromfile, FILE* file, bool isDecimal)
+{
+	int numValue = 0;
+
+	bool isNegative = false;
+
+	charFromfile = fgetc(file); // skip the space
+	charFromfile = fgetc(file);// get the next number from the file
+	if (charFromfile == '-')
+	{
+		isNegative = true;
+		charFromfile = fgetc(file);
+	}
+	charFromfile -= '0';
+
+
+	numValue += charFromfile;
+	while (charFromfile = fgetc(file))
+	{
+		if (charFromfile == NEW_LINE_CHARACTER)
+		{
+			break;
+		} // check for end of line
+		if (!isDecimal && charFromfile == '.')
+		{
+			break;
+		} // if number is not decimal and found a decimal point stop
+
+		numValue *= 10;
+		numValue += charFromfile - '0';
+	}
+
+	if (isNegative)
+	{
+		numValue *= -1;
+	}
+
+
+	return numValue;
+}
+
+
+char* extractIdentifier(char charFromfile, FILE* file)
+{
+	charFromfile = fgetc(file); // skip the space
+	char* identifier = calloc(MAX_VARIABLE_SIZE, sizeof(char));
+	while (charFromfile = fgetc(file)) // get the identifier
+	{
+		if (charFromfile == NEW_LINE_CHARACTER)
+		{
+			break;
+		}
+
+		// add c to id
+		strncat(identifier, &charFromfile, 1);
+	}
+
+	return identifier;
+}
+
+void* extractLetter(char charFromfile, FILE* file)
+{
+
+	charFromfile = fgetc(file); // skip the space
+	charFromfile = fgetc(file); // skip the first '
+	charFromfile = fgetc(file);
+	bool specialCharacter = false;
+
+	char* character = calloc(1, sizeof(char));
+
+
+	if (charFromfile == '\\')
+	{
+		specialCharacter = true;
+		charFromfile = fgetc(file);
+	}
+
+
+	if (specialCharacter)
+	{
+		if (charFromfile == 'n')
+		{
+			*character = '\n';
+		}
+		else if (charFromfile == 'r')
+		{
+			*character = '\r';
+		}
+		else if (charFromfile == 't')
+		{
+			*character = '\t';
+		}
+		else if (charFromfile == '\\')
+		{
+			*character = '\\';
+		}
+		else if (charFromfile == '\'')
+		{
+			*character = '\'';
+		}
+		else if (charFromfile == '\"')
+		{
+			*character = '\"';
+		}
+		else if (charFromfile == 'b')
+		{
+			*character = '\b';
+		}
+		else if (charFromfile == 'f')
+		{
+			*character = '\f';
+		}
+		else
+		{
+			*character = charFromfile;
+		}
+	}
+	else
+	{
+		*character = charFromfile;
+	}
+
+	charFromfile = fgetc(file); // skip the last '
+	return character;
+}
+
+
 
 /*
  * prints a token to the screen

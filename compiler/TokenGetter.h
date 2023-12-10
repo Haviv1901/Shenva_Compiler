@@ -1,6 +1,7 @@
 #pragma once
 #ifndef TOKENGETTER_H  
 #define TOKENGETTER_H
+#include <stdbool.h>
 #include <stdio.h>
 
 #define MAX_VARIABLE_SIZE 256
@@ -31,6 +32,10 @@ struct Token
 
 llist* extractToken(FILE* file);
 void printToken(Token* token);
+
+float extractNumber(char charFromfile, FILE* file, bool isDecimal);
+char* extractIdentifier(char charFromfile, FILE* file);
+void* extractLetter(char charFromfile, FILE* file);
 
 
 
