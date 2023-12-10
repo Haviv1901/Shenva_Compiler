@@ -18,7 +18,7 @@ FILE* errorFile;
 %token PRINTINT PRINTCHAR COMMA
 %token ENDL
 %token ASSIGN
-%token INT CHAR
+%token INT CHAR FLOAT
 %token VAR
 %token ADDEQ SUBEQ MULEQ DIVEQ MODEQ
 %left ADD SUB
@@ -45,6 +45,7 @@ statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statem
 
 declaration : INT decleration_list
             | CHAR decleration_list
+			| FLOAT decleration_list
             ;
 
 decleration_list : VAR
@@ -134,6 +135,11 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "char");
 			i += 3;
+		}
+				else if (strncmp(msg + i, "FLOAT", 5) == 0)
+		{
+			fprintf(errorFile, "float");
+			i += 4;
 		}
 		else if (strncmp(msg + i, "LETTER", 6) == 0)
 		{

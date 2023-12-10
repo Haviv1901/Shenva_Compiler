@@ -56,12 +56,13 @@
      ASSIGN = 272,
      INT = 273,
      CHAR = 274,
-     VAR = 275,
-     ADDEQ = 276,
-     SUBEQ = 277,
-     MULEQ = 278,
-     DIVEQ = 279,
-     MODEQ = 280
+     FLOAT = 275,
+     VAR = 276,
+     ADDEQ = 277,
+     SUBEQ = 278,
+     MULEQ = 279,
+     DIVEQ = 280,
+     MODEQ = 281
    };
 #endif
 
@@ -80,7 +81,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 84 "parser.tab.h"
+#line 85 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
