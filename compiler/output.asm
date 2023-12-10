@@ -46,67 +46,17 @@ push 101
 pop eax
 mov byte ptr [ebp - 2], al
 sub esp, 1
-push 108
+push 121
 pop eax
 mov byte ptr [ebp - 3], al
 sub esp, 1
-push 111
-pop eax
-mov byte ptr [ebp - 4], al
-sub esp, 1
-push 32
-pop eax
-mov byte ptr [ebp - 5], al
-sub esp, 1
-push 119
-pop eax
-mov byte ptr [ebp - 6], al
-sub esp, 1
-push 114
-pop eax
-mov byte ptr [ebp - 7], al
-sub esp, 1
-push 100
-pop eax
-mov byte ptr [ebp - 8], al
-sub esp, 1
 push 33
 pop eax
-mov byte ptr [ebp - 9], al
+mov byte ptr [ebp - 4], al
 push [ebp - 1]
 pop eax
 call WriteChar
 push [ebp - 2]
-pop eax
-call WriteChar
-push [ebp - 3]
-pop eax
-call WriteChar
-push [ebp - 3]
-pop eax
-call WriteChar
-push [ebp - 4]
-pop eax
-call WriteChar
-push [ebp - 5]
-pop eax
-call WriteChar
-push [ebp - 6]
-pop eax
-call WriteChar
-push [ebp - 4]
-pop eax
-call WriteChar
-push [ebp - 7]
-pop eax
-call WriteChar
-push [ebp - 3]
-pop eax
-call WriteChar
-push [ebp - 8]
-pop eax
-call WriteChar
-push [ebp - 9]
 pop eax
 call WriteChar
 

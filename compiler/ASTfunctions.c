@@ -27,10 +27,22 @@ ASTNode* buildASTFunctions(struct node** curr)
 
 ASTNode* buildASTFunctions_print(struct node** curr)
 {
-	struct node* currentNode = (*curr)->next->next; // current node = first token inside the parenthesis
-	Token* currentToken = currentNode->data;
+	Token* currentToken = (*curr)->data;
+	struct node* currentNode;
+	if (currentToken->type != TOKEN_COMMA)
+	{
+		currentNode = (*curr)->next->next; // current node = first token inside the parenthesis
 
+	}
+	else
+	{
+		currentNode = (*curr)->next; // current node = first token inside the parenthesis
+	}
+	currentToken = currentNode->data;
 	// TODO: this will not work with something that is not char / int.
 	return buildASTNumeric(&currentNode); // currently only possible to have numeric expression inside the print function
 
 }
+
+
+

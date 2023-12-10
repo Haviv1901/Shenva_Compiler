@@ -15,7 +15,7 @@ enum TokenTypes {TOKEN_ERROR = '0', TOKEN_NUM = '1', TOKEN_ADD = '2',TOKEN_SUB =
 				 TOKEN_PRINT_INT = '8', TOKEN_ENDL = '9', TOKEN_MODULO = '%',
 				 TOKEN_ASSIGN = '=', TOKEN_VAR = 'v', TOKEN_INT = 'i',
 				TOKEN_CHAR = 'c', TOKEN_STRING = 's', TOKEN_FLOAT = 'f',
-				TOKEN_LETTER = 'l', TOKEN_PRINT_CHAR = 'h'
+				TOKEN_LETTER = 'l', TOKEN_PRINT_CHAR = 'h', TOKEN_COMMA = ','
 };
 
 #endif 

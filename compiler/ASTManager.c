@@ -67,6 +67,7 @@ ASTNode* buildTree(struct node** FirstNode)
 				parenthesesEqualizer--;
 			}
 
+
 			currentNode = currentNode->next; // take the next node
 			if (currentNode != NULL)
 			{

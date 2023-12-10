@@ -20,6 +20,7 @@ void set_output_file(FILE* file) {
 
 
 %%
+","					{ fprintf(outputFile, ",\n"); return COMMA;}
 "hadpasaShelMispar" { fprintf(outputFile, "8\n"); return PRINTINT;}
 "printInt"   { fprintf(outputFile, "8\n"); return PRINTINT;}
 "hadpasaShelOt" { fprintf(outputFile, "h\n"); return PRINTCHAR;}
