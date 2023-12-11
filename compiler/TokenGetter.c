@@ -34,7 +34,8 @@ llist* extractToken(FILE* file)
 		{
 			token->type = TOKEN_NUM;
 			token->value = (int*)malloc(sizeof(int));
-			*((int*)(token->value)) = extractNumber(charFromfile, file, false);
+
+			*((float*)(token->value)) = extractNumber(charFromfile, file);
 		}
 		else if (charFromfile == TOKEN_ADD)
 		{
@@ -167,49 +168,68 @@ llist* extractToken(FILE* file)
 
 
 
-
-int extractNumber(char charFromfile, FILE* file, bool isDecimal)
+ /*
+ * extracting a number from a file.
+ * charFromfile: char, the first character of the number
+ * file: FILE*, an opened file
+ * ret: float, the number
+ */
+float extractNumber(char charFromfile, FILE* file)
 {
 	int numValue = 0;
+	int decimalValue = 0;
 
 	bool isNegative = false;
+	bool decimalPart = false;
+
+	float result = 0.0f;
+	float decimalMultiplier = 0.1f; // To calculate decimal part
 
 	charFromfile = fgetc(file); // skip the space
-	charFromfile = fgetc(file);// get the next number from the file
-	if (charFromfile == '-')
+	charFromfile = fgetc(file); // get the next number from the file
+
+	if (charFromfile == '-') 
 	{
 		isNegative = true;
 		charFromfile = fgetc(file);
 	}
-	charFromfile -= '0';
 
-
-	numValue += charFromfile;
-	while (charFromfile = fgetc(file))
+	while (charFromfile != EOF && charFromfile != NEW_LINE_CHARACTER) 
 	{
-		if (charFromfile == NEW_LINE_CHARACTER)
+		if (charFromfile == '.')
 		{
-			break;
-		} // check for end of line
-		if (!isDecimal && charFromfile == '.')
+			decimalPart = true;
+		}
+		else if (decimalPart)
 		{
-			break;
-		} // if number is not decimal and found a decimal point stop
-
-		numValue *= 10;
-		numValue += charFromfile - '0';
+			decimalValue = charFromfile - '0';
+			result = result + decimalValue * decimalMultiplier;
+			decimalMultiplier *= 0.1f; // Move to the next decimal place
+		}
+		else 
+		{
+			numValue *= 10;
+			numValue += charFromfile - '0';
+		}
+		charFromfile = fgetc(file);
 	}
 
-	if (isNegative)
+	result += numValue;
+
+	if (isNegative) 
 	{
-		numValue *= -1;
+		result *= -1;
 	}
 
-
-	return numValue;
+	return result;
 }
 
-
+/**
+ * \brief extract identifire of a variable
+ * \param charFromfile 
+ * \param file 
+ * \return allocated string that contains the identifier
+ */
 char* extractIdentifier(char charFromfile, FILE* file)
 {
 	charFromfile = fgetc(file); // skip the space
@@ -228,6 +248,12 @@ char* extractIdentifier(char charFromfile, FILE* file)
 	return identifier;
 }
 
+/*
+ * extracting a character from a file.
+ * charFromfile: char, the first character of the letter
+ * file: FILE*, an opened file
+ * ret: char*, the letter
+ */
 void* extractLetter(char charFromfile, FILE* file)
 {
 
@@ -305,7 +331,7 @@ void printToken(Token* token)
 {
 	if (token->type == TOKEN_NUM)
 	{
-		printf("%d", *((int*)(token->value)));
+		printf("%.6f", *((float*)(token->value)));
 	}
 	else if (token->type == TOKEN_ADD)
 	{
@@ -354,6 +380,10 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_CHAR)
 	{
 		printf("char");
+	}
+	else if (token->type == TOKEN_FLOAT)
+	{
+		printf("float");
 	}
 	else if (token->type == TOKEN_LETTER)
 	{

@@ -18,7 +18,7 @@
 
 ASTNode* buildASTVariables(struct node** curr);
 
-ASTNode* buildASTDeclerationsInt(struct node** curr);
+ASTNode* buildASTDeclerationsNumeric(struct node** curr);
 
 ASTNode* buildASTVariablesAssign(node** node);
 

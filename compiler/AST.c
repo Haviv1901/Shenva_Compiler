@@ -91,6 +91,7 @@ int isTwoChildNode(enum TokenTypes token)
 		token == TOKEN_MODULO ||
 		token == TOKEN_INT ||
 		token == TOKEN_CHAR ||
+		token == TOKEN_FLOAT ||
 		token == TOKEN_ASSIGN)
 	{
 		return 1;

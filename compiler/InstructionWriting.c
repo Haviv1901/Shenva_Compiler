@@ -103,11 +103,14 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 		writeNumericBranch(tree, asmFile, varList);
 		fprintf(asmFile, "pop eax\n");
 	}
-	else if (currentToken->type == TOKEN_PRINT_INT || currentToken->type == TOKEN_PRINT_CHAR)// checking for function branch
+	else if (currentToken->type == TOKEN_PRINT_INT ||
+			currentToken->type == TOKEN_PRINT_CHAR)// checking for function branch
 	{
 		writeFunctionBranch(tree, asmFile, varList);
 	}
-	else if (currentToken->type == TOKEN_INT || currentToken->type == TOKEN_CHAR)
+	else if (currentToken->type == TOKEN_INT ||
+			currentToken->type == TOKEN_CHAR ||
+			currentToken->type == TOKEN_FLOAT)// checking for decleration branch
 	{
 		writeDeclerationBranch(tree, asmFile, varList);
 	}

@@ -152,6 +152,13 @@ enum VarTypes getVarByTokenType(enum TokenTypes currentToken)
 	{
 		return VAR_STRING;
 	}
+	else
+	{
+		if (currentToken == TOKEN_BOOL)
+		{
+			return VAR_BOOL;
+		}
+	}
 }
 /*
 createVariableListFromToken: this function will produce the var list from the tokens
@@ -172,7 +179,7 @@ VariableList* createVariableListFromToken(llist* tokenList)
 	while (curr != NULL) // going through the token list
 	{
 		enum TokenTypes currentToken = ((Token*)(curr->data))->type;
-		if (currentToken == TOKEN_INT || currentToken == TOKEN_CHAR) // if its an int token
+		if (currentToken == TOKEN_INT || currentToken == TOKEN_CHAR || currentToken == TOKEN_FLOAT) // if its an int token
 		{
 			curr = curr->next;
 			identifier = (char*)(((Token*)(curr->data))->value);//getting identifier

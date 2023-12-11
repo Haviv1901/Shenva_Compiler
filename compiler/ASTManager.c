@@ -82,7 +82,7 @@ ASTNode* buildTree(struct node** FirstNode)
 		result->children[EXPRESSION] = buildASTFunctions(FirstNode);  
 		result->children[NEXT] = buildTree(&currentNode);
 	}
-	else if (firstToken->type == TOKEN_INT || firstToken->type == TOKEN_CHAR)
+	else if (firstToken->type == TOKEN_INT || firstToken->type == TOKEN_CHAR || firstToken->type == TOKEN_FLOAT)
 	{
 		result->children[EXPRESSION] = buildASTVariables(FirstNode);
 		if(result->children[EXPRESSION]->children[1] == NULL)
