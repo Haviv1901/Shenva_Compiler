@@ -10,226 +10,100 @@
 #endif
 
 
-
-/*
- * extracting tokens from a file.
- * file: FILE*, an opened file
- * ret: llist*, a linked list of tokens
- */
-llist* extractToken(FILE* file)
+float extractDecimal(char charFromfile, FILE* file)
 {
-	llist* tokenList = llist_create(NULL);
-	char charFromfile;
-	enum TokenTypes lastVoidType;
-	bool isPrintLine = false, isDecLine = false;
-	while ((charFromfile = fgetc(file)) != EOF)
-	{
-		if (charFromfile == NEW_LINE_CHARACTER) // if newline
-		{
-			continue;
-		}
-
-		Token* token = (Token*)malloc(sizeof(Token));
-		if( charFromfile == TOKEN_NUM)
-		{
-			token->type = TOKEN_NUM;
-			token->value = (int*)malloc(sizeof(int));
-
-			*((float*)(token->value)) = extractNumber(charFromfile, file);
-		}
-		else if (charFromfile == TOKEN_ADD)
-		{
-			token->type = TOKEN_ADD;
-			token->value = NULL;
-		}
-		else if (charFromfile == TOKEN_SUB)
-		{
-			token->type = TOKEN_SUB;
-			token->value = NULL;
-		}
-		else if (charFromfile == TOKEN_MUL)
-		{
-			token->type = TOKEN_MUL;
-			token->value = NULL;
-		}
-		else if (charFromfile == TOKEN_DIV)
-		{
-			token->type = TOKEN_DIV;
-			token->value = NULL;
-		}
-		else if (charFromfile == TOKEN_MODULO)
-		{
-			token->type = TOKEN_MODULO;
-			token->value = NULL;
-		}
-		else if (charFromfile == TOKEN_LPARN)
-		{
-			token->type = TOKEN_LPARN;
-			token->value = NULL;
-		}
-		else if (charFromfile == TOKEN_RPARN)
-		{
-			token->type = TOKEN_RPARN;
-			token->value = NULL;
-		}
-		else if (charFromfile == TOKEN_PRINT_INT)
-		{
-			token->type = TOKEN_PRINT_INT;
-			lastVoidType = TOKEN_PRINT_INT;
-			token->value = NULL;
-			isPrintLine = true;
-		}
-		else if (charFromfile == TOKEN_PRINT_CHAR)
-		{
-			token->type = TOKEN_PRINT_CHAR;
-			lastVoidType = TOKEN_PRINT_CHAR;
-			token->value = NULL;
-			isPrintLine = true;
-		}
-		else if (charFromfile == TOKEN_ENDL)
-		{
-			token->type = TOKEN_ENDL;
-			token->value = NULL;
-			isPrintLine = false;
-			isDecLine = false;
-		}
-		else if(charFromfile == TOKEN_INT)
-		{
-			token->type = TOKEN_INT;
-			token->value = NULL;
-			lastVoidType = TOKEN_INT;
-			isDecLine = true;
-		}
-		else if (charFromfile == TOKEN_FLOAT)
-		{
-			token->type = TOKEN_FLOAT;
-			token->value = NULL;
-			lastVoidType = TOKEN_FLOAT;
-			isDecLine = true;
-		}
-		else if (charFromfile == TOKEN_ASSIGN)
-		{
-			token->type = TOKEN_ASSIGN;
-			token->value = NULL;
-		}
-		else if (charFromfile == TOKEN_VAR)
-		{
-			token->type = TOKEN_VAR;
-			token->value = extractIdentifier(charFromfile, file);
-		}
-		else if (charFromfile == TOKEN_CHAR) // char variable type
-		{
-			token->type = TOKEN_CHAR;
-			token->value = NULL;
-			lastVoidType = TOKEN_CHAR;
-			isDecLine = true;
-		}
-		else if (charFromfile == TOKEN_LETTER) // single character. ex: 'a'
-		{
-			token->type = TOKEN_LETTER;
-			token->value = extractLetter(charFromfile, file);
-		}
-		else if (charFromfile == TOKEN_COMMA)
-		{
-			if (isPrintLine)
-			{
-				token->type = TOKEN_RPARN;
-				token->value = NULL;
-				llist_append(tokenList, token);
-				token = (Token*)malloc(sizeof(Token));
-				token->type = token->type = lastVoidType;
-				token->value = NULL;
-				llist_append(tokenList, token);
-				token = (Token*)malloc(sizeof(Token));
-				token->type = token->type = TOKEN_LPARN;
-				token->value = NULL;
-			}
-			else if (isDecLine)
-			{
-				token->type = lastVoidType;
-				token->value = NULL;
-			}
-
-
-		}
-		else
-		{
-			token->type = TOKEN_ERROR;
-			token->value = NULL;
-		}
-
-		llist_append(tokenList, token);
-		
-	}
-	fclose(file);
-	return tokenList;
-
-}
-
-
-
- /*
- * extracting a number from a file.
- * charFromfile: char, the first character of the number
- * file: FILE*, an opened file
- * ret: float, the number
- */
-float extractNumber(char charFromfile, FILE* file)
-{
-	int numValue = 0;
-	int decimalValue = 0;
+	float decValue = 0, calcFloat = 0, divisor = 10;
 
 	bool isNegative = false;
-	bool decimalPart = false;
-
-	float result = 0.0f;
-	float decimalMultiplier = 0.1f; // To calculate decimal part
 
 	charFromfile = fgetc(file); // skip the space
-	charFromfile = fgetc(file); // get the next number from the file
-
-	if (charFromfile == '-') 
+	charFromfile = fgetc(file);// get the next number from the file
+	if (charFromfile == '-')
 	{
 		isNegative = true;
 		charFromfile = fgetc(file);
 	}
+	charFromfile -= '0';
 
-	while (charFromfile != EOF && charFromfile != NEW_LINE_CHARACTER) 
+	calcFloat = charFromfile;
+	decValue += calcFloat;
+	while (true)
 	{
-		if (charFromfile == '.')
+		charFromfile = fgetc(file); // skip the space
+
+		if (charFromfile == DOT_CHARACTER)
 		{
-			decimalPart = true;
+			break;
 		}
-		else if (decimalPart)
+
+		decValue *= 10;
+		calcFloat = charFromfile - '0';
+		decValue += calcFloat;
+	}
+	while (charFromfile = fgetc(file))
+	{
+		if (charFromfile == NEW_LINE_CHARACTER)
 		{
-			decimalValue = charFromfile - '0';
-			result = result + decimalValue * decimalMultiplier;
-			decimalMultiplier *= 0.1f; // Move to the next decimal place
+			break;
 		}
-		else 
-		{
-			numValue *= 10;
-			numValue += charFromfile - '0';
-		}
-		charFromfile = fgetc(file);
+
+		calcFloat = charFromfile - '0';
+		calcFloat /= divisor;
+		divisor *= 10;
+		decValue += calcFloat;
 	}
 
-	result += numValue;
 
-	if (isNegative) 
+
+
+	if (isNegative)
 	{
-		result *= -1;
+		decValue *= -1;
 	}
 
-	return result;
+
+	return decValue;
 }
 
-/**
- * \brief extract identifire of a variable
- * \param charFromfile 
- * \param file 
- * \return allocated string that contains the identifier
- */
+
+int extractNumber(char charFromfile, FILE* file)
+{
+	int numValue = 0;
+
+	bool isNegative = false;
+
+	charFromfile = fgetc(file); // skip the space
+	charFromfile = fgetc(file);// get the next number from the file
+	if (charFromfile == '-')
+	{
+		isNegative = true;
+		charFromfile = fgetc(file);
+	}
+	charFromfile -= '0';
+
+
+	numValue += charFromfile;
+	while (charFromfile = fgetc(file))
+	{
+		if (charFromfile == NEW_LINE_CHARACTER)
+		{
+			break;
+		}
+
+		numValue *= 10;
+		numValue += charFromfile - '0';
+	}
+
+	if (isNegative)
+	{
+		numValue *= -1;
+	}
+
+
+	return numValue;
+}
+
+
 char* extractIdentifier(char charFromfile, FILE* file)
 {
 	charFromfile = fgetc(file); // skip the space
@@ -248,12 +122,6 @@ char* extractIdentifier(char charFromfile, FILE* file)
 	return identifier;
 }
 
-/*
- * extracting a character from a file.
- * charFromfile: char, the first character of the letter
- * file: FILE*, an opened file
- * ret: char*, the letter
- */
 void* extractLetter(char charFromfile, FILE* file)
 {
 
@@ -319,8 +187,170 @@ void* extractLetter(char charFromfile, FILE* file)
 	charFromfile = fgetc(file); // skip the last '
 	return character;
 }
+/*
+ * extracting tokens from a file.
+ * file: FILE*, an opened file
+ * ret: llist*, a linked list of tokens
+ */
+llist* extractToken(FILE* file)
+{
+	llist* tokenList = llist_create(NULL);
+	char charFromfile;
+	enum TokenTypes lastVoidType;
+	bool isPrintLine = false, isDecLine = false;
+	while ((charFromfile = fgetc(file)) != EOF)
+	{
+		if (charFromfile == NEW_LINE_CHARACTER) // if newline
+		{
+			continue;
+		}
+
+		Token* token = (Token*)malloc(sizeof(Token));
+		if (charFromfile == TOKEN_NUM)
+		{
+			token->type = TOKEN_NUM;
+			token->value = (int*)malloc(sizeof(int));
+			*((int*)(token->value)) = extractNumber(charFromfile, file);
+		}
+		else if (charFromfile == TOKEN_DECIMAL)
+		{
+			token->type = TOKEN_DECIMAL;
+			token->value = (float*)malloc(sizeof(float));
+			*((float*)(token->value)) = extractDecimal(charFromfile, file);
+		}
+		else if (charFromfile == TOKEN_ADD)
+		{
+			token->type = TOKEN_ADD;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_SUB)
+		{
+			token->type = TOKEN_SUB;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_MUL)
+		{
+			token->type = TOKEN_MUL;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_DIV)
+		{
+			token->type = TOKEN_DIV;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_MODULO)
+		{
+			token->type = TOKEN_MODULO;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_LPARN)
+		{
+			token->type = TOKEN_LPARN;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_RPARN)
+		{
+			token->type = TOKEN_RPARN;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_PRINT_INT)
+		{
+			token->type = TOKEN_PRINT_INT;
+			lastVoidType = TOKEN_PRINT_INT;
+			token->value = NULL;
+			isPrintLine = true;
+		}
+		else if (charFromfile == TOKEN_PRINT_CHAR)
+		{
+			token->type = TOKEN_PRINT_CHAR;
+			lastVoidType = TOKEN_PRINT_CHAR;
+			token->value = NULL;
+			isPrintLine = true;
+		}
+		else if (charFromfile == TOKEN_ENDL)
+		{
+			token->type = TOKEN_ENDL;
+			token->value = NULL;
+			isPrintLine = false;
+			isDecLine = false;
+		}
+		else if (charFromfile == TOKEN_INT)
+		{
+			token->type = TOKEN_INT;
+			token->value = NULL;
+			lastVoidType = TOKEN_INT;
+			isDecLine = true;
+		}
+		else if (charFromfile == TOKEN_FLOAT)
+		{
+			token->type = TOKEN_FLOAT;
+			token->value = NULL;
+			lastVoidType = TOKEN_FLOAT;
+			isDecLine = true;
+		}
+		else if (charFromfile == TOKEN_ASSIGN)
+		{
+			token->type = TOKEN_ASSIGN;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_VAR)
+		{
+			token->type = TOKEN_VAR;
+			token->value = extractIdentifier(charFromfile, file);
+		}
+		else if (charFromfile == TOKEN_CHAR) // char variable type
+		{
+			token->type = TOKEN_CHAR;
+			token->value = NULL;
+			lastVoidType = TOKEN_CHAR;
+			isDecLine = true;
+		}
+		else if (charFromfile == TOKEN_LETTER) // single character. ex: 'a'
+		{
+			token->type = TOKEN_LETTER;
+			token->value = extractLetter(charFromfile, file);
+		}
+		else if (charFromfile == TOKEN_LETTER) // single character. ex: 'a'
+		{
+			token->type = TOKEN_LETTER;
+			token->value = extractLetter(charFromfile, file);
+		}
+		else if (charFromfile == TOKEN_COMMA)
+		{
+			if (isPrintLine)
+			{
+				token->type = TOKEN_RPARN;
+				token->value = NULL;
+				llist_append(tokenList, token);
+				token = (Token*)malloc(sizeof(Token));
+				token->type = token->type = lastVoidType;
+				token->value = NULL;
+				llist_append(tokenList, token);
+				token = (Token*)malloc(sizeof(Token));
+				token->type = token->type = TOKEN_LPARN;
+				token->value = NULL;
+			}
+			else if (isDecLine)
+			{
+				token->type = lastVoidType;
+				token->value = NULL;
+			}
 
 
+		}
+		else
+		{
+			token->type = TOKEN_ERROR;
+			token->value = NULL;
+		}
+
+		llist_append(tokenList, token);
+
+	}
+	fclose(file);
+	return tokenList;
+
+}
 
 /*
  * prints a token to the screen
@@ -331,7 +361,11 @@ void printToken(Token* token)
 {
 	if (token->type == TOKEN_NUM)
 	{
-		printf("%.6f", *((float*)(token->value)));
+		printf("%d", *((int*)(token->value)));
+	}
+	if (token->type == TOKEN_DECIMAL)
+	{
+		printf("%f", *((float*)(token->value)));
 	}
 	else if (token->type == TOKEN_ADD)
 	{
@@ -373,6 +407,10 @@ void printToken(Token* token)
 	{
 		printf("int");
 	}
+	else if (token->type == TOKEN_FLOAT)
+	{
+		printf("float");
+	}
 	else if (token->type == TOKEN_ASSIGN)
 	{
 		printf("=");
@@ -380,10 +418,6 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_CHAR)
 	{
 		printf("char");
-	}
-	else if (token->type == TOKEN_FLOAT)
-	{
-		printf("float");
 	}
 	else if (token->type == TOKEN_LETTER)
 	{
@@ -406,5 +440,3 @@ void printToken(Token* token)
 		printf("TOKEN_ERROR");
 	}
 }
-
-

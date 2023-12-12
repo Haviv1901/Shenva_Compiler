@@ -57,7 +57,8 @@ void set_output_file(FILE* file) {
 "esroni"	  { fprintf(outputFile, "f\n"); return FLOAT;}
 [a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); strcpy(lastIdentifier, yytext); return VAR; }
 '([^\\'\n"\r\b\t\f]|\\[\\'n"tbrf])'   {fprintf(outputFile, "l %s\n", yytext); return LETTER; }
-[-]?[0-9]+(\.[0-9]+)?   { fprintf(outputFile, "1 %s\n", yytext); return NUM;}
+[-]?[0-9]+   { fprintf(outputFile, "1 %s\n", yytext); return NUM;}
+[-]?[0-9]+\.[0-9]+		{ fprintf(outputFile, "d %s\n", yytext); return DECIMAL;}
 [ \t]     ; // Ignore whitespace and newline characters
 [\n]      { fprintf(outputFile, "9\n"); yylineno++; return ENDL;}
 .         { yylval.str = yytext; fprintf(outputFile, "0 %s\n", yytext); return ERROR;}
