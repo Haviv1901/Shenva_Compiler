@@ -8,22 +8,15 @@ includelib \masm32\lib\user32.lib
 .code
 
 
-
-
 ConvertFloatToInt PROC
-    push ebp
-    mov ebp, esp
-
     sub esp, 4          ; Reserve space for the local variable
+	mov dword ptr[esp], eax
+    fld DWORD PTR [esp]  ; Store the floating-point value from EAX onto the stack
 
-    fstp DWORD PTR [ebp-4]  ; Store the floating-point value from EAX onto the stack
 
-    mov eax, [ebp-4]        ; Move the floating-point value from memory to EAX register
+    fistp DWORD PTR [esp] ; Store the integer part back to the stack as a DWORD
+    pop eax        ; Move the integer part from memory to EAX register
 
-    fistp DWORD PTR [ebp-4] ; Store the integer part back to the stack as a DWORD
-    mov eax, [ebp-4]        ; Move the integer part from memory to EAX register
-
-    leave
     ret
 ConvertFloatToInt ENDP
 
@@ -69,37 +62,39 @@ main:
 
 
 
-push 1078523330
-push 5
+push 1075838976
+push 2
 pop ebx
 pop eax
-
 push eax
 fld dword ptr[esp]
-add esp, 4
+pop eax
 push ebx
 fild dword ptr[esp]
-add esp, 4
-fadd
-
-
-call writeFloat
-
-
-
-
+pop ebx
+fmul
 push 0
 fstp dword ptr[esp]
 pop eax
 push eax
-fld dword ptr [esp]
-fistp dword ptr[esp]
+push 1084856730
+pop ebx
 pop eax
 push eax
-;call print_number_signed
-
-;call dumpRegs
-
+fld dword ptr[esp]
+pop eax
+push ebx
+fld dword ptr[esp]
+pop ebx
+fadd
+push 0
+fstp dword ptr[esp]
+pop eax
+push eax
+pop eax
+call ConvertFloatToInt
+push eax
+call print_number_signed
 
 mov esp, ebp
 pop ebp
