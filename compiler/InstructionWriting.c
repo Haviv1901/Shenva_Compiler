@@ -92,6 +92,7 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 
 
 	if (currentToken->type == TOKEN_NUM ||
+		currentToken->type == TOKEN_DECIMAL ||
 		currentToken->type == TOKEN_VAR ||
 		currentToken->type == TOKEN_ADD ||
 		currentToken->type == TOKEN_SUB ||
@@ -137,9 +138,15 @@ void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	writeBranch(branch->children[1], asmFile, varList);
 	if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_CHAR)
 	{
+		fprintf(asmFile, "call ConvertFloatToInt\n");
 		fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
 	}
 	else if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_INT)
+	{
+		fprintf(asmFile, "call ConvertFloatToInt\n");
+		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+	}
+	else if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_FLOAT)
 	{
 		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
 	}
@@ -154,6 +161,19 @@ output: non
 void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
 	if (branch->token->type == TOKEN_INT)
+	{
+		if (branch->children[1] != NULL)
+		{
+			writeBranch(branch->children[1], asmFile, varList);
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+			fprintf(asmFile, "push eax\n");
+		}
+		else
+		{
+			fprintf(asmFile, "push 0\n");
+		}
+	}
+	else if (branch->token->type == TOKEN_FLOAT)
 	{
 		if (branch->children[1] != NULL)
 		{
@@ -173,6 +193,7 @@ void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varLis
 		if (branch->children[1] != NULL)
 		{
 			writeBranch(branch->children[1], asmFile, varList);
+			fprintf(asmFile, "call ConvertFloatToInt\n");
 			fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
 		}
 	}
@@ -310,12 +331,14 @@ void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	if (branch->token->type == TOKEN_PRINT_INT)// checking for print (in the futer there will be )
 	{
 		writeBranch(branch->children[0], asmFile, varList);
+		fprintf(asmFile, "call ConvertFloatToInt\n");
 		fprintf(asmFile, "push eax\n");
 		fprintf(asmFile, "call print_number_signed\n");
 	}
 	else if (branch->token->type == TOKEN_PRINT_CHAR)
 	{
 		writeBranch(branch->children[0], asmFile, varList);
+		fprintf(asmFile, "call ConvertFloatToInt\n");
 		// write branch's result is in eax already
 		// and WriteChar works with al
 		fprintf(asmFile, "call WriteChar\n");

@@ -33,7 +33,7 @@ void Compile(char* inputFileName, char* outputFileName)
 	ASTNode* tree = buildTree(tokenList); // build AST
 
 	convertASTToASM(tree, outputFileName, varList); // convert AST to ASM code.
-	//runMasmAndLink(outputFileName);
+	runMasmAndLink(outputFileName);
 	deleteAST(tree); // free alocated memory of AST
 	*tokenList = hold;
 
