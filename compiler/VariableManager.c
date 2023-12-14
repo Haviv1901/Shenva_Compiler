@@ -23,7 +23,7 @@ int getSizeByType(enum VarTypes type)
 		return 1;
 	case VAR_CHAR:
 		return 1;
-	case VAR_FLOLAT:
+	case VAR_FLOAT:
 		return 4;
 	case VAR_DOUBLE:
 		return 8;
@@ -146,7 +146,7 @@ enum VarTypes getVarByTokenType(enum TokenTypes currentToken)
 	}
 	else if (currentToken == TOKEN_FLOAT)
 	{
-		return VAR_FLOLAT;
+		return VAR_FLOAT;
 	}
 	else if (currentToken == TOKEN_STRING)
 	{

@@ -363,7 +363,7 @@ void printToken(Token* token)
 	{
 		printf("%d", *((int*)(token->value)));
 	}
-	if (token->type == TOKEN_DECIMAL)
+	else if (token->type == TOKEN_DECIMAL)
 	{
 		printf("%f", *((float*)(token->value)));
 	}

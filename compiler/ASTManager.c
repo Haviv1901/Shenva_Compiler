@@ -26,6 +26,8 @@ ASTNode* buildTree(struct node** FirstNode)
 
 
 	if (firstToken->type == TOKEN_NUM ||
+		firstToken->type == TOKEN_DECIMAL || // if numeric expression
+		firstToken->type == TOKEN_LETTER ||
 		firstToken->type == TOKEN_LPARN || // if numeric expression
 		(firstToken->type == TOKEN_VAR && ((Token*)currentNode->next->data)->type != TOKEN_ASSIGN)) // or a variable
 	{
@@ -102,8 +104,6 @@ ASTNode* buildTree(struct node** FirstNode)
 
 
 		result->children[NEXT] = buildTree(FirstNode);
-
-
 
 	}
 	return result;

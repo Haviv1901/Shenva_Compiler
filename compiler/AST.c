@@ -42,7 +42,7 @@ ASTNode* createNewASTnode(Token* token)
 		result->children[0] = NULL;
 
 	}
-	else // else:   char / int / 
+	else // else:   char / int / decimal
 	{
 		result->children = NULL;
 	}
