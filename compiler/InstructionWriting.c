@@ -186,14 +186,33 @@ output: non
 */
 void writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
-	if(branch->token->type == TOKEN_NUM || branch->token->type == TOKEN_LETTER)
+	if (branch->token->type == TOKEN_NUM)
+	{
+		fprintf(asmFile, "push %d\n", *(int*)branch->token->value);
+		return;
+	}
+	if (branch->token->type == TOKEN_DECIMAL)
+	{
+		fprintf(asmFile, "push %d\n", getIEEE754(*(float*)branch->token->value));
+		return;
+	}
+	if (branch->token->type == TOKEN_LETTER)
 	{
 		fprintf(asmFile, "push %d\n", *(char*)branch->token->value);
 		return;
 	}
 	if (branch->token->type == TOKEN_VAR)
 	{
-		fprintf(asmFile, "push [ebp - %d]\n", getVariable(varList, (char*)(branch->token->value))->placeInMemory);// getting the stack position of this specific var from the var list
+		if (getVariable(varList, (char*)(branch->token->value))->Type == TOKEN_CHAR)
+		{
+			fprintf(asmFile, "xor eax, eax\n");
+			fprintf(asmFile, "mov al, byte ptr [ebp - %d]\n", getVariable(varList, (char*)(branch->token->value))->placeInMemory);
+			fprintf(asmFile, "push eax\n");
+		}
+		else
+		{
+			fprintf(asmFile, "push [ebp - %d]\n", getVariable(varList, (char*)(branch->token->value))->placeInMemory);// getting the stack position of this specific var from the var list
+		}
 		return;
 	}
 
@@ -211,8 +230,6 @@ void writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	fprintf(asmFile, "push eax\n");
 
 }
-
-
 
 
 
@@ -270,5 +287,22 @@ void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	return;
 }
 
+
+
+
+
+
+
+/*
+getIEEE754: this function will get the ieee754 value of a float
+input: the float
+output: the ieee754 value
+*/
+int getIEEE754(float val)
+{
+	int result = 0;
+	memcpy(&result, &val, sizeof(float));//copying bits
+	return result;
+}
 
 

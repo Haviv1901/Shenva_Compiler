@@ -36,4 +36,16 @@ print_number_signed  ENDP
 main:
     push ebp
     mov ebp, esp
+	finit
+	sub esp, 2
+	fstcw word ptr[esp]
+	mov ax, [esp]
+	and ax, 0FCFFh         
+	or ax, 00C00h
+	mov [esp], ax
+	fldcw word ptr [esp]
+	add esp, 2
+
+
+
 

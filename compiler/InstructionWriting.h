@@ -25,5 +25,6 @@ void writeNumericInstruction(Token* operand, FILE* asmFile);
 void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
+int getIEEE754(float val);
 
 #endif
