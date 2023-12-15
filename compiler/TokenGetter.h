@@ -17,7 +17,7 @@ enum TokenTypes {TOKEN_ERROR = '0', TOKEN_NUM = '1', TOKEN_DECIMAL = 'd', TOKEN_
 				 TOKEN_ASSIGN = '=', TOKEN_VAR = 'v', TOKEN_INT = 'i',
 				TOKEN_CHAR = 'c', TOKEN_STRING = 's', TOKEN_FLOAT = 'f',
 				TOKEN_LETTER = 'l', TOKEN_PRINT_CHAR = 'h', TOKEN_COMMA = ',',
-				 TOKEN_BOOL = 'b'
+				 TOKEN_BOOL = 'b', TOKEN_PRINT_FLOAT = 'n'
 };
 
 #endif 

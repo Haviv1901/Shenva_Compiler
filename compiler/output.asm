@@ -62,59 +62,11 @@ main:
 
 
 
-push 1085276160
+push 1076006748
 pop eax
 push eax
-push 1074580685
-pop eax
-push eax
-push [ebp - 4]
-push [ebp - 8]
-push 10
-push 1056964608
-pop ebx
-pop eax
-push eax
-fild dword ptr[esp]
-pop eax
-push ebx
-fld dword ptr[esp]
-pop ebx
-fadd
-push 0
-fstp dword ptr[esp]
-pop eax
-push eax
-pop ebx
-pop eax
-push eax
-fld dword ptr[esp]
-pop eax
-push ebx
-fld dword ptr[esp]
-pop ebx
-fadd
-push 0
-fstp dword ptr[esp]
-pop eax
-push eax
-pop ebx
-pop eax
-push eax
-fld dword ptr[esp]
-pop eax
-push ebx
-fld dword ptr[esp]
-pop ebx
-fadd
-push 0
-fstp dword ptr[esp]
-pop eax
-push eax
-pop eax
-call ConvertFloatToInt
-push eax
-call print_number_signed
+fld DWORD PTR [esp]
+call WriteFloat
 
 mov esp, ebp
 pop ebp

@@ -267,6 +267,13 @@ llist* extractToken(FILE* file)
 			token->value = NULL;
 			isPrintLine = true;
 		}
+		else if (charFromfile == TOKEN_PRINT_FLOAT)
+		{
+			token->type = TOKEN_PRINT_FLOAT;
+			lastVoidType = TOKEN_PRINT_FLOAT;
+			token->value = NULL;
+			isPrintLine = true;
+		}
 		else if (charFromfile == TOKEN_ENDL)
 		{
 			token->type = TOKEN_ENDL;
@@ -398,6 +405,10 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_PRINT_CHAR)
 	{
 		printf("printChar");
+	}
+	else if (token->type == TOKEN_PRINT_FLOAT)
+	{
+		printf("printFloat");
 	}
 	else if (token->type == TOKEN_ENDL)
 	{

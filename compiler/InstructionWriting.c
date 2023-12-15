@@ -104,8 +104,7 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 		writeNumericBranch(tree, asmFile, varList);
 		fprintf(asmFile, "pop eax\n");
 	}
-	else if (currentToken->type == TOKEN_PRINT_INT ||
-		currentToken->type == TOKEN_PRINT_CHAR)// checking for function branch
+	else if (isPrintToken(*currentToken))// checking for function branch
 	{
 		writeFunctionBranch(tree, asmFile, varList);
 	}
@@ -342,6 +341,14 @@ void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 		// write branch's result is in eax already
 		// and WriteChar works with al
 		fprintf(asmFile, "call WriteChar\n");
+	}
+	else if (branch->token->type == TOKEN_PRINT_FLOAT)
+	{
+		writeBranch(branch->children[0], asmFile, varList);
+		fprintf(asmFile, "push eax\n");
+		fprintf(asmFile, "fld DWORD PTR [esp]\n");
+		// write branch's result is in eax already
+		fprintf(asmFile, "call WriteFloat\n");
 	}
 	return;
 }
