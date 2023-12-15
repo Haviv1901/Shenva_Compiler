@@ -62,11 +62,18 @@ main:
 
 
 
-push 1076006748
+push 6
+pop eax
+push eax
+fild dword ptr [esp]
+fstp dword ptr [esp]
+push [ebp - 4]
 pop eax
 push eax
 fld DWORD PTR [esp]
 call WriteFloat
+fstp dword ptr [esp]
+pop eax
 
 mov esp, ebp
 pop ebp

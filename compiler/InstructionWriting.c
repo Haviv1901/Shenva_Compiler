@@ -10,7 +10,7 @@
 #include "fileHelper.h"
 #endif
 
-
+bool isLastValFloat = false;
 
 /// <summary>
 /// function to copy the functions and the assembly code bone to the assembly file
@@ -101,7 +101,7 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 		currentToken->type == TOKEN_MODULO ||
 		currentToken->type == TOKEN_LETTER)// checking for numeric branch
 	{
-		writeNumericBranch(tree, asmFile, varList);
+		isLastValFloat = writeNumericBranch(tree, asmFile, varList);
 		fprintf(asmFile, "pop eax\n");
 	}
 	else if (isPrintToken(*currentToken))// checking for function branch
@@ -137,12 +137,18 @@ void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	writeBranch(branch->children[1], asmFile, varList);
 	if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_CHAR)
 	{
-		fprintf(asmFile, "call ConvertFloatToInt\n");
+		if (isLastValFloat)
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+		}
 		fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
 	}
 	else if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_INT)
 	{
-		fprintf(asmFile, "call ConvertFloatToInt\n");
+		if (isLastValFloat)
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+		}
 		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
 	}
 	else if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_FLOAT)
@@ -164,7 +170,10 @@ void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varLis
 		if (branch->children[1] != NULL)
 		{
 			writeBranch(branch->children[1], asmFile, varList);
-			fprintf(asmFile, "call ConvertFloatToInt\n");
+			if (isLastValFloat)
+			{
+				fprintf(asmFile, "call ConvertFloatToInt\n");
+			}
 			fprintf(asmFile, "push eax\n");
 		}
 		else
@@ -177,7 +186,16 @@ void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varLis
 		if (branch->children[1] != NULL)
 		{
 			writeBranch(branch->children[1], asmFile, varList);
-			fprintf(asmFile, "push eax\n");
+			if (!isLastValFloat)
+			{
+				fprintf(asmFile, "push eax\n");
+				fprintf(asmFile, "fild dword ptr [esp]\n");
+				fprintf(asmFile, "fstp dword ptr [esp]\n");
+			}
+			else
+			{
+				fprintf(asmFile, "push eax\n");
+			}
 		}
 		else
 		{
@@ -192,7 +210,10 @@ void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varLis
 		if (branch->children[1] != NULL)
 		{
 			writeBranch(branch->children[1], asmFile, varList);
-			fprintf(asmFile, "call ConvertFloatToInt\n");
+			if (isLastValFloat)
+			{
+				fprintf(asmFile, "call ConvertFloatToInt\n");
+			}
 			fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
 		}
 	}
@@ -330,14 +351,20 @@ void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	if (branch->token->type == TOKEN_PRINT_INT)// checking for print (in the futer there will be )
 	{
 		writeBranch(branch->children[0], asmFile, varList);
-		fprintf(asmFile, "call ConvertFloatToInt\n");
+		if (isLastValFloat)
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+		}
 		fprintf(asmFile, "push eax\n");
 		fprintf(asmFile, "call print_number_signed\n");
 	}
 	else if (branch->token->type == TOKEN_PRINT_CHAR)
 	{
 		writeBranch(branch->children[0], asmFile, varList);
-		fprintf(asmFile, "call ConvertFloatToInt\n");
+		if (isLastValFloat)
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+		}
 		// write branch's result is in eax already
 		// and WriteChar works with al
 		fprintf(asmFile, "call WriteChar\n");
@@ -346,9 +373,19 @@ void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	{
 		writeBranch(branch->children[0], asmFile, varList);
 		fprintf(asmFile, "push eax\n");
-		fprintf(asmFile, "fld DWORD PTR [esp]\n");
+		if (!isLastValFloat)
+		{
+			fprintf(asmFile, "fild DWORD PTR [esp]\n");
+		}
+		else
+		{
+			fprintf(asmFile, "fld DWORD PTR [esp]\n");
+		}
 		// write branch's result is in eax already
 		fprintf(asmFile, "call WriteFloat\n");
+		fprintf(asmFile, "fstp dword ptr [esp]\n");
+		fprintf(asmFile, "pop eax\n");
+
 	}
 	return;
 }

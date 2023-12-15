@@ -1,3 +1,3 @@
-float a = 5.5, b = 2.2
-printInt(a + b + '\n' + 0.5)
+float a = 6
+printFloat(a)
 
