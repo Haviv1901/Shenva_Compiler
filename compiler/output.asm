@@ -9,14 +9,8 @@ includelib \masm32\lib\user32.lib
 
 
 ConvertFloatToInt PROC
-    sub esp, 4          ; Reserve space for the local variable
-	mov dword ptr[esp], eax
-    fld DWORD PTR [esp]  ; Store the floating-point value from EAX onto the stack
-
-
-    fistp DWORD PTR [esp] ; Store the integer part back to the stack as a DWORD
-    pop eax        ; Move the integer part from memory to EAX register
-
+    fld DWORD PTR [esp + 4]  ; Store the floating-point value from EAX onto the stack
+    fistp DWORD PTR [esp + 4] ; Store the integer part back to the stack as a DWOR
     ret
 ConvertFloatToInt ENDP
 
@@ -28,6 +22,7 @@ print_number_signed PROC
 	pushad
 	
 	mov edx, [ebp + 8]
+	mov eax, [ebp + 8]
 	test edx, 80000000h
 	js print_negative
 	
@@ -62,14 +57,49 @@ main:
 
 
 
-push 6
+push 97
+pop eax
+call WriteChar
+push 10
+pop eax
+call WriteChar
+push 15
+push 10
+push 1092878336
+push -2
+push -2
+pop ebx
 pop eax
 push eax
-fild dword ptr [esp]
-fstp dword ptr [esp]
-push [ebp - 4]
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
 pop eax
 push eax
+fld dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
 fld DWORD PTR [esp]
 call WriteFloat
 fstp dword ptr [esp]

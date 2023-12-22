@@ -9,14 +9,8 @@ includelib \masm32\lib\user32.lib
 
 
 ConvertFloatToInt PROC
-    sub esp, 4          ; Reserve space for the local variable
-	mov dword ptr[esp], eax
-    fld DWORD PTR [esp]  ; Store the floating-point value from EAX onto the stack
-
-
-    fistp DWORD PTR [esp] ; Store the integer part back to the stack as a DWORD
-    pop eax        ; Move the integer part from memory to EAX register
-
+    fld DWORD PTR [esp + 4]  ; Store the floating-point value from EAX onto the stack
+    fistp DWORD PTR [esp + 4] ; Store the integer part back to the stack as a DWOR
     ret
 ConvertFloatToInt ENDP
 
@@ -28,6 +22,7 @@ print_number_signed PROC
 	pushad
 	
 	mov edx, [ebp + 8]
+	mov eax, [ebp + 8]
 	test edx, 80000000h
 	js print_negative
 	
