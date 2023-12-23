@@ -23,7 +23,7 @@ int getSizeByType(enum VarTypes type)
 		return 1;
 	case VAR_CHAR:
 		return 1;
-	case VAR_FLOLAT:
+	case VAR_FLOAT:
 		return 4;
 	case VAR_DOUBLE:
 		return 8;
@@ -146,11 +146,18 @@ enum VarTypes getVarByTokenType(enum TokenTypes currentToken)
 	}
 	else if (currentToken == TOKEN_FLOAT)
 	{
-		return VAR_FLOLAT;
+		return VAR_FLOAT;
 	}
 	else if (currentToken == TOKEN_STRING)
 	{
 		return VAR_STRING;
+	}
+	else
+	{
+		if (currentToken == TOKEN_BOOL)
+		{
+			return VAR_BOOL;
+		}
 	}
 }
 /*
@@ -172,7 +179,7 @@ VariableList* createVariableListFromToken(llist* tokenList)
 	while (curr != NULL) // going through the token list
 	{
 		enum TokenTypes currentToken = ((Token*)(curr->data))->type;
-		if (currentToken == TOKEN_INT || currentToken == TOKEN_CHAR) // if its an int token
+		if (currentToken == TOKEN_INT || currentToken == TOKEN_CHAR || currentToken == TOKEN_FLOAT) // if its an int token
 		{
 			curr = curr->next;
 			identifier = (char*)(((Token*)(curr->data))->value);//getting identifier

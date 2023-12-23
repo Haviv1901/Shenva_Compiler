@@ -8,6 +8,13 @@ includelib \masm32\lib\user32.lib
 .code
 
 
+ConvertFloatToInt PROC
+    fld DWORD PTR [esp + 4]  ; Store the floating-point value from EAX onto the stack
+    fistp DWORD PTR [esp + 4] ; Store the integer part back to the stack as a DWOR
+    ret
+ConvertFloatToInt ENDP
+
+
 print_number_signed PROC
 	
 	push ebp
@@ -15,6 +22,7 @@ print_number_signed PROC
 	pushad
 	
 	mov edx, [ebp + 8]
+	mov eax, [ebp + 8]
 	test edx, 80000000h
 	js print_negative
 	
@@ -36,29 +44,66 @@ print_number_signed  ENDP
 main:
     push ebp
     mov ebp, esp
+	finit
+	sub esp, 2
+	fstcw word ptr[esp]
+	mov ax, [esp]
+	and ax, 0FCFFh         
+	or ax, 00C00h
+	mov [esp], ax
+	fldcw word ptr [esp]
+	add esp, 2
 
-sub esp, 1
-push 104
-pop eax
-mov byte ptr [ebp - 1], al
-sub esp, 1
-push 101
-pop eax
-mov byte ptr [ebp - 2], al
-sub esp, 1
-push 121
-pop eax
-mov byte ptr [ebp - 3], al
-sub esp, 1
-push 33
-pop eax
-mov byte ptr [ebp - 4], al
-push [ebp - 1]
+
+
+
+push 97
 pop eax
 call WriteChar
-push [ebp - 2]
+push 10
 pop eax
 call WriteChar
+push 15
+push 10
+push 1092878336
+push -2
+push -2
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fld dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+fld DWORD PTR [esp]
+call WriteFloat
+fstp dword ptr [esp]
+pop eax
 
 mov esp, ebp
 pop ebp

@@ -28,6 +28,7 @@ void Compile(char* inputFileName, char* outputFileName)
 		return;
 	}
 
+	
 
 	ASTNode* tree = buildTree(tokenList); // build AST
 

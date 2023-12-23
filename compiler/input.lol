@@ -1,4 +1,3 @@
-ot a = 'h', b = 'e'
-
-hadpasaShelOt(a, b, c)
+printChar('a', '\n')
+printFloat(15 + '\n' + 10.25 + -2 * -2)
 

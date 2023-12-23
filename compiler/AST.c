@@ -42,7 +42,7 @@ ASTNode* createNewASTnode(Token* token)
 		result->children[0] = NULL;
 
 	}
-	else // else:   char / int / 
+	else // else:   char / int / decimal
 	{
 		result->children = NULL;
 	}
@@ -91,6 +91,7 @@ int isTwoChildNode(enum TokenTypes token)
 		token == TOKEN_MODULO ||
 		token == TOKEN_INT ||
 		token == TOKEN_CHAR ||
+		token == TOKEN_FLOAT ||
 		token == TOKEN_ASSIGN)
 	{
 		return 1;
@@ -105,6 +106,7 @@ int isOneChildNode(enum TokenTypes token)
 		token == TOKEN_LPARN ||
 		token == TOKEN_RPARN ||
 		token == TOKEN_PRINT_CHAR ||
+		token == TOKEN_PRINT_FLOAT ||
 		token == TOKEN_PRINT_INT)
 	{
 		return 1;
@@ -112,6 +114,40 @@ int isOneChildNode(enum TokenTypes token)
 	return 0;
 }
 
+
+int isPrintToken(Token token)
+{
+	if (token.type == TOKEN_PRINT_INT ||
+		token.type == TOKEN_PRINT_CHAR ||
+		token.type == TOKEN_PRINT_FLOAT)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+int isVariableToken(Token token)
+{
+	if (token.type == TOKEN_INT ||
+		token.type == TOKEN_CHAR ||
+		token.type == TOKEN_FLOAT)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+int isNumericToken(Token token)
+{
+	if (token.type == TOKEN_NUM ||
+		token.type == TOKEN_DECIMAL || // if numeric expression
+		token.type == TOKEN_LETTER ||
+		token.type == TOKEN_LPARN) // if numeric expression
+	{
+		return 1;
+	}
+	return 0;
+}
 
 
 

@@ -11,11 +11,11 @@ FILE* errorFile;
     int num;
     char *str;  // Add a string field
 }
-%token NUM LETTER
+%token NUM LETTER DECIMAL
 %token ADD SUB MUL DIV MOD
 %token LPAREN RPAREN
 %token <str> ERROR
-%token PRINTINT PRINTCHAR COMMA
+%token PRINTINT PRINTCHAR PRINTFLOAT COMMA
 %token ENDL
 %token ASSIGN
 %token INT CHAR FLOAT
@@ -36,6 +36,7 @@ statements : statement
 
 statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
 		  |  PRINTCHAR LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
+		  |  PRINTFLOAT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
 		  | expression ENDL
           | declaration ENDL
           | assignment ENDL
@@ -70,6 +71,7 @@ assignment : VAR ASSIGN expression
 expression : NUM
 		   | VAR
 		   | LETTER
+		   | DECIMAL
            | expression ADD expression { /* Handle addition here */ }
            | expression SUB expression { /* Handle subtraction here */ }
            | expression MUL expression { /* Handle multiplication here */ }
@@ -201,6 +203,11 @@ int yyerror(char *msg)
 			fprintf(errorFile, "number");
 			i += 2;
 		}
+		else if (strncmp(msg + i, "PRINTFLOAT", 10) == 0)
+		{
+			fprintf(errorFile, "int");
+			i += 9;
+		}
 		else if (strncmp(msg + i, "INT", 3) == 0)
 		{
 			fprintf(errorFile, "int");
@@ -250,6 +257,11 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "\"character\"");
 			i += 5;
+		}
+		else if (strncmp(msg + i, "DECIMAL", 7) == 0)
+		{
+			fprintf(errorFile, "floating point number");
+			i += 6;
 		}
 		else
 		{

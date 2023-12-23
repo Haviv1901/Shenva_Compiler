@@ -10,6 +10,61 @@
 #endif
 
 
+float extractDecimal(char charFromfile, FILE* file)
+{
+	float decValue = 0, calcFloat = 0, divisor = 10;
+
+	bool isNegative = false;
+
+	charFromfile = fgetc(file); // skip the space
+	charFromfile = fgetc(file);// get the next number from the file
+	if (charFromfile == '-')
+	{
+		isNegative = true;
+		charFromfile = fgetc(file);
+	}
+	charFromfile -= '0';
+
+	calcFloat = charFromfile;
+	decValue += calcFloat;
+	while (true)
+	{
+		charFromfile = fgetc(file); // skip the space
+
+		if (charFromfile == DOT_CHARACTER)
+		{
+			break;
+		}
+
+		decValue *= 10;
+		calcFloat = charFromfile - '0';
+		decValue += calcFloat;
+	}
+	while (charFromfile = fgetc(file))
+	{
+		if (charFromfile == NEW_LINE_CHARACTER)
+		{
+			break;
+		}
+
+		calcFloat = charFromfile - '0';
+		calcFloat /= divisor;
+		divisor *= 10;
+		decValue += calcFloat;
+	}
+
+
+
+
+	if (isNegative)
+	{
+		decValue *= -1;
+	}
+
+
+	return decValue;
+}
+
 
 int extractNumber(char charFromfile, FILE* file)
 {
@@ -85,7 +140,7 @@ void* extractLetter(char charFromfile, FILE* file)
 	}
 
 
-	if(specialCharacter)
+	if (specialCharacter)
 	{
 		if (charFromfile == 'n')
 		{
@@ -151,11 +206,17 @@ llist* extractToken(FILE* file)
 		}
 
 		Token* token = (Token*)malloc(sizeof(Token));
-		if( charFromfile == TOKEN_NUM)
+		if (charFromfile == TOKEN_NUM)
 		{
 			token->type = TOKEN_NUM;
 			token->value = (int*)malloc(sizeof(int));
 			*((int*)(token->value)) = extractNumber(charFromfile, file);
+		}
+		else if (charFromfile == TOKEN_DECIMAL)
+		{
+			token->type = TOKEN_DECIMAL;
+			token->value = (float*)malloc(sizeof(float));
+			*((float*)(token->value)) = extractDecimal(charFromfile, file);
 		}
 		else if (charFromfile == TOKEN_ADD)
 		{
@@ -206,6 +267,13 @@ llist* extractToken(FILE* file)
 			token->value = NULL;
 			isPrintLine = true;
 		}
+		else if (charFromfile == TOKEN_PRINT_FLOAT)
+		{
+			token->type = TOKEN_PRINT_FLOAT;
+			lastVoidType = TOKEN_PRINT_FLOAT;
+			token->value = NULL;
+			isPrintLine = true;
+		}
 		else if (charFromfile == TOKEN_ENDL)
 		{
 			token->type = TOKEN_ENDL;
@@ -213,11 +281,18 @@ llist* extractToken(FILE* file)
 			isPrintLine = false;
 			isDecLine = false;
 		}
-		else if(charFromfile == TOKEN_INT)
+		else if (charFromfile == TOKEN_INT)
 		{
 			token->type = TOKEN_INT;
 			token->value = NULL;
 			lastVoidType = TOKEN_INT;
+			isDecLine = true;
+		}
+		else if (charFromfile == TOKEN_FLOAT)
+		{
+			token->type = TOKEN_FLOAT;
+			token->value = NULL;
+			lastVoidType = TOKEN_FLOAT;
 			isDecLine = true;
 		}
 		else if (charFromfile == TOKEN_ASSIGN)
@@ -236,6 +311,11 @@ llist* extractToken(FILE* file)
 			token->value = NULL;
 			lastVoidType = TOKEN_CHAR;
 			isDecLine = true;
+		}
+		else if (charFromfile == TOKEN_LETTER) // single character. ex: 'a'
+		{
+			token->type = TOKEN_LETTER;
+			token->value = extractLetter(charFromfile, file);
 		}
 		else if (charFromfile == TOKEN_LETTER) // single character. ex: 'a'
 		{
@@ -272,7 +352,7 @@ llist* extractToken(FILE* file)
 		}
 
 		llist_append(tokenList, token);
-		
+
 	}
 	fclose(file);
 	return tokenList;
@@ -289,6 +369,10 @@ void printToken(Token* token)
 	if (token->type == TOKEN_NUM)
 	{
 		printf("%d", *((int*)(token->value)));
+	}
+	else if (token->type == TOKEN_DECIMAL)
+	{
+		printf("%f", *((float*)(token->value)));
 	}
 	else if (token->type == TOKEN_ADD)
 	{
@@ -322,6 +406,10 @@ void printToken(Token* token)
 	{
 		printf("printChar");
 	}
+	else if (token->type == TOKEN_PRINT_FLOAT)
+	{
+		printf("printFloat");
+	}
 	else if (token->type == TOKEN_ENDL)
 	{
 		printf("endl\n");
@@ -329,6 +417,10 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_INT)
 	{
 		printf("int");
+	}
+	else if (token->type == TOKEN_FLOAT)
+	{
+		printf("float");
 	}
 	else if (token->type == TOKEN_ASSIGN)
 	{
@@ -359,5 +451,3 @@ void printToken(Token* token)
 		printf("TOKEN_ERROR");
 	}
 }
-
-

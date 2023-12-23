@@ -45,6 +45,10 @@ void token_llist_free(llist* list)
         {
             free((int*)(((Token*)(curr->data))->value));
         }
+        if (((Token*)(curr->data))->type == TOKEN_DECIMAL)
+        {
+            free((float*)(((Token*)(curr->data))->value));
+        }
         if ((((Token*)(curr->data))->type == TOKEN_VAR))
         {
             free((char*)(((Token*)(curr->data))->value));
