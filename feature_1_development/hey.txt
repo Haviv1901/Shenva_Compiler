@@ -1,3 +1,3 @@
-intInput(5)
-floatInput(5)
-charInput(5)
+intInput()
+floatInput()
+charInput()

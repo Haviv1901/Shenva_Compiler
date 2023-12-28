@@ -37,9 +37,7 @@ statements : statement
 statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
 		  |  PRINTCHAR LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
 		  |  PRINTFLOAT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
-		  |  INTINPUT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
-		  |  FLOATINPUT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
-		  |  CHARINPUT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
+
 		  | expression ENDL
           | declaration ENDL
           | assignment ENDL
@@ -71,10 +69,16 @@ assignment : VAR ASSIGN expression
 			| VAR MODEQ expression
            ;
 
+input : INTINPUT 
+	  | FLOATINPUT 
+	  | CHARINPUT 
+	  ;
+
 expression : NUM
 		   | VAR
 		   | LETTER
 		   | DECIMAL
+		   | input LPAREN RPAREN
            | expression ADD expression { /* Handle addition here */ }
            | expression SUB expression { /* Handle subtraction here */ }
            | expression MUL expression { /* Handle multiplication here */ }
@@ -83,6 +87,7 @@ expression : NUM
            | LPAREN expression RPAREN   { /* Handle parentheses here */ }
 		   | error 
            ;
+
 
 
 %%
