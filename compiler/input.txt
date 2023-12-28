@@ -1,3 +1,6 @@
-intInput()
-floatInput()
-charInput()
+printInt(intInput())
+printChar('\n')
+printFloat(floatInput())
+printChar('\n')
+printChar(charInput())
+

@@ -64,7 +64,6 @@ void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList)
 
 
 
-
 /*
 writeBranch: this function will write all instructions to the asm file after the first bone was added
 input: the tree, and the asm file
@@ -94,15 +93,7 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 	}
 
 
-	if (currentToken->type == TOKEN_NUM ||
-		currentToken->type == TOKEN_DECIMAL ||
-		currentToken->type == TOKEN_VAR ||
-		currentToken->type == TOKEN_ADD ||
-		currentToken->type == TOKEN_SUB ||
-		currentToken->type == TOKEN_MUL ||
-		currentToken->type == TOKEN_DIV ||
-		currentToken->type == TOKEN_MODULO ||
-		currentToken->type == TOKEN_LETTER)// checking for numeric branch
+	if (isExpressionToken(*currentToken)) // checking for expression branch
 	{
 		isLastValFloat = writeNumericBranch(tree, asmFile, varList);
 		if (isNullFlag)
@@ -110,7 +101,7 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 			fprintf(asmFile, "pop eax\n");
 		}
 	}
-	else if (isPrintToken(*currentToken))// checking for function branch
+	else if (isPrintToken(*currentToken) || isInputToken(*currentToken))// checking for function branch
 	{
 		writeFunctionBranch(tree, asmFile, varList);
 	}
@@ -233,7 +224,7 @@ writeNumericBranch: this function will get a numeric branch and write it into th
 input: the branch and the asm file
 output: non
 */
-bool writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
+int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
 	if (branch->token->type == TOKEN_NUM)
 	{
@@ -270,6 +261,27 @@ bool writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 
 		return false;
 	}
+	if (branch->token->type == TOKEN_INPUT_INT)
+	{
+		fprintf(asmFile, "call readInt\n");
+		fprintf(asmFile, "push eax\n");
+		return false;
+	}
+	if (branch->token->type == TOKEN_INPUT_FLOAT)
+	{
+		fprintf(asmFile, "call readFloat\n");
+		fprintf(asmFile, "push 0\n");
+		fprintf(asmFile, "fstp dword ptr [esp]\n");
+		return true;
+	}
+	if (branch->token->type == TOKEN_INPUT_CHAR)
+	{
+		fprintf(asmFile, "xor eax, eax\n");
+		fprintf(asmFile, "call readChar\n");
+		fprintf(asmFile, "call writeChar\n");
+		fprintf(asmFile, "push eax\n");
+		return false;
+	}
 
 	// token is an operator:
 
@@ -284,7 +296,12 @@ bool writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	return true;
 }
 
-
+int isInputToken(Token token)
+{
+	return token.type == TOKEN_INPUT_INT ||
+		token.type == TOKEN_INPUT_FLOAT ||
+		token.type == TOKEN_INPUT_CHAR;
+}
 
 /*
 writeNumericInstruction: this function will get the operand and value of a numeric type, and write the correct instruction

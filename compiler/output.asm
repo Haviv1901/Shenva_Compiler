@@ -57,53 +57,28 @@ main:
 
 
 
-push 97
-pop eax
-call WriteChar
+call readInt
+push eax
+call print_number_signed
 push 10
 pop eax
 call WriteChar
-push 15
-push 10
-push 1092878336
-push -2
-push -2
-pop ebx
-pop eax
-push eax
-fild dword ptr[esp]
-mov dword ptr [esp], ebx
-fild dword ptr[esp]
-fmul
-fstp dword ptr[esp]
-pop ebx
-pop eax
-push eax
-fld dword ptr[esp]
-mov dword ptr [esp], ebx
-fld dword ptr[esp]
-fadd
-fstp dword ptr[esp]
-pop ebx
-pop eax
-push eax
-fild dword ptr[esp]
-mov dword ptr [esp], ebx
-fld dword ptr[esp]
-fadd
-fstp dword ptr[esp]
-pop ebx
-pop eax
-push eax
-fild dword ptr[esp]
-mov dword ptr [esp], ebx
-fld dword ptr[esp]
-fadd
-fstp dword ptr[esp]
+call readFloat
+push 0
+fstp dword ptr [esp]
 fld DWORD PTR [esp]
 call WriteFloat
 fstp dword ptr [esp]
 pop eax
+push 10
+pop eax
+call WriteChar
+xor eax, eax
+call readChar
+call writeChar
+push eax
+pop eax
+call WriteChar
 
 mov esp, ebp
 pop ebp
