@@ -21,12 +21,19 @@ void set_output_file(FILE* file) {
 
 %%
 ","					{ fprintf(outputFile, ",\n"); return COMMA;}
+"intInput"   { fprintf(outputFile, "j\n"); return INTINPUT;}
+"keletShelShalem"   { fprintf(outputFile, "j\n"); return INTINPUT;}
+"charInput"   { fprintf(outputFile, "l\n"); return CHARINPUT;}
+"keletShelOt"   { fprintf(outputFile, "l\n"); return CHARINPUT;}
+"floatInput"   { fprintf(outputFile, "m\n"); return FLOATINPUT;}
+"keletShelTzaf"   { fprintf(outputFile, "m\n"); return FLOATINPUT;}
 "hadpasaShelMispar" { fprintf(outputFile, "8\n"); return PRINTINT;}
 "printInt"   { fprintf(outputFile, "8\n"); return PRINTINT;}
 "hadpasaShelOt" { fprintf(outputFile, "h\n"); return PRINTCHAR;}
 "printChar"   { fprintf(outputFile, "h\n"); return PRINTCHAR;}
 "hadpasaShelTzaf" { fprintf(outputFile, "n\n"); return PRINTFLOAT;}
 "printFloat"   { fprintf(outputFile, "n\n"); return PRINTFLOAT;}
+
 "veod"    { fprintf(outputFile, "2\n"); return ADD;}
 "+"       { fprintf(outputFile, "2\n"); return ADD;}
 "pahot"   { fprintf(outputFile, "3\n"); return SUB;}
