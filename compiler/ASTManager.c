@@ -25,7 +25,7 @@ ASTNode* buildTree(struct node** FirstNode)
 
 
 
-	if (isNumericToken(*firstToken) || // numeric value, or a variable 
+	if (isExpressionToken(*firstToken) || // numeric value, or a variable 
 		(firstToken->type == TOKEN_VAR && ((Token*)currentNode->next->data)->type != TOKEN_ASSIGN))
 	{
 

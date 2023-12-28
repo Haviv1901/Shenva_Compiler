@@ -42,7 +42,7 @@ ASTNode* createNewASTnode(Token* token)
 		result->children[0] = NULL;
 
 	}
-	else // else:   char / int / decimal
+	else // else:   char / int / decimal / input functions
 	{
 		result->children = NULL;
 	}
@@ -74,7 +74,7 @@ void deleteAST(ASTNode* head)
 		}
 		free(head->children);
 	}
-	else // no child
+	else // else:   char / int / decimal / input functions
 	{
 		free(head->children);
 	}
@@ -137,11 +137,14 @@ int isVariableToken(Token token)
 	return 0;
 }
 
-int isNumericToken(Token token)
+int isExpressionToken(Token token)
 {
 	if (token.type == TOKEN_NUM ||
 		token.type == TOKEN_DECIMAL || // if numeric expression
 		token.type == TOKEN_LETTER ||
+		token.type == TOKEN_INPUT_CHAR ||
+		token.type == TOKEN_INPUT_FLOAT ||
+		token.type == TOKEN_INPUT_INT ||
 		token.type == TOKEN_LPARN) // if numeric expression
 	{
 		return 1;

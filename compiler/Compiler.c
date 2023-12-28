@@ -45,9 +45,7 @@ void Compile(char* inputFileName, char* outputFileName)
 
 VariableList* createVariableList(llist* tokenList)
 {
-
 	return createVariableListFromToken(tokenList);
-
 }
 
 /* lex a txt file into a token list */
