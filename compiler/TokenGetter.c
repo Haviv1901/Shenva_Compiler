@@ -279,21 +279,29 @@ llist* extractToken(FILE* file)
 			token->type = TOKEN_INPUT_FLOAT;
 			lastVoidType = TOKEN_INPUT_FLOAT;
 			token->value = NULL;
-			isPrintLine = false;
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
 		}
 		else if (charFromfile == TOKEN_INPUT_INT)
 		{
 			token->type = TOKEN_INPUT_INT;
-			lastVoidType = TOKEN_INPUT_INT;
 			token->value = NULL;
-			isPrintLine = false;
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
 		}
 		else if (charFromfile == TOKEN_INPUT_CHAR)
 		{
 			token->type = TOKEN_INPUT_CHAR;
-			lastVoidType = TOKEN_INPUT_CHAR;
 			token->value = NULL;
-			isPrintLine = false;
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+
 		}
 		else if (charFromfile == TOKEN_ENDL)
 		{

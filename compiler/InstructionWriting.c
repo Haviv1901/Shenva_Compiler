@@ -277,8 +277,7 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	if (branch->token->type == TOKEN_INPUT_CHAR)
 	{
 		fprintf(asmFile, "xor eax, eax\n");
-		fprintf(asmFile, "call readChar\n");
-		fprintf(asmFile, "call writeChar\n");
+		fprintf(asmFile, "call get_char_func\n");
 		fprintf(asmFile, "push eax\n");
 		return false;
 	}
