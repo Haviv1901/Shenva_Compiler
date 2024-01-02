@@ -25,6 +25,13 @@ struct ASTNode
 ASTNode* createNewASTnode(Token* token);
 void deleteAST(ASTNode* head);
 
+int isOneChildNode(enum TokenTypes token);
+int isTwoChildNode(enum TokenTypes token);
+
+int isPrintToken(Token token);
+int isVariableToken(Token token);
+int isExpressionToken(Token token);
+
 
 
 

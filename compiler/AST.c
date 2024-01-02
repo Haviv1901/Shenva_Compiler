@@ -1,5 +1,6 @@
 
 #include "AST.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,7 +18,8 @@ ASTNode* createNewASTnode(Token* token)
 		return NULL;
 	}
 	result->token = token;//setting token
-	if (token == NULL || token->type == ADD || token->type == SUB || token->type == MUL || token->type == DIV || token->type == MOD)// 2 children types
+
+	if (token == NULL || isTwoChildNode(token->type)) // checking if the token is a two child type of token
 	{
 		result->children = (ASTNode**)malloc(TWO_CHILDREN_NODE * sizeof(ASTNode*));
 		if (result->children == NULL)
@@ -25,11 +27,11 @@ ASTNode* createNewASTnode(Token* token)
 			free(result);
 			return NULL;
 		}
-		result->children[0] = NULL;//setting children to NULL, the outer function can change that
+		result->children[0] = NULL; // setting children to NULL, the outer function can change that
 		result->children[1] = NULL;
 
 	}
-	else if (token->type == ENDL || token->type == LPARN || token->type == RPARN || token->type == PRINT)// 1 kid type
+	else if (isOneChildNode(token->type)) // checking if the token is a one child type of token	
 	{
 		result->children = (ASTNode**)malloc(ONE_CHILD_NODE * sizeof(ASTNode*));
 		if (result->children == NULL)
@@ -40,7 +42,7 @@ ASTNode* createNewASTnode(Token* token)
 		result->children[0] = NULL;
 
 	}
-	else// if its a raw value, like a number, they dont have children
+	else // else:   char / int / decimal / input functions
 	{
 		result->children = NULL;
 	}
@@ -48,14 +50,9 @@ ASTNode* createNewASTnode(Token* token)
 }
 
 
-/*
-deleteAST: this function will delete an AST
-input: the tree
-output: non
-*/
 void deleteAST(ASTNode* head)
-{
-	if (head->token == NULL || head->token->type == ADD || head->token->type == SUB || head->token->type == MUL || head->token->type == DIV || head->token->type == MOD)
+{ 
+	if (head->token == NULL || isTwoChildNode(head->token->type)) // checking if the token is a two child type of token
 	{
 		// 2 child
 		if (head->children[0] != NULL)
@@ -69,30 +66,91 @@ void deleteAST(ASTNode* head)
 		}
 		free(head->children);
 	}
-	else if (head->token->type == ENDL || head->token->type == LPARN || head->token->type == RPARN || head->token->type == PRINT)
+	else if (isOneChildNode(head->token->type)) // checking if the token is a one child type of token
 	{
-		// 1 child
 		if (head->children[0] != NULL)
 		{
 			deleteAST(head->children[0]);
 		}
 		free(head->children);
 	}
-	else // no child
+	else // else:   char / int / decimal / input functions
 	{
 		free(head->children);
 	}
 
 	free(head);
+}
 
-
+int isTwoChildNode(enum TokenTypes token)
+{
+	if (token == TOKEN_ADD ||
+		token == TOKEN_SUB ||
+		token == TOKEN_MUL ||
+		token == TOKEN_DIV ||
+		token == TOKEN_MODULO ||
+		token == TOKEN_INT ||
+		token == TOKEN_CHAR ||
+		token == TOKEN_FLOAT ||
+		token == TOKEN_ASSIGN)
+	{
+		return 1;
+	}
+	return 0;
 }
 
 
+int isOneChildNode(enum TokenTypes token)
+{
+	if (token == TOKEN_ENDL ||
+		token == TOKEN_LPARN ||
+		token == TOKEN_RPARN ||
+		token == TOKEN_PRINT_CHAR ||
+		token == TOKEN_PRINT_FLOAT ||
+		token == TOKEN_PRINT_INT)
+	{
+		return 1;
+	}
+	return 0;
+}
 
 
+int isPrintToken(Token token)
+{
+	if (token.type == TOKEN_PRINT_INT ||
+		token.type == TOKEN_PRINT_CHAR ||
+		token.type == TOKEN_PRINT_FLOAT)
+	{
+		return 1;
+	}
+	return 0;
+}
 
+int isVariableToken(Token token)
+{
+	if (token.type == TOKEN_INT ||
+		token.type == TOKEN_CHAR ||
+		token.type == TOKEN_FLOAT)
+	{
+		return 1;
+	}
+	return 0;
+}
 
+int isExpressionToken(Token token)
+{
+	if (token.type == TOKEN_NUM ||
+		token.type == TOKEN_DECIMAL || // if numeric expression
+		token.type == TOKEN_LETTER ||
+		token.type == TOKEN_INPUT_CHAR ||
+		token.type == TOKEN_INPUT_FLOAT ||
+		token.type == TOKEN_INPUT_INT ||
+		token.type == TOKEN_LPARN) // if numeric expression
+	{
+		return 1;
+	}
+	return 0;
+}
 
 
 

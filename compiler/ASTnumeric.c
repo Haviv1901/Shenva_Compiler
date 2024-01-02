@@ -23,11 +23,11 @@ ASTNode* buildASTNumeric(struct node** curr)
 ASTNode* parseLast(struct node** curr)
 {
 	ASTNode* holder = parseSecond(curr), *node = NULL;
-	if (!((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == ADD || ((Token*)(*curr)->data)->type == SUB)))
+	if (!((*curr) != NULL && ((Token*)(*curr)->data)->type != TOKEN_ENDL && (((Token*)(*curr)->data)->type == TOKEN_ADD || ((Token*)(*curr)->data)->type == TOKEN_SUB)))
 	{
 		return holder;
 	}
-	while ((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == ADD || ((Token*)(*curr)->data)->type == SUB))
+	while ((*curr) != NULL && ((Token*)(*curr)->data)->type != TOKEN_ENDL && (((Token*)(*curr)->data)->type == TOKEN_ADD || ((Token*)(*curr)->data)->type == TOKEN_SUB))
 	{
 		node = createNewASTnode((Token*)(*curr)->data);
 		node->children[0] = holder;
@@ -47,11 +47,11 @@ ASTNode* parseLast(struct node** curr)
 ASTNode* parseSecond(struct node** curr)
 {
 	ASTNode* holder = parseFirst(curr), * node = NULL;
-	if (!((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == DIV || ((Token*)(*curr)->data)->type == MUL || ((Token*)(*curr)->data)->type == MOD)))
+	if (!((*curr) != NULL && ((Token*)(*curr)->data)->type != TOKEN_ENDL && (((Token*)(*curr)->data)->type == TOKEN_DIV || ((Token*)(*curr)->data)->type == TOKEN_MUL || ((Token*)(*curr)->data)->type == TOKEN_MODULO)))
 	{
 		return holder;
 	}
-	while ((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL && (((Token*)(*curr)->data)->type == DIV || ((Token*)(*curr)->data)->type == MUL || ((Token*)(*curr)->data)->type == MOD))
+	while ((*curr) != NULL && ((Token*)(*curr)->data)->type != TOKEN_ENDL && (((Token*)(*curr)->data)->type == TOKEN_DIV || ((Token*)(*curr)->data)->type == TOKEN_MUL || ((Token*)(*curr)->data)->type == TOKEN_MODULO))
 	{
 
 		node = createNewASTnode((Token*)(*curr)->data);
@@ -68,14 +68,14 @@ ASTNode* parseSecond(struct node** curr)
 // Function to parse a factor.
 ASTNode* parseFirst(struct node** curr)
 {
-	if ((*curr) != NULL && ((Token*)(*curr)->data)->type != ENDL)
+	if ((*curr) != NULL && ((Token*)(*curr)->data)->type != TOKEN_ENDL)
 	{
-		if (((Token*)(*curr)->data)->type == LPARN)
+		if (((Token*)(*curr)->data)->type == TOKEN_LPARN)
 		{
 			(*curr) = (*curr)->next; // Consume the opening parenthesis.
 			ASTNode* node = parseLast(curr);
 
-			if (((Token*)(*curr)->data)->type == RPARN)
+			if (((Token*)(*curr)->data)->type == TOKEN_RPARN)
 			{
 				(*curr) = (*curr)->next; // Consume the closing parenthesis.
 				return node;
@@ -83,7 +83,7 @@ ASTNode* parseFirst(struct node** curr)
 		}
 		else
 		{
-			// It's a number.
+			// It's a number or var
 			ASTNode* node = createNewASTnode((Token*)(*curr)->data);
 			(*curr) = (*curr)->next;
 			return node;

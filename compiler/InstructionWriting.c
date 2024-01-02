@@ -10,7 +10,7 @@
 #include "fileHelper.h"
 #endif
 
-
+bool isLastValFloat = false;
 
 /// <summary>
 /// function to copy the functions and the assembly code bone to the assembly file
@@ -22,7 +22,7 @@ void copyBoneFile(FILE* asmFile, bool boneFileNumber)
 	FILE* boneFile = openFile(boneFileNumber ? SECOND_BONE_FILE : FIRST_BONE_FILE, "r");
 	// Open FIRST_BONE_FILE for reading
 
-	if (boneFile == NULL) 
+	if (boneFile == NULL)
 	{
 		printf("Error opening file %s\n", boneFileNumber ? SECOND_BONE_FILE : FIRST_BONE_FILE);
 		return;
@@ -31,12 +31,12 @@ void copyBoneFile(FILE* asmFile, bool boneFileNumber)
 
 
 	char buffer[1024];
-	while (fgets(buffer, sizeof(buffer), boneFile) != NULL) 
+	while (fgets(buffer, sizeof(buffer), boneFile) != NULL)
 	{
-		fputs(buffer, asmFile); 
+		fputs(buffer, asmFile);
 	}
 
-	fclose(boneFile); 
+	fclose(boneFile);
 }
 
 /**
@@ -44,7 +44,7 @@ void copyBoneFile(FILE* asmFile, bool boneFileNumber)
  * \param tree AST
  * \param fileName sulotion file name
  */
-void convertASTToASM(ASTNode* tree, const char* fileName)
+void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList)
 {
 	char* asmPath = NULL;
 	asmPath = (char*)calloc(strlen(fileName) + 5, sizeof(char));
@@ -55,7 +55,7 @@ void convertASTToASM(ASTNode* tree, const char* fileName)
 
 	copyBoneFile(asmFile, FIRST); // copy first half of the basic functions and start of main
 
-	writeBranch(tree, asmFile); // write instructions from the ast
+	writeBranch(tree, asmFile, varList); // write instructions from the ast
 
 	copyBoneFile(asmFile, SECOND); // copy the second half
 	free(asmPath);
@@ -64,13 +64,12 @@ void convertASTToASM(ASTNode* tree, const char* fileName)
 
 
 
-
 /*
 writeBranch: this function will write all instructions to the asm file after the first bone was added
 input: the tree, and the asm file
 output: non
 */
-void writeBranch(ASTNode* tree, FILE* asmFile)
+void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 {
 	if (tree == NULL)// if the tree is null do nothing
 	{
@@ -79,127 +78,283 @@ void writeBranch(ASTNode* tree, FILE* asmFile)
 
 	Token* currentToken;
 	ASTNode* next = NULL;
-	if(tree->token == NULL)
+	bool isNullFlag = false;
+	if (tree->token == NULL)
 	{
 		currentToken = tree->children[EXPRESSION]->token;// getting the command part of this node
 		next = tree->children[NEXT];
 		tree = tree->children[EXPRESSION];
+		isNullFlag = true;
 	}
 	else
 	{
 		currentToken = tree->token;// getting the command part of this node
-	}
-	
-
-	if (currentToken->type == NUM || currentToken->type == ADD || currentToken->type == SUB || currentToken->type == MUL || currentToken->type == DIV || currentToken->type == MOD)// checking for numeric branch
-	{
-		writeNumericBranch(tree, asmFile);
-		fprintf(asmFile, "pop eax\n");
-	}
-	else if (currentToken->type == PRINT)// checking for function branch
-	{
-		writeFunctionBranch(tree, asmFile);
+		isNullFlag = false;
 	}
 
-	if(next != NULL)
+
+	if (isExpressionToken(*currentToken)) // checking for expression branch
 	{
-		writeBranch(next, asmFile);
+		isLastValFloat = writeNumericBranch(tree, asmFile, varList);
+		if (isNullFlag)
+		{
+			fprintf(asmFile, "pop eax\n");
+		}
 	}
-	
+	else if (isPrintToken(*currentToken) || isInputToken(*currentToken))// checking for function branch
+	{
+		writeFunctionBranch(tree, asmFile, varList);
+	}
+	else if (currentToken->type == TOKEN_INT ||
+		currentToken->type == TOKEN_CHAR ||
+		currentToken->type == TOKEN_FLOAT)// checking for decleration branch
+	{
+		writeDeclerationBranch(tree, asmFile, varList);
+	}
+	else if (currentToken->type == TOKEN_ASSIGN)
+	{
+		writeAssignBranch(tree, asmFile, varList);
+	}
+
+	if (next != NULL)
+	{
+		writeBranch(next, asmFile, varList);
+	}
+
 }
 
 
+/*
+writeAssignBranch: this function will write an assign branch into the asm file
+input: the decleration branch, and the asm file
+output: non
+*/
+void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
+{
+	writeBranch(branch->children[1], asmFile, varList);
+	if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_CHAR)
+	{
+		if (isLastValFloat)
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+		}
+		fprintf(asmFile, "pop eax\n");
+		fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+	}
+	else if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_INT)
+	{
+		if (isLastValFloat)
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+		}
+		fprintf(asmFile, "pop eax\n");
+		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+	}
+	else if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_FLOAT)
+	{
+		fprintf(asmFile, "pop eax\n");
+		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+	}
+
+}
+
+/*
+writeDeclerationBranch: this function will write a decleration branch into the asm file
+input: the decleration branch, and the asm file
+output: non
+*/
+void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
+{
+	if (branch->token->type == TOKEN_INT)
+	{
+		if (branch->children[1] != NULL)
+		{
+			writeBranch(branch->children[1], asmFile, varList);
+			if (isLastValFloat)
+			{
+				fprintf(asmFile, "call ConvertFloatToInt\n");
+			}
+		}
+		else
+		{
+			fprintf(asmFile, "push 0\n");
+		}
+	}
+	else if (branch->token->type == TOKEN_FLOAT)
+	{
+		if (branch->children[1] != NULL)
+		{
+			writeBranch(branch->children[1], asmFile, varList);
+			if (!isLastValFloat)
+			{
+				fprintf(asmFile, "fild dword ptr [esp]\n");
+				fprintf(asmFile, "fstp dword ptr [esp]\n");
+			}
+		}
+		else
+		{
+			fprintf(asmFile, "push 0\n");
+		}
+	}
+	else if (branch->token->type == TOKEN_CHAR)
+	{
+
+		fprintf(asmFile, "sub esp, 1\n");
+
+		if (branch->children[1] != NULL)
+		{
+			writeBranch(branch->children[1], asmFile, varList);
+			if (isLastValFloat)
+			{
+				fprintf(asmFile, "call ConvertFloatToInt\n");
+			}
+			fprintf(asmFile, "pop eax\n");
+			fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+		}
+		else
+		{
+			fprintf(asmFile, "mov byte ptr[esp], 0\n");
+		}
+	}
+
+}
 
 /*
 writeNumericBranch: this function will get a numeric branch and write it into the asm file
 input: the branch and the asm file
 output: non
 */
-void writeNumericBranch(ASTNode * branch, FILE * asmFile)
+int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
-	if(branch->token->type == NUM)
+	if (branch->token->type == TOKEN_NUM)
 	{
 		fprintf(asmFile, "push %d\n", *(int*)branch->token->value);
-		return;
+		return false;
+	}
+	if (branch->token->type == TOKEN_DECIMAL)
+	{
+		fprintf(asmFile, "push %d\n", getIEEE754(*(float*)branch->token->value));
+		return true;
+	}
+	if (branch->token->type == TOKEN_LETTER)
+	{
+		fprintf(asmFile, "push %d\n", *(char*)branch->token->value);
+		return false;
+	}
+	if (branch->token->type == TOKEN_VAR)
+	{
+		if (getVariable(varList, (char*)(branch->token->value))->Type == VAR_CHAR)
+		{
+			fprintf(asmFile, "xor eax, eax\n");
+			fprintf(asmFile, "mov al, byte ptr [ebp - %d]\n", getVariable(varList, (char*)(branch->token->value))->placeInMemory);
+			fprintf(asmFile, "push eax\n");
+		}
+		else
+		{
+			fprintf(asmFile, "push [ebp - %d]\n", getVariable(varList, (char*)(branch->token->value))->placeInMemory);// getting the stack position of this specific var from the var list
+		}
+
+		if (getVariable(varList, (char*)(branch->token->value))->Type == VAR_FLOAT)
+		{
+			return true;
+		}
+
+		return false;
+	}
+	if (branch->token->type == TOKEN_INPUT_INT)
+	{
+		fprintf(asmFile, "call readInt\n");
+		fprintf(asmFile, "push eax\n");
+		return false;
+	}
+	if (branch->token->type == TOKEN_INPUT_FLOAT)
+	{
+		fprintf(asmFile, "call readFloat\n");
+		fprintf(asmFile, "push 0\n");
+		fprintf(asmFile, "fstp dword ptr [esp]\n");
+		return true;
+	}
+	if (branch->token->type == TOKEN_INPUT_CHAR)
+	{
+		fprintf(asmFile, "xor eax, eax\n");
+		fprintf(asmFile, "call get_char_func\n");
+		fprintf(asmFile, "push eax\n");
+		return false;
 	}
 
 	// token is an operator:
 
-	writeNumericBranch(branch->children[0], asmFile);
-	writeNumericBranch(branch->children[1], asmFile);
+	bool isEAXdecimal = writeNumericBranch(branch->children[0], asmFile, varList);
+	bool isEBXdecimal = writeNumericBranch(branch->children[1], asmFile, varList);
 
 	fprintf(asmFile, "pop ebx\n"); // put into ebx the solution for the right side if the tree
 	fprintf(asmFile, "pop eax\n"); // put into eax the solution for the left side if the tree
 
-	writeNumericInstruction(branch->token, asmFile); // write the instruction
+	writeNumericInstruction(branch->token, asmFile, isEAXdecimal, isEBXdecimal); // write the instruction
 
-	// push the final solution to the stack
-	fprintf(asmFile, "push eax\n");
-
+	return true;
 }
 
-
-
-
+int isInputToken(Token token)
+{
+	return token.type == TOKEN_INPUT_INT ||
+		token.type == TOKEN_INPUT_FLOAT ||
+		token.type == TOKEN_INPUT_CHAR;
+}
 
 /*
 writeNumericInstruction: this function will get the operand and value of a numeric type, and write the correct instruction
 input: the tokens of the operand and value, and the asm file
 output: non
 */
-void writeNumericInstruction(Token* operand, FILE* asmFile)
+void writeNumericInstruction(Token* operand, FILE* asmFile, bool isEAXdecimal, bool isEBXdecimal)
 {
-	if (operand->type == ADD)//checking for the correct operand, and preforming it on eax
+
+	fprintf(asmFile, "push eax\n");
+	if (isEAXdecimal)
 	{
-		fprintf(asmFile, "add eax, ebx\n");
+		fprintf(asmFile, "fld dword ptr[esp]\n");
 	}
-	else if (operand->type == SUB)
+	else
 	{
-		fprintf(asmFile, "sub eax, ebx\n");
+		fprintf(asmFile, "fild dword ptr[esp]\n");
 	}
-	else if (operand->type == MUL)
+	fprintf(asmFile, "mov dword ptr [esp], ebx\n");
+	if (isEBXdecimal)
 	{
-		fprintf(asmFile, "cdq\nimul eax, ebx\n");
+		fprintf(asmFile, "fld dword ptr[esp]\n");
 	}
-	else if (operand->type == DIV)//using ebx seince idiv cannot use immidiates
+	else
 	{
-		fprintf(asmFile, "cdq\nidiv ebx\n");
+		fprintf(asmFile, "fild dword ptr[esp]\n");
 	}
-	else if (operand->type == MOD)//using ebx seince idiv cannot use immidiates
+
+	if (operand->type == TOKEN_ADD)
 	{
-		fprintf(asmFile, "xor edx, edx\ncdq\nidiv ebx\nmov eax, edx\n");
+		fprintf(asmFile, "fadd\n"); // Floating-point addition using FPU stack
 	}
-	return;
+	else if (operand->type == TOKEN_SUB)
+	{
+		fprintf(asmFile, "fsub\n"); // Floating-point subtraction using FPU stack
+	}
+	else if (operand->type == TOKEN_MUL)
+	{
+		fprintf(asmFile, "fmul\n"); // Floating-point multiplication using FPU stack
+	}
+	else if (operand->type == TOKEN_DIV)
+	{
+		fprintf(asmFile, "fdiv\n"); // Floating-point division using FPU stack
+	}
+	else if (operand->type == TOKEN_MODULO)
+	{
+		fprintf(asmFile, "fprem\n"); // Floating-point remainder using FPU stack
+	}
+
+
+	// extract result to eax
+	fprintf(asmFile, "fstp dword ptr[esp]\n");
+
 }
-
-//
-///*
-//writeNumericInstruction: this function will get the operand and value of a numeric type, and write the correct instruction
-//input: the tokens of the operand and value, and the asm file
-//output: non
-//*/
-//void writeNumericInstruction(Token* operand, Token* value, FILE* asmFile)
-//{
-//	if (operand->type == ADD)//checking for the correct operand, and preforming it on eax
-//	{
-//		fprintf(asmFile, "add eax, %d\n", *(int*)value->value);
-//	}
-//	else if (operand->type == SUB)
-//	{
-//		fprintf(asmFile, "sub eax, %d\n", *(int*)value->value);
-//	}
-//	else if (operand->type == MUL)
-//	{
-//		fprintf(asmFile, "imul eax, %d\n", *(int*)value->value);
-//	}
-//	else if (operand->type == DIV)//using ebx sience idiv cannot use immidiates
-//	{
-//		fprintf(asmFile, "mov ebx, %d\nidiv ebx\n", *(int*)value->value);
-//	}
-//	return;
-//}
-
-
 
 
 /*
@@ -207,13 +362,43 @@ writeFunctionBranch: this function will write the branches of functions
 input: the branch and the asm file
 output:non
 */
-void writeFunctionBranch(ASTNode* branch, FILE* asmFile)
+void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
-
-	if (branch->token->type == PRINT)// checking for print (in the futer there will be )
+	if (branch->token->type == TOKEN_PRINT_INT)// checking for print (in the futer there will be )
 	{
-		writeNumericBranch(branch->children[0], asmFile);
+		writeBranch(branch->children[0], asmFile, varList);
+		if (isLastValFloat)
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+		}
 		fprintf(asmFile, "call print_number_signed\n");
+	}
+	else if (branch->token->type == TOKEN_PRINT_CHAR)
+	{
+		writeBranch(branch->children[0], asmFile, varList);
+		if (isLastValFloat)
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+		}
+		fprintf(asmFile, "pop eax\n");
+		fprintf(asmFile, "call WriteChar\n");
+	}
+	else if (branch->token->type == TOKEN_PRINT_FLOAT)
+	{
+		writeBranch(branch->children[0], asmFile, varList);
+		if (!isLastValFloat)
+		{
+			fprintf(asmFile, "fild DWORD PTR [esp]\n");
+		}
+		else
+		{
+			fprintf(asmFile, "fld DWORD PTR [esp]\n");
+		}
+		// write branch's result is in eax already
+		fprintf(asmFile, "call WriteFloat\n");
+		fprintf(asmFile, "fstp dword ptr [esp]\n");
+		fprintf(asmFile, "pop eax\n");
+
 	}
 	return;
 }
@@ -223,5 +408,17 @@ void writeFunctionBranch(ASTNode* branch, FILE* asmFile)
 
 
 
+
+/*
+getIEEE754: this function will get the ieee754 value of a float
+input: the float
+output: the ieee754 value
+*/
+int getIEEE754(float val)
+{
+	int result = 0;
+	memcpy(&result, &val, sizeof(float));//copying bits
+	return result;
+}
 
 

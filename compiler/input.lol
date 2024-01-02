@@ -1,1 +1,1 @@
-print(-10 % 21)
+printChar(intInput())

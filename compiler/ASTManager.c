@@ -1,5 +1,7 @@
 #include "ASTManager.h"
 
+#include "ASTdeclerations.h"
+
 
 ASTNode* buildTree(struct node** FirstNode)
 {
@@ -10,7 +12,7 @@ ASTNode* buildTree(struct node** FirstNode)
 	Token* firstToken = (Token*)(*FirstNode)->data, * currentToken = NULL;
 	ASTNode* result = NULL;
 	struct node* currentNode = *FirstNode;
-	if (((Token*)currentNode->data)->type != ENDL)
+	if (((Token*)currentNode->data)->type != TOKEN_ENDL)
 	{
 		result = createNewASTnode(NULL);
 	}
@@ -23,10 +25,12 @@ ASTNode* buildTree(struct node** FirstNode)
 
 
 
-	if (firstToken->type == NUM || firstToken->type == LPARN) // if numeric expression
+	if (isExpressionToken(*firstToken) || // numeric value, or a variable 
+		(firstToken->type == TOKEN_VAR && ((Token*)currentNode->next->data)->type != TOKEN_ASSIGN))
 	{
+
 		currentToken = ((Token*)currentNode->data);
-		while (currentNode != NULL && currentToken->type != ENDL) // while not the end of list nor the end of line
+		while (currentNode != NULL && currentToken->type != TOKEN_ENDL) // while not the end of list nor the end of line
 		{
 			currentNode = currentNode->next; // take the next node
 			if (currentNode != NULL)
@@ -38,11 +42,12 @@ ASTNode* buildTree(struct node** FirstNode)
 		result->children[EXPRESSION] = buildASTNumeric(FirstNode); // first son: the numeric expresion
 		result->children[NEXT] = buildTree(&currentNode); // second son: the continuation of the tree
 	}
-	else if (firstToken->type == ENDL) // if new line continue
+	else if (firstToken->type == TOKEN_ENDL) // if new line continue
 	{
-		result = buildTree(&(*FirstNode)->next);
+		*FirstNode = (*FirstNode)->next;
+		result = buildTree(FirstNode);
 	}
-	else if (firstToken->type == PRINT) // if print  , in the future we will add function support
+	else if (isPrintToken(*firstToken)) // if printToken  , in the future we will add function support
 	{
 		
 		int parenthesesEqualizer = 0;
@@ -52,28 +57,51 @@ ASTNode* buildTree(struct node** FirstNode)
 		do
 		{
 
-			if(currentToken->type == LPARN)
+			if(currentToken->type == TOKEN_LPARN)
 			{
 				parenthesesEqualizer++;
 			}
-			else if (currentToken->type == RPARN)
+			else if (currentToken->type == TOKEN_RPARN)
 			{
 				parenthesesEqualizer--;
 			}
+
 
 			currentNode = currentNode->next; // take the next node
 			if (currentNode != NULL)
 			{
 				currentToken = ((Token*)currentNode->data); // take the next token
 			}
-		} while (currentNode != NULL && currentToken->type != ENDL && parenthesesEqualizer != 0);
+		} while (currentNode != NULL && currentToken->type != TOKEN_ENDL && parenthesesEqualizer != 0);
 		// while not the end of list nor the end of the parentheses and not end of line
 
 
 		// first node is first node in the current expression
-		// currentNode is the endl that differs between expresions.
+		// currentNode is the endl that differs between expressions.
 		result->children[EXPRESSION] = buildASTFunctions(FirstNode);  
 		result->children[NEXT] = buildTree(&currentNode);
+	}
+	else if (isVariableToken(*firstToken)) // if variable decleration ie: int , char , float
+	{
+		result->children[EXPRESSION] = buildASTVariables(FirstNode);
+		if(result->children[EXPRESSION]->children[1] == NULL)
+		{
+			*FirstNode = (*FirstNode)->next;
+			result->children[NEXT] = buildTree(FirstNode);
+		}
+		else
+		{
+			result->children[NEXT] = buildTree(FirstNode);
+		}
+	}
+	else if (firstToken->type == TOKEN_VAR) // if variable id
+	{
+
+		result->children[EXPRESSION] = buildASTVariables(FirstNode);
+
+
+		result->children[NEXT] = buildTree(FirstNode);
+
 	}
 	return result;
 }

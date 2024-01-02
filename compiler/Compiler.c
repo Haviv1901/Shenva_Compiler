@@ -6,30 +6,46 @@
 
 void tokenPrint(void* data);
 
+
 /* main function, compile a txt file into a .exe file */
 void Compile(char* inputFileName, char* outputFileName)
 {
 
-	if (activateLexer(inputFileName)) // lex inpput file
+	if (!activateLexer(inputFileName)) // lex inpput file
 	{
-
-		llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME); // extract tokens to c memory
-		llist hold = *tokenList;
-
-	//	llist_print(tokenList, tokenPrint); // print for debugging
-
-		ASTNode* tree = buildTree(tokenList); // build AST
-
-		convertASTToASM(tree, outputFileName); // convert AST to ASM code.
-		runMasmAndLink(outputFileName);
-		deleteAST(tree); // free alocated memory of AST
-		*tokenList = hold;
-		token_llist_free(tokenList);
-		// Assembly to .exe and finish sprint 1 :)
-
+		return;
 	}
 
+	llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME); // extract tokens to c memory
+	llist hold = *tokenList;
 
+	llist_print(tokenList, tokenPrint); // print for debugging
+	VariableList* varList = createVariableList(tokenList);
+
+	if(isVars(tokenList) && varList == NULL) // checking if there is any undefined variable error.
+	{
+		token_llist_free(tokenList);
+		return;
+	}
+
+	
+
+	ASTNode* tree = buildTree(tokenList); // build AST
+
+	convertASTToASM(tree, outputFileName, varList); // convert AST to ASM code.
+	runMasmAndLink(outputFileName);
+	deleteAST(tree); // free alocated memory of AST
+	*tokenList = hold;
+
+	token_llist_free(tokenList);
+	deleteVariableList(varList);
+
+
+}
+
+VariableList* createVariableList(llist* tokenList)
+{
+	return createVariableListFromToken(tokenList);
 }
 
 /* lex a txt file into a token list */

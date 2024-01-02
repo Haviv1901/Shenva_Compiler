@@ -99,6 +99,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AST.c" />
+    <ClCompile Include="ASTdeclerations.c" />
     <ClCompile Include="ASTfunctions.c" />
     <ClCompile Include="ASTManager.c" />
     <ClCompile Include="ASTnumeric.c" />
@@ -150,9 +152,11 @@
     <ClCompile Include="masmAndLink.c" />
     <ClCompile Include="prog.c" />
     <ClCompile Include="TokenGetter.c" />
+    <ClCompile Include="VariableManager.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST.h" />
+    <ClInclude Include="ASTdeclerations.h" />
     <ClInclude Include="ASTfunctions.h" />
     <ClInclude Include="ASTManager.h" />
     <ClInclude Include="ASTnumeric.h" />
@@ -163,9 +167,7 @@
     <ClInclude Include="lexer.h" />
     <ClInclude Include="llist.h" />
     <ClInclude Include="TokenGetter.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="output.tok" />
+    <ClInclude Include="VariableManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

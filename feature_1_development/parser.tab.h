@@ -40,16 +40,34 @@
       know about them.  */
    enum yytokentype {
      NUM = 258,
-     ADD = 259,
-     SUB = 260,
-     MUL = 261,
-     DIV = 262,
-     MOD = 263,
-     LPAREN = 264,
-     RPAREN = 265,
-     ERROR = 266,
-     PRINT = 267,
-     ENDL = 268
+     LETTER = 259,
+     DECIMAL = 260,
+     ADD = 261,
+     SUB = 262,
+     MUL = 263,
+     DIV = 264,
+     MOD = 265,
+     LPAREN = 266,
+     RPAREN = 267,
+     ERROR = 268,
+     PRINTINT = 269,
+     PRINTCHAR = 270,
+     PRINTFLOAT = 271,
+     COMMA = 272,
+     INTINPUT = 273,
+     FLOATINPUT = 274,
+     CHARINPUT = 275,
+     ENDL = 276,
+     ASSIGN = 277,
+     INT = 278,
+     CHAR = 279,
+     FLOAT = 280,
+     VAR = 281,
+     ADDEQ = 282,
+     SUBEQ = 283,
+     MULEQ = 284,
+     DIVEQ = 285,
+     MODEQ = 286
    };
 #endif
 
@@ -68,7 +86,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 72 "parser.tab.h"
+#line 90 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

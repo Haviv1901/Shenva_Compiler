@@ -1,1 +1,6 @@
-hadpasa( 5 / 5)
+printInt(intInput())
+printChar('\n')
+printFloat(floatInput())
+printChar('\n')
+printChar(charInput())
+
