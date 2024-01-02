@@ -30,7 +30,7 @@ int isTwoChildNode(enum TokenTypes token);
 
 int isPrintToken(Token token);
 int isVariableToken(Token token);
-int isNumericToken(Token token);
+int isExpressionToken(Token token);
 
 
 

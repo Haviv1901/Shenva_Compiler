@@ -15,7 +15,7 @@ FILE* errorFile;
 %token ADD SUB MUL DIV MOD
 %token LPAREN RPAREN
 %token <str> ERROR
-%token PRINTINT PRINTCHAR PRINTFLOAT COMMA
+%token PRINTINT PRINTCHAR PRINTFLOAT COMMA INTINPUT FLOATINPUT CHARINPUT
 %token ENDL
 %token ASSIGN
 %token INT CHAR FLOAT
@@ -37,6 +37,7 @@ statements : statement
 statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
 		  |  PRINTCHAR LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
 		  |  PRINTFLOAT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
+
 		  | expression ENDL
           | declaration ENDL
           | assignment ENDL
@@ -68,10 +69,16 @@ assignment : VAR ASSIGN expression
 			| VAR MODEQ expression
            ;
 
+input : INTINPUT 
+	  | FLOATINPUT 
+	  | CHARINPUT 
+	  ;
+
 expression : NUM
 		   | VAR
 		   | LETTER
 		   | DECIMAL
+		   | input LPAREN RPAREN
            | expression ADD expression { /* Handle addition here */ }
            | expression SUB expression { /* Handle subtraction here */ }
            | expression MUL expression { /* Handle multiplication here */ }
@@ -80,6 +87,7 @@ expression : NUM
            | LPAREN expression RPAREN   { /* Handle parentheses here */ }
 		   | error 
            ;
+
 
 
 %%
@@ -157,6 +165,21 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "\"-=\"");
 			i += 4;
+		}
+		else if (strncmp(msg + i, "INTINPUT", 8) == 0)
+		{
+			fprintf(errorFile, "\"-=\"");
+			i += 7;
+		}
+		else if (strncmp(msg + i, "FLOATINPUT",10) == 0)
+		{
+			fprintf(errorFile, "\"-=\"");
+			i += 9;
+		}
+		else if (strncmp(msg + i, "CHARINPUT", 9) == 0)
+		{
+			fprintf(errorFile, "\"-=\"");
+			i += 8;
 		}
 		else if (strncmp(msg + i, "MULEQ", 5) == 0)
 		{

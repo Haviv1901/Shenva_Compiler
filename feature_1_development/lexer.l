@@ -21,6 +21,12 @@ void set_output_file(FILE* file) {
 
 %%
 ","					{ fprintf(outputFile, ",\n"); return COMMA;}
+"intInput"   { fprintf(outputFile, "j\n"); return INTINPUT;}
+"keletShelShalem"   { fprintf(outputFile, "j\n"); return INTINPUT;}
+"charInput"   { fprintf(outputFile, "L\n"); return CHARINPUT;}
+"keletShelOt"   { fprintf(outputFile, "L\n"); return CHARINPUT;}
+"floatInput"   { fprintf(outputFile, "m\n"); return FLOATINPUT;}
+"keletShelTzaf"   { fprintf(outputFile, "m\n"); return FLOATINPUT;}
 "hadpasaShelMispar" { fprintf(outputFile, "8\n"); return PRINTINT;}
 "printInt"   { fprintf(outputFile, "8\n"); return PRINTINT;}
 "hadpasaShelOt" { fprintf(outputFile, "h\n"); return PRINTCHAR;}

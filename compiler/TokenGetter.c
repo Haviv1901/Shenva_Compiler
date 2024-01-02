@@ -274,6 +274,35 @@ llist* extractToken(FILE* file)
 			token->value = NULL;
 			isPrintLine = true;
 		}
+		else if (charFromfile == TOKEN_INPUT_FLOAT)
+		{
+			token->type = TOKEN_INPUT_FLOAT;
+			lastVoidType = TOKEN_INPUT_FLOAT;
+			token->value = NULL;
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+		}
+		else if (charFromfile == TOKEN_INPUT_INT)
+		{
+			token->type = TOKEN_INPUT_INT;
+			token->value = NULL;
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+		}
+		else if (charFromfile == TOKEN_INPUT_CHAR)
+		{
+			token->type = TOKEN_INPUT_CHAR;
+			token->value = NULL;
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+			charFromfile = fgetc(file); // skip the space
+
+		}
 		else if (charFromfile == TOKEN_ENDL)
 		{
 			token->type = TOKEN_ENDL;
@@ -397,6 +426,18 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_RPARN)
 	{
 		printf(")");
+	}
+	else if (token->type == TOKEN_INPUT_CHAR)
+	{
+		printf("inputChar");
+	}
+	else if (token->type == TOKEN_INPUT_FLOAT)
+	{
+		printf("inputFloat");
+	}
+	else if (token->type == TOKEN_INPUT_INT)
+	{
+		printf("inputInt");
 	}
 	else if (token->type == TOKEN_PRINT_INT)
 	{

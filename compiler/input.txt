@@ -1,1 +1,6 @@
-printFloat(2.54)
+printInt(intInput())
+printChar('\n')
+printFloat(floatInput())
+printChar('\n')
+printChar(charInput())
+

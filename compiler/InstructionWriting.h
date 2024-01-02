@@ -20,9 +20,10 @@ void copyBoneFile(FILE* asmFile, bool boneFileNumber);
 void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList);
 
 void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList);
-bool writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
-void writeNumericInstruction(Token* operand, FILE* asmFile);
+int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
+void writeNumericInstruction(Token* operand, FILE* asmFile, bool isEAXdecimal, bool isEBXdecimal);
 void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
+int isInputToken(Token token);
 void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 int getIEEE754(float val);

@@ -1,1 +1,3 @@
-printFloat(5.5)
+intInput()
+floatInput()
+charInput()
