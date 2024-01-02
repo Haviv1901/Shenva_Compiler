@@ -74,6 +74,7 @@ get_char_func PROC
 	jnz close_get_char_function
 	mov al, bl
 	close_get_char_function:
+	mov ah, 0
 	ret
 get_char_func  ENDP
 

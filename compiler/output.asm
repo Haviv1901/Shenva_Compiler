@@ -74,6 +74,7 @@ get_char_func PROC
 	jnz close_get_char_function
 	mov al, bl
 	close_get_char_function:
+	mov ah, 0
 	ret
 get_char_func  ENDP
 
@@ -99,6 +100,10 @@ call readInt
 push eax
 pop eax
 call WriteChar
+xor eax, eax
+call get_char_func
+push eax
+call print_number_signed
 
 mov esp, ebp
 pop ebp

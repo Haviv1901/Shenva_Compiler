@@ -1,1 +1,2 @@
 printChar(intInput())
+printInt(charInput())
