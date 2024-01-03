@@ -92,7 +92,18 @@ int isTwoChildNode(enum TokenTypes token)
 		token == TOKEN_INT ||
 		token == TOKEN_CHAR ||
 		token == TOKEN_FLOAT ||
-		token == TOKEN_ASSIGN)
+		token == TOKEN_ASSIGN ||
+		token == TOKEN_OR ||
+		token == TOKEN_AND || 
+		token == TOKEN_EQUALS || 
+		token == TOKEN_NOT_EQUALS || 
+		token == TOKEN_GREATER || 
+		token == TOKEN_NOT_GREATER || 
+		token == TOKEN_LESSER || 
+		token == TOKEN_NOT_LESSER || 
+		token == TOKEN_GREATER_EQUALS || 
+		token == TOKEN_LESSER_EQUALS ||
+		token == TOKEN_BOOL)
 	{
 		return 1;
 	}
@@ -107,7 +118,8 @@ int isOneChildNode(enum TokenTypes token)
 		token == TOKEN_RPARN ||
 		token == TOKEN_PRINT_CHAR ||
 		token == TOKEN_PRINT_FLOAT ||
-		token == TOKEN_PRINT_INT)
+		token == TOKEN_PRINT_INT ||
+		token == TOKEN_NOT)
 	{
 		return 1;
 	}
@@ -130,7 +142,8 @@ int isVariableToken(Token token)
 {
 	if (token.type == TOKEN_INT ||
 		token.type == TOKEN_CHAR ||
-		token.type == TOKEN_FLOAT)
+		token.type == TOKEN_FLOAT ||
+		token.type == TOKEN_BOOL)
 	{
 		return 1;
 	}
@@ -145,7 +158,25 @@ int isExpressionToken(Token token)
 		token.type == TOKEN_INPUT_CHAR ||
 		token.type == TOKEN_INPUT_FLOAT ||
 		token.type == TOKEN_INPUT_INT ||
-		token.type == TOKEN_LPARN) // if numeric expression
+		token.type == TOKEN_LPARN ||
+		token.type == TOKEN_NOT) // if numeric expression
+	{
+		return 1;
+	}
+	return 0;
+}
+
+
+int isBooleanExpressionToken(enum TokenTypes token)
+{
+	if (token == TOKEN_EQUALS ||
+		token == TOKEN_NOT_EQUALS ||
+		token == TOKEN_GREATER ||
+		token == TOKEN_NOT_GREATER ||
+		token == TOKEN_LESSER ||
+		token == TOKEN_NOT_LESSER ||
+		token == TOKEN_GREATER_EQUALS ||
+		token == TOKEN_LESSER_EQUALS)
 	{
 		return 1;
 	}

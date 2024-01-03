@@ -37,7 +37,7 @@ void token_llist_free(llist* list)
 {
     struct node* curr = *list;
     struct node* next;
-    Token* tok = NULL; 
+    Token* tok = curr->data; 
     while (curr != NULL)
     {
         tok = curr->data;

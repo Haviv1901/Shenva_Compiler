@@ -31,7 +31,7 @@ int isTwoChildNode(enum TokenTypes token);
 int isPrintToken(Token token);
 int isVariableToken(Token token);
 int isExpressionToken(Token token);
-
+int isBooleanExpressionToken(enum TokenTypes token);
 
 
 

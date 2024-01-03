@@ -20,25 +20,25 @@ void Compile(char* inputFileName, char* outputFileName)
 	llist hold = *tokenList;
 
 	llist_print(tokenList, tokenPrint); // print for debugging
-	//VariableList* varList = createVariableList(tokenList);
+	VariableList* varList = createVariableList(tokenList);
 
-	//if(isVars(tokenList) && varList == NULL) // checking if there is any undefined variable error.
-	//{
-	//	token_llist_free(tokenList);
-	//	return;
-	//}
+	if(isVars(tokenList) && varList == NULL) // checking if there is any undefined variable error.
+	{
+		token_llist_free(tokenList);
+		return;
+	}
 
-	//
+	
 
-	//ASTNode* tree = buildTree(tokenList); // build AST
+	ASTNode* tree = buildTree(tokenList); // build AST
 
 	//convertASTToASM(tree, outputFileName, varList); // convert AST to ASM code.
 	//runMasmAndLink(outputFileName);
-	//deleteAST(tree); // free alocated memory of AST
-	//*tokenList = hold;
+	deleteAST(tree); // free alocated memory of AST
+	*tokenList = hold;
 
 	token_llist_free(tokenList);
-	//deleteVariableList(varList);
+	deleteVariableList(varList);
 
 
 }
