@@ -1,9 +1,4 @@
-int a = 5, b = 6
-bool x = a > b
-
-
-
-
-
+bool a, b = true, x = a == b
+hadpasaShelTzaf('a')
 
 

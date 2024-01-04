@@ -159,7 +159,8 @@ int isExpressionToken(Token token)
 		token.type == TOKEN_INPUT_FLOAT ||
 		token.type == TOKEN_INPUT_INT ||
 		token.type == TOKEN_LPARN ||
-		token.type == TOKEN_NOT) // if numeric expression
+		token.type == TOKEN_NOT || 
+		token.type == TOKEN_VAR) // if numeric expression
 	{
 		return 1;
 	}

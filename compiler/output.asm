@@ -96,14 +96,39 @@ main:
 
 
 
-call readInt
+sub esp, 1
+mov byte ptr[esp], 0
+sub esp, 1
+push 1
+pop eax
+mov byte ptr [ebp - 2], al
+sub esp, 1
+xor eax, eax
+mov al, byte ptr [ebp - 1]
+push eax
+fild dword ptr [esp]
+fstp dword ptr [esp]
+xor eax, eax
+mov al, byte ptr [ebp - 2]
+push eax
+fild dword ptr [esp]
+fstp dword ptr [esp]
+pop ebx
+pop eax
+xor edx, edx
+cmp eax, ebx
+jne label_0
+mov edx, 1
+label_0:
+mov eax, edx
 push eax
 pop eax
-call WriteChar
-xor eax, eax
-call get_char_func
-push eax
-call print_number_signed
+mov byte ptr [ebp - 3], al
+push 97
+fild DWORD PTR [esp]
+call WriteFloat
+fstp dword ptr [esp]
+pop eax
 
 mov esp, ebp
 pop ebp
