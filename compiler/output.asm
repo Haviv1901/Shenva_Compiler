@@ -117,18 +117,17 @@ pop ebx
 pop eax
 xor edx, edx
 cmp eax, ebx
-jne label_0
+je label_0
 mov edx, 1
 label_0:
 mov eax, edx
 push eax
 pop eax
 mov byte ptr [ebp - 3], al
-push 97
-fild DWORD PTR [esp]
-call WriteFloat
-fstp dword ptr [esp]
-pop eax
+xor eax, eax
+mov al, byte ptr [ebp - 3]
+push eax
+call print_number_signed
 
 mov esp, ebp
 pop ebp

@@ -16,7 +16,6 @@
 #define FIRST false
 #define SECOND true
 
-static unsigned long lableNum = 0;
 
 void copyBoneFile(FILE* asmFile, bool boneFileNumber);
 void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList);

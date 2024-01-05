@@ -7,6 +7,7 @@
 
 #include "fileHelper.h"
 bool isLastValFloat = false;
+unsigned long lableNum = 0;
 
 
 /// <summary>
@@ -256,9 +257,7 @@ int writeLogicalBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 		fprintf(asmFile, "je label_%d\n", lableNum);
 		writeLogicalBranch(branch->children[1], asmFile, varList);// doing so only if the first value isnt 1
 		fprintf(asmFile, "pop eax\n");
-		fprintf(asmFile, "pop ebx\n");
-		fprintf(asmFile, "or eax, ebx\n");
-		fprintf(asmFile, "push eax\n");
+		fprintf(asmFile, "mov dword ptr [esp], eax\n");
 		fprintf(asmFile, "label_%d:\n", lableNum);
 		lableNum += 1;
 		return false;

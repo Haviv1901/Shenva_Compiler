@@ -413,6 +413,26 @@ llist* extractToken(FILE* file)
 			token->type = TOKEN_LETTER;
 			token->value = extractLetter(charFromfile, file);
 		}
+		else if (charFromfile == TOKEN_IF)
+		{
+			token->type = TOKEN_IF;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_ELSE)
+		{
+			token->type = TOKEN_ELSE;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_LBRACK)
+		{
+			token->type = TOKEN_LBRACK;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_RBRACK)
+		{
+			token->type = TOKEN_RBRACK;
+			token->value = NULL;
+		}
 		else if (charFromfile == TOKEN_COMMA)
 		{
 			if (isPrintLine)
@@ -584,6 +604,22 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_LETTER)
 	{
 		printf("%c", *((char*)(token->value)));
+	}
+	else if (token->type == TOKEN_IF)
+	{
+		printf("if");
+	}
+	else if (token->type == TOKEN_ELSE)
+	{
+		printf("else");
+	}
+	else if (token->type == TOKEN_LBRACK)
+	{
+		printf("{");
+	}
+	else if (token->type == TOKEN_RBRACK)
+	{
+		printf("}");
 	}
 	else if (token->type == TOKEN_VAR)
 	{

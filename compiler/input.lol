@@ -1,4 +1,16 @@
-bool a, b = true, x = a == b
-hadpasaShelTzaf('a')
+
+
+if (a == 2)
+{
+	if (b)
+	{
+	}
+}
+else if (x)
+{
+}
+else
+{
+}
 
 
