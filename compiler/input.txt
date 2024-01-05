@@ -1,6 +1,10 @@
-printInt(intInput())
-printChar('\n')
-printFloat(floatInput())
-printChar('\n')
-printChar(charInput())
 
+int a
+if(a== 5)
+{
+    int a
+    
+    int b
+   
+}
+int b
