@@ -90,6 +90,14 @@ void set_output_file(FILE* file) {
 "tzaf"	  { fprintf(outputFile, "f\n"); return FLOAT;}
 "bool"	  { fprintf(outputFile, "b\n"); return BOOL;}
 "meteg"	  { fprintf(outputFile, "b\n"); return BOOL;}
+"if"	  { fprintf(outputFile, "I\n"); return IF;}
+"em"	  { fprintf(outputFile, "I\n"); return IF;}
+"else"	  { fprintf(outputFile, "E\n"); return ELSE;}
+"aheret"	  { fprintf(outputFile, "E\n"); return ELSE;}
+"{"	  { fprintf(outputFile, "{\n"); return LBRACK;}
+"}"	  { fprintf(outputFile, "}\n"); return RBRACK;}
+
+
 [a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); strcpy(lastIdentifier, yytext); return VAR; }
 '([^\\'\n"\r\b\t\f]|\\[\\'n"tbrf])'   {fprintf(outputFile, "l %s\n", yytext); return LETTER; }
 [-]?[0-9]+   { fprintf(outputFile, "1 %s\n", yytext); return NUM;}

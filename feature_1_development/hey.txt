@@ -1,5 +1,19 @@
 
 
-!b
-
-
+if (b)
+{
+	if (h == 3 and p < 2)
+	{
+		printInt(5)
+	}
+	else if (h == 3)
+	{
+		printInt(3)
+	}
+	else
+	{
+		printChar('a')
+	}
+	
+	
+}

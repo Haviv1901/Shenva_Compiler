@@ -15,6 +15,7 @@ FILE* errorFile;
 %token ADD SUB MUL DIV MOD
 %token LPAREN RPAREN
 %token EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS NOT OR AND
+%token IF ELSE LBRACK RBRACK
 %token <str> ERROR
 %token PRINTINT PRINTCHAR PRINTFLOAT COMMA INTINPUT FLOATINPUT CHARINPUT
 %token TRUE FALSE
@@ -26,28 +27,44 @@ FILE* errorFile;
 %left ADD SUB
 %left MUL DIV MOD
 %left EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS OR AND
-%nonassoc NOT
+%nonassoc NOT ELSE
+%nonassoc LOWER_THAN_ELSE
 %%
 
 
-program : statements
+program : blocks
         ;
 
-statements : statement
-           | statements statement
-           ;
+blocks : block
+        | blocks block
+        ;
+		   
+block : statement
+		| condition
+		;
+		
+condition : IF LPAREN expression RPAREN empty_space LBRACK blocks RBRACK ENDL else_part
+          ;
 
+else_part : ELSE empty_space LBRACK blocks RBRACK ENDL
+          | ELSE condition %prec LOWER_THAN_ELSE
+          | /* empty, if there's no else part */
+          ;
+
+empty_space : ENDL
+            | empty_space ENDL
+            ;
+		
 statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
-		  |  PRINTCHAR LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
+		  |  PRINTCHAR LPAREN expression_list RPAREN  ENDL { /* Handle print statement */ }
 		  |  PRINTFLOAT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
-
 		  | expression ENDL
           | declaration ENDL
           | assignment ENDL
 		  | ENDL
           | ERROR {fprintf(errorFile, "syntax error, unrecognized \"%s\" in the code (line %d)\n", $1, yylineno);}
           ;
-
+		
 declaration : INT decleration_list
             | CHAR decleration_list
 			| FLOAT decleration_list
@@ -116,7 +133,6 @@ numeric_expression : NUM
            | LPAREN numeric_expression RPAREN   { /* Handle parentheses here */ }
 		   | error 
            ;
-
 
 
 %%
