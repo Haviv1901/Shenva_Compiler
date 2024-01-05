@@ -127,7 +127,7 @@ writeAssignBranch: this function will write an assign branch into the asm file
 input: the decleration branch, and the asm file
 output: non
 */
-void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
+void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList) 
 {
 	writeBranch(branch->children[1], asmFile, varList);
 	if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_CHAR || getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_BOOL)

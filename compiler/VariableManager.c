@@ -9,6 +9,9 @@
 #include <string.h>
 
 int reformattedStackPointer = 0; // new stack pointer that works with variables in size of less then 4 bytes
+ScopeTreeNode* scopeTreeHead = NULL;
+
+int nextScope = -1;
 
 int getSizeByType(enum VarTypes type)
 {
@@ -52,7 +55,7 @@ void deleteVariableList(VariableList* varList) // deletes allocated memory for t
  * \param type type of new var
  * \param placeInMemory place in memory of new var
  */
-void createNewVariable(char* identifier, enum VarTypes type, VariableList** list, int varScope)
+void createNewVariable(char* identifier, enum VarTypes type, VariableList** varList, int varScope)
 {
 
 	// create new veriable
@@ -68,13 +71,13 @@ void createNewVariable(char* identifier, enum VarTypes type, VariableList** list
 	newVarNode->var->scope = varScope;
 	
 	newVarNode->next = NULL;
-	if (*list == NULL)
+	if (*varList == NULL)
 	{
-		*list = newVarNode;
+		*varList = newVarNode;
 	}
 	else
 	{
-		curr = *list;
+		curr = *varList;
 		while (curr->next != NULL)
 		{
 			curr = curr->next;
@@ -101,7 +104,8 @@ int isVariableExistInScope(VariableList* varList, char* identifier, int varScope
 		return 0;
 	}
 
-	if (otherVarScope <= varScope) // if theres allready a variable with the same id in current scope or below it, then return true
+
+	if (isAncestor(scopeTreeHead, varScope, otherVarScope)) // if theres allready a variable with the same id in current scope or below it, then return true
 	{
 		return 1;
 	}
@@ -143,11 +147,7 @@ Variable* getVariable(VariableList* varList, char* identifier)
 
 bool callIsVariablExist(VariableList* varList, char* identifier, int currentScope)
 {
-	if (isVariableExistInScope(varList, identifier, currentScope)) // checking if id already exists
-	{
-		return true;
-	}
-	return false;
+	return isVariableExistInScope(varList, identifier, currentScope); // checking if id already exists
 }
 
 enum VarTypes getVarByTokenType(enum TokenTypes currentToken)
@@ -173,18 +173,39 @@ enum VarTypes getVarByTokenType(enum TokenTypes currentToken)
 		return VAR_BOOL;
 	}
 }
+
+
+VariableList* createVariableListFromToken(llist* tokenList)
+{
+	VariableList* varList = NULL;
+	return createVariableListFromScope(tokenList, -1 , scopeTreeHead, &varList);
+	deleteScopeTree(scopeTreeHead);
+}
+
+
 /*
-createVariableListFromToken: this function will produce the var list from the tokens
+createVariableListFromScope: this function will produce the var list from the tokens
 input; the token list. 
 output: a variable list, or NULL if there is a semantic error, or if there are no vars
 */
-VariableList* createVariableListFromToken(llist* tokenList, int currentScope)
+VariableList* createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNode* currentScopeNode, VariableList** varList)
 {
-	VariableList* varList = NULL;
 
+	nextScope++;
+	currentScope = nextScope;
+	if (scopeTreeHead == NULL)
+	{
+		scopeTreeHead = createNode(currentScope);
+		currentScopeNode = scopeTreeHead;
+	}
+	else
+	{
+		addChild(currentScopeNode, currentScope);
+	}
+	
 
-	currentScope++;
 	int holderForPlacceInMemory;
+	int outerBracketBalance = 1;
 
 
 	if (tokenList == NULL)
@@ -202,49 +223,71 @@ VariableList* createVariableListFromToken(llist* tokenList, int currentScope)
 		{
 			curr = curr->next;
 			identifier = (char*)(((Token*)(curr->data))->value);//getting identifier
-			if(callIsVariablExist(varList, identifier, currentScope))
+			if(callIsVariablExist(*varList, identifier, currentScope))
 			{
 				printf("Semantic error: variable %s is already defined in scope\n", identifier);
-				deleteVariableList(varList);
+				deleteVariableList(*varList);
 				return NULL;
 			}
-			createNewVariable(identifier, getVarByTokenType(currentToken), &varList, currentScope);//adding var
+			createNewVariable(identifier, getVarByTokenType(currentToken), varList, currentScope);//adding var
 		}
 		else if (currentToken == TOKEN_VAR)//if its a variable
 		{
 			identifier = (char*)(((Token*)(curr->data))->value);
-			if (!callIsVariablExist(varList, identifier, currentScope)) // checking if variable has been declared before
+			if (!callIsVariablExist(*varList, identifier, currentScope)) // checking if variable has been declared before
 			{
 				printf("Semantic error: '%s' is undefined\n", identifier);
-				deleteVariableList(varList);
+				deleteVariableList(*varList);
 				return NULL;
 			}
 		}
 		else if (currentToken == TOKEN_ERROR)
 		{
 			printf("Error occurred.\n");
-			deleteVariableList(varList);
+			deleteVariableList(*varList);
 			return NULL;
 		}
 		else if (currentToken == TOKEN_LBRACK)
 		{
-
+			outerBracketBalance++;
 			holderForPlacceInMemory = reformattedStackPointer;
-			curr = curr->next; // skipping the right bracket token
-			appendVariableList(&varList, createVariableListFromToken(&curr, currentScope));
+			curr = curr->next; // skipping the left bracket token
+			if(createVariableListFromScope(&curr, currentScope, currentScopeNode, varList) == NULL)
+			{
+				return NULL;
+			}
+			
 
 			// skip all tokens until after the right bracket.
-			while(((Token*)(curr->data))->type != TOKEN_RBRACK)
+			int bracketBalance = 1;
+			while (bracketBalance != 0)
 			{
+
+				if (((Token*)(curr->data))->type == TOKEN_LBRACK)
+				{
+					bracketBalance++;
+				}
+
+
+				if(((Token*)(curr->data))->type == TOKEN_RBRACK)
+				{
+					bracketBalance--;
+				}
+
 				curr = curr->next;
 			}
 
-			curr = curr->next; // skip the right bracket and continue to scan
 			reformattedStackPointer = holderForPlacceInMemory;
 		}
 		else if (currentToken == TOKEN_RBRACK)
 		{
-			return varList;
+			outerBracketBalance--;
+			currentScope--;
+			if(outerBracketBalance == 0)
+			{
+				return varList;
+			}
+
 		}
 		curr = curr->next;
 	}
