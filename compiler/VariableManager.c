@@ -11,7 +11,6 @@
 int reformattedStackPointer = 0; // new stack pointer that works with variables in size of less then 4 bytes
 ScopeTreeNode* scopeTreeHead = NULL;
 VariableList* varListHead = NULL;
-
 int nextScope = -1;
 
 int getSizeByType(enum VarTypes type)
@@ -123,6 +122,24 @@ int getVariableScope(VariableList* varList, char* identifier)
 		return -1;
 	}
 	return var->scope;
+}
+
+/*
+ * get variable by scope
+ * return: variable in  scope inputed
+ */
+Variable* getVariableByScope(VariableList* varList, char* identifier, int scope)
+{
+	VariableList* curr = varList;
+	while (curr != NULL)
+	{
+		if (strcmp(curr->var->Id, identifier) == 0 && curr->var->scope == scope)
+		{
+			return curr->var;
+		}
+		curr = curr->next;
+	}
+	return NULL;
 }
 
 /**
@@ -259,7 +276,8 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 			outerBracketBalance++;
 			holderForPlacceInMemory = reformattedStackPointer;
 			curr = curr->next; // skipping the left bracket token
-			
+
+
 			if(createVariableListFromScope(&curr, currentScope, currentScopeNode) == 0)
 			{
 				return 0;

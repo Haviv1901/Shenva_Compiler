@@ -8,6 +8,7 @@
 #include "fileHelper.h"
 bool isLastValFloat = false;
 unsigned long lableNum = 0;
+int scope;
 
 
 /// <summary>

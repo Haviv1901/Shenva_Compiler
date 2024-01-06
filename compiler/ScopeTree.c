@@ -53,9 +53,11 @@ void addChild(ScopeTreeNode* tree, int value)
 }
 
 // Function to check if a node is an ancestor of another node or if they are the same node
-int isAncestor(ScopeTreeNode* tree, int descendantValue, int potentialAncestorValue) {
+int isAncestor(ScopeTreeNode* tree, int descendantValue, int potentialAncestorValue)
+{
     // If the tree is NULL, return 0
-    if (tree == NULL) {
+    if (tree == NULL) 
+    {
         return 0;
     }
     // If the value of the current node is equal to the potential ancestor value

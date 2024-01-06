@@ -1,23 +1,16 @@
-int a
+
+
 if(5 == 5)
 {
-    if(1==5)
-    {
-        char yon = 'j'
-    }
-    else
-    {
-    
-        int yon
-    
-    }
+
+    int a = 5
+    printInt(a)
 }
-else
+
+
+if(5 == 5)
 {
-    
-    if(1==5)
-    {
-        a
-    }
+    printInt(5)
+
 
 }
