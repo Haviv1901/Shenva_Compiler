@@ -92,17 +92,18 @@ int isAncestor(ScopeTreeNode* tree, int descendantValue, int potentialAncestorVa
 void deleteScopeTree(ScopeTreeNode* tree)
 {
     // If the tree is NULL, return
-    if (tree == NULL) {
+    if (tree == NULL) 
+    {
         return;
     }
     // Recursively delete all the children of the current node
     ChildrenNode* currentChild = tree->children;
     while (currentChild != NULL)
     {
-        deleteScopeTree(currentChild->value);
         ChildrenNode* temp = currentChild;
         currentChild = currentChild->next;
-        free(temp);
+        deleteScopeTree(temp->value); // delete the ScopeTreeNode
+        free(temp); // then delete the ChildrenNode
     }
     // Delete the current node
     free(tree);

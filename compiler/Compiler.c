@@ -38,7 +38,7 @@ void Compile(char* inputFileName, char* outputFileName)
 	*tokenList = hold;
 
 	token_llist_free(tokenList);
-	//deleteVariableList(varList);
+	deleteVariableList(varList);
 
 
 }

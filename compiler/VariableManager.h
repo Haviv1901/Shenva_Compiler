@@ -44,7 +44,7 @@ void printVariable(Variable* var);
 void printVariableList(VariableList* varList);
 
 VariableList* createVariableListFromToken(llist* tokenList);
-VariableList* createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNode* currentScopeNode, VariableList** varList);
+int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNode* currentScopeNode);
 bool isVars(llist* tokenList);
 // creates a variable list from a token list and run simple checks on the variable declarations
 
