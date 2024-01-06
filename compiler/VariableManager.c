@@ -198,7 +198,7 @@ VariableList* createVariableListFromToken(llist* tokenList)
 
 	if(createVariableListFromScope(tokenList, -1 , scopeTreeHead) == 0)
 	{
-		printf("Semantic  analysis failed.");
+		printf("Semantic  analysis failed.\n");
 		deleteScopeTree(scopeTreeHead);
 		return NULL;
 	}

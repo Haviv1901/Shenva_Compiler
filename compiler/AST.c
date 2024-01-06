@@ -31,6 +31,19 @@ ASTNode* createNewASTnode(Token* token)
 		result->children[1] = NULL;
 
 	}
+	else if (token->type == TOKEN_IF)
+	{
+		result->children = (ASTNode**)malloc((TWO_CHILDREN_NODE + 1) * sizeof(ASTNode*));
+		if (result->children == NULL)
+		{
+			free(result);
+			return NULL;
+		}
+		result->children[0] = NULL; // setting children to NULL, the outer function can change that
+		result->children[1] = NULL;
+		result->children[2] = NULL;
+
+	}
 	else if (isOneChildNode(token->type)) // checking if the token is a one child type of token	
 	{
 		result->children = (ASTNode**)malloc(ONE_CHILD_NODE * sizeof(ASTNode*));
@@ -63,6 +76,23 @@ void deleteAST(ASTNode* head)
 		if (head->children[1] != NULL)
 		{
 			deleteAST(head->children[1]);
+		}
+		free(head->children);
+	}
+	else if (head->token->type == TOKEN_IF)
+	{
+		// 3 child
+		if (head->children[0] != NULL)
+		{
+			deleteAST(head->children[0]);
+		}
+		if (head->children[1] != NULL)
+		{
+			deleteAST(head->children[1]);
+		}
+		if (head->children[2] != NULL)
+		{
+			deleteAST(head->children[2]);
 		}
 		free(head->children);
 	}
@@ -119,7 +149,8 @@ int isOneChildNode(enum TokenTypes token)
 		token == TOKEN_PRINT_CHAR ||
 		token == TOKEN_PRINT_FLOAT ||
 		token == TOKEN_PRINT_INT ||
-		token == TOKEN_NOT)
+		token == TOKEN_NOT || 
+		token == TOKEN_ELSE)
 	{
 		return 1;
 	}

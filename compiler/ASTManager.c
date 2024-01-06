@@ -12,7 +12,7 @@ ASTNode* buildTree(struct node** FirstNode)
 	Token* firstToken = (Token*)(*FirstNode)->data, * currentToken = NULL;
 	ASTNode* result = NULL;
 	struct node* currentNode = *FirstNode;
-	if (((Token*)currentNode->data)->type != TOKEN_ENDL)
+	if (((Token*)currentNode->data)->type != TOKEN_ENDL && ((Token*)currentNode->data)->type != TOKEN_RBRACK)
 	{
 		result = createNewASTnode(NULL);
 	}
@@ -93,6 +93,15 @@ ASTNode* buildTree(struct node** FirstNode)
 		{
 			result->children[NEXT] = buildTree(FirstNode);
 		}
+	}
+	else if (firstToken->type == TOKEN_IF)
+	{
+		int parenthesesEqualizer = 0;
+
+		currentNode = currentNode->next; // skipping the PRINT token
+		currentToken = ((Token*)currentNode->data);
+		result->children[EXPRESSION] = buildASTConditions(FirstNode);
+		result->children[NEXT] = buildTree(FirstNode);
 	}
 	else if (firstToken->type == TOKEN_VAR) // if variable id
 	{

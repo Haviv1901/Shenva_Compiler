@@ -60,6 +60,9 @@
     <ClCompile Include="ScopeTree.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ASTconditions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TokenGetter.h">
@@ -102,6 +105,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScopeTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ASTconditions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
