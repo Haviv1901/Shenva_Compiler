@@ -1,16 +1,25 @@
+int a = 0
 
-
-if(5 == 5)
+if (1)
 {
-
-    int a = 5
-    printInt(a)
+	int b = 0
+	if (1)
+	{
+		int c = 0
+	}
+	else
+	{
+		if (1)
+		{
+			int d = 0
+		}
+		else if (1)
+		{
+		 int e = 0
+		}
+		int f = 0
+	}
+    int g = 0
 }
+int h
 
-
-if(5 == 5)
-{
-    printInt(5)
-
-
-}

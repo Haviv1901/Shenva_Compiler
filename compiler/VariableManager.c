@@ -307,12 +307,13 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 		}
 		else if (currentToken == TOKEN_RBRACK)
 		{
-			outerBracketBalance--;
-			currentScope--;
-			if(outerBracketBalance == 0)
-			{
-				return 1;
-			}
+			//outerBracketBalance--;
+			//if(outerBracketBalance == 0)
+			//{
+			//	return 1;
+			//}
+
+			return 1;
 
 		}
 		curr = curr->next;

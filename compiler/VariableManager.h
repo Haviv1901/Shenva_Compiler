@@ -41,6 +41,7 @@ Variable* getVariable(VariableList* varList, char* identifier);
 void appendVariableList(VariableList** list1, VariableList* list2);
 Variable* getVariableByScope(VariableList* varList, char* identifier, int scope);
 
+
 void printVariable(Variable* var);
 void printVariableList(VariableList* varList);
 

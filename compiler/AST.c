@@ -79,7 +79,7 @@ void deleteAST(ASTNode* head)
 		}
 		free(head->children);
 	}
-	else if (head->token->type == TOKEN_IF)
+	else if (isThreeChildNode(head->token->type))
 	{
 		// 3 child
 		if (head->children[0] != NULL)
@@ -110,6 +110,16 @@ void deleteAST(ASTNode* head)
 	}
 
 	free(head);
+}
+
+
+int isThreeChildNode(enum TokenTypes token)
+{
+	if (token == TOKEN_IF)
+	{
+		return 1;
+	}
+	return 0;
 }
 
 int isTwoChildNode(enum TokenTypes token)

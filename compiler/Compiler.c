@@ -7,6 +7,16 @@
 void tokenPrint(void* data);
 
 
+void printVariaballsWithScope(VariableList* curr)
+{
+	while (curr)
+	{
+		printf("%s: %d\n", curr->var->Id, curr->var->scope);
+		curr = curr->next;
+	}
+}
+
+
 /* main function, compile a txt file into a .exe file */
 void Compile(char* inputFileName, char* outputFileName)
 {
@@ -28,7 +38,7 @@ void Compile(char* inputFileName, char* outputFileName)
 		return;
 	}
 
-	
+	printVariaballsWithScope(varList);
 
 	ASTNode* tree = buildTree(tokenList); // build AST 
 
@@ -42,6 +52,8 @@ void Compile(char* inputFileName, char* outputFileName)
 
 
 }
+
+
 
 VariableList* createVariableList(llist* tokenList)
 {
