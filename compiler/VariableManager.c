@@ -96,19 +96,13 @@ void createNewVariable(char* identifier, enum VarTypes type, VariableList** varL
  */
 int isVariableExistInScope(VariableList* varList, char* identifier, int varScope)
 {
-	int otherVarScope = getVariableScope(varList, identifier);
-	// -1  if var does not exist
 
-	if (otherVarScope == -1) 
-	{
-		return 0;
-	}
-
-
-	if (isAncestor(scopeTreeHead, varScope, otherVarScope)) // if theres allready a variable with the same id in current scope or below it, then return true
+	VariableList* curr = getVariableByScope(varList, identifier, varScope);
+	if (curr)
 	{
 		return 1;
 	}
+
 	return 0;
 
 }
@@ -133,7 +127,7 @@ Variable* getVariableByScope(VariableList* varList, char* identifier, int scope)
 	VariableList* curr = varList;
 	while (curr != NULL)
 	{
-		if (strcmp(curr->var->Id, identifier) == 0 && curr->var->scope == scope)
+		if (strcmp(curr->var->Id, identifier) == 0 && isAncestor(scopeTreeHead, scope, curr->var->scope))
 		{
 			return curr->var;
 		}
@@ -202,9 +196,15 @@ VariableList* createVariableListFromToken(llist* tokenList)
 		deleteScopeTree(scopeTreeHead);
 		return NULL;
 	}
-	deleteScopeTree(scopeTreeHead);
 	return varListHead;
 }
+
+
+void callDeleteScopeTree()
+{
+	deleteScopeTree(scopeTreeHead);
+}
+
 
 
 /*
@@ -322,6 +322,30 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 	return 1;
 
 }
+
+/*
+getSizeOfScope: this function will count the size of a given scope
+input: the list of vars and the scope
+output: the combined size of all of the variables in the scope
+*/
+int getSizeOfScope(VariableList* list, int scope)
+{
+	int result = 0;
+	VariableList* curr = list;
+	while (curr)
+	{
+		if (curr->var->scope == scope)
+		{
+			result += curr->var->size;//gettuing size
+
+		}
+		curr = curr->next;
+	}
+
+	return result;
+}
+
+
 
 void appendVariableList(VariableList** list1, VariableList* list2)
 {

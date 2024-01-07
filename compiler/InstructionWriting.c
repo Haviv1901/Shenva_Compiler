@@ -8,7 +8,8 @@
 #include "fileHelper.h"
 bool isLastValFloat = false;
 unsigned long lableNum = 0;
-
+int currentScope = 0;
+int ScopeCounter = 0;
 
 /// <summary>
 /// function to copy the functions and the assembly code bone to the assembly file
@@ -113,13 +114,48 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 	{
 		writeAssignBranch(tree, asmFile, varList);
 	}
-
+	else if(currentToken->type == TOKEN_IF)
+	{
+		writeConditionBranch(tree, asmFile, varList);
+	}
 	if (next != NULL)
 	{
 		writeBranch(next, asmFile, varList);
 	}
 
 }
+
+
+
+void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
+{
+	int finishLabel = lableNum, scopeSaver = currentScope, scopeSize = 0;
+	lableNum++;
+	writeBranch(branch->children[CONDITION], asmFile, varList);
+	fprintf(asmFile, "pop eax\n");
+	fprintf(asmFile, "cmp eax, 0\n");
+	fprintf(asmFile, "je label_%d\n", lableNum);
+	ScopeCounter++;
+	currentScope = ScopeCounter;
+	writeBranch(branch->children[CODE], asmFile, varList);
+	currentScope = scopeSaver;
+	scopeSize = getSizeOfScope(varList, currentScope + 1);
+	if (scopeSize != 0)
+	{
+		fprintf(asmFile, "add esp, %d\n", scopeSize);
+	}
+	fprintf(asmFile, "label_%d:\n", lableNum);
+
+
+
+
+
+
+
+}
+
+
+
 
 
 /*
@@ -130,25 +166,26 @@ output: non
 void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList) 
 {
 	writeBranch(branch->children[1], asmFile, varList);
-	if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_CHAR || getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_BOOL)
+	if (getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->Type == VAR_CHAR || getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->Type == VAR_BOOL)
 	{
 		if (isLastValFloat)
 		{
 			fprintf(asmFile, "call ConvertFloatToInt\n");
 		}
 		fprintf(asmFile, "pop eax\n");
-		fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+		fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
+		
 	}
-	else if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_INT)
+	else if (getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->Type == VAR_INT)
 	{
 		if (isLastValFloat)
 		{
 			fprintf(asmFile, "call ConvertFloatToInt\n");
 		}
 		fprintf(asmFile, "pop eax\n");
-		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
 	}
-	else if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_FLOAT)
+	else if (getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->Type == VAR_FLOAT)
 	{
 		if (!isLastValFloat)
 		{
@@ -156,7 +193,7 @@ void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 			fprintf(asmFile, "fstp dword ptr [esp]\n");
 		}
 		fprintf(asmFile, "pop eax\n");
-		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
 	}
 
 }
@@ -212,7 +249,7 @@ void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varLis
 				fprintf(asmFile, "call ConvertFloatToInt\n");
 			}
 			fprintf(asmFile, "pop eax\n");
-			fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+			fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
 		}
 		else
 		{
@@ -244,8 +281,10 @@ int writeLogicalBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	{
 		writeLogicalBranch(branch->children[0], asmFile, varList);
 		writeLogicalBranch(branch->children[1], asmFile, varList);
+
 		fprintf(asmFile, "pop eax\n");
 		fprintf(asmFile, "pop ebx\n");
+
 		fprintf(asmFile, "and eax, ebx\n");// logical and
 		fprintf(asmFile, "push eax\n");
 		return false;
@@ -253,10 +292,13 @@ int writeLogicalBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	else if (branch->token->type == TOKEN_OR)
 	{
 		writeLogicalBranch(branch->children[0], asmFile, varList);
+
 		fprintf(asmFile, "cmp dword ptr [esp], 1\n");
 		fprintf(asmFile, "je label_%d\n", lableNum);
+
 		writeLogicalBranch(branch->children[1], asmFile, varList);// doing so only if the first value isnt 1
 		fprintf(asmFile, "pop eax\n");
+
 		fprintf(asmFile, "mov dword ptr [esp], eax\n");
 		fprintf(asmFile, "label_%d:\n", lableNum);
 		lableNum += 1;
@@ -302,11 +344,14 @@ int writeBooleanBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 		}
 		fprintf(asmFile, "pop ebx\n");
 		fprintf(asmFile, "pop eax\n");
+
 		fprintf(asmFile, "xor edx, edx\n");
 		fprintf(asmFile, "cmp eax, ebx\n");
+
 		writeJMPcondition(asmFile, branch->token->type);// taking coresponding jmp condition
 		fprintf(asmFile, "mov edx, 1\n");
 		fprintf(asmFile, "label_%d:\n", lableNum);
+
 		fprintf(asmFile, "mov eax, edx\n");
 		fprintf(asmFile, "push eax\n");
 		lableNum += 1;
@@ -381,18 +426,18 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	}
 	if (branch->token->type == TOKEN_VAR)
 	{
-		if (getVariable(varList, (char*)(branch->token->value))->Type == VAR_CHAR || getVariable(varList, (char*)(branch->token->value))->Type == VAR_BOOL)
+		if (getVariableByScope(varList, (char*)(branch->token->value), currentScope)->Type == VAR_CHAR || getVariableByScope(varList, (char*)(branch->token->value), currentScope)->Type == VAR_BOOL)
 		{
 			fprintf(asmFile, "xor eax, eax\n");
-			fprintf(asmFile, "mov al, byte ptr [ebp - %d]\n", getVariable(varList, (char*)(branch->token->value))->placeInMemory);
+			fprintf(asmFile, "mov al, byte ptr [ebp - %d]\n", getVariableByScope(varList, (char*)(branch->token->value), currentScope)->placeInMemory);
 			fprintf(asmFile, "push eax\n");
 		}
 		else
 		{
-			fprintf(asmFile, "push [ebp - %d]\n", getVariable(varList, (char*)(branch->token->value))->placeInMemory);// getting the stack position of this specific var from the var list
+			fprintf(asmFile, "push [ebp - %d]\n", getVariableByScope(varList, (char*)(branch->token->value), currentScope)->placeInMemory);// getting the stack position of this specific var from the var list
 		}
 
-		if (getVariable(varList, (char*)(branch->token->value))->Type == VAR_FLOAT)
+		if (getVariableByScope(varList, (char*)(branch->token->value), currentScope)->Type == VAR_FLOAT)
 		{
 			return true;
 		}

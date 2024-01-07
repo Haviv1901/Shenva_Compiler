@@ -1,9 +1,7 @@
-if (5 == 5)
+int b = 200
+if (1)
 {
-	if(1)
-	{
-	}
-	else
-	{
-	}
-} 
+	printInt(b)
+}
+
+

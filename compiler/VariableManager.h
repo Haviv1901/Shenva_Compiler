@@ -34,16 +34,17 @@ void deleteVariableList(VariableList* varList); // deletes allocated memory for 
 
 int getSizeByType(enum VarTypes type); // returns the size of the type in bytes
 void createNewVariable(char* identifier, enum VarTypes type, VariableList** varList, int scope);
-int isVariableExistInScope(VariableList* varList, char* identifier);
+int isVariableExistInScope(VariableList* varList, char* identifier, int varScope);
 int getVariableScope(VariableList* varList, char* identifier);
 bool callIsVariablExist(VariableList* varList, char* identifier, int currentScope);
 Variable* getVariable(VariableList* varList, char* identifier);
 void appendVariableList(VariableList** list1, VariableList* list2);
 Variable* getVariableByScope(VariableList* varList, char* identifier, int scope);
 
-
+int getSizeOfScope(VariableList* list, int scope);
 void printVariable(Variable* var);
 void printVariableList(VariableList* varList);
+void callDeleteScopeTree();
 
 VariableList* createVariableListFromToken(llist* tokenList);
 int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNode* currentScopeNode);

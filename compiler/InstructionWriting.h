@@ -31,6 +31,8 @@ int getIEEE754(float val);
 int writeLogicalBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 int writeBooleanBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 void writeJMPcondition(FILE* asmFile, enum TokenTypes type);
+void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
+
 
 
 #endif
