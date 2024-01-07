@@ -100,20 +100,31 @@ push 1
 pop eax
 cmp eax, 0
 je label_1
-push 10
+call readInt
+push eax
 push [ebp - 4]
-call print_number_signed
-add esp, 4
-label_1:
-push 1
+fild dword ptr [esp]
+fstp dword ptr [esp]
+push 10
+fild dword ptr [esp]
+fstp dword ptr [esp]
+pop ebx
+pop eax
+xor edx, edx
+cmp eax, ebx
+jne label_2
+mov edx, 1
+label_2:
+mov eax, edx
+push eax
 pop eax
 cmp eax, 0
-je label_2
-push 100
+je label_3
 push [ebp - 4]
 call print_number_signed
+label_3:
 add esp, 4
-label_2:
+label_3:
 
 mov esp, ebp
 pop ebp

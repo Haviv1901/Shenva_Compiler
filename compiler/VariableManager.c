@@ -97,7 +97,7 @@ void createNewVariable(char* identifier, enum VarTypes type, VariableList** varL
 int isVariableExistInScope(VariableList* varList, char* identifier, int varScope)
 {
 
-	VariableList* curr = getVariableByScope(varList, identifier, varScope);
+	Variable* curr = getVariableByScope(varList, identifier, varScope);
 	if (curr)
 	{
 		return 1;

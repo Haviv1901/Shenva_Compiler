@@ -1,22 +1,8 @@
-
 if (1)
 {
-
-	if (1)
-	{
-	}
-	else
-	{
-		if (1)
-		{
-
-		}
-		else if (1)
-		{
-
-		}
-
-	}
-
+    int b = intInput()
+    if (b == 10)
+    {
+        printInt(b)
+    }
 }
-

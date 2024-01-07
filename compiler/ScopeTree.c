@@ -40,7 +40,7 @@ ScopeTreeNode* addChild(ScopeTreeNode* tree, int value)
     if (temp == NULL)
     {
         tree->children = child;
-        return;
+        return child->value;
     }
 
     while (temp->next != NULL)
