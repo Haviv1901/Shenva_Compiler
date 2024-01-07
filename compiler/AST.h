@@ -14,6 +14,9 @@ enum { LEAF=0,ONE_CHILD_NODE=1,TWO_CHILDREN_NODE=2};
 // when handling with tokenless nodes
 enum {ONLY_CHILD = 0, NEXT=0, EXPRESSION = 1};
 
+// if nodes
+enum {CONDITION = 0 , CODE = 1, ELSE = 2};
+
 struct ASTNode
 {
 	Token* token;

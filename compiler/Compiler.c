@@ -50,7 +50,6 @@ void Compile(char* inputFileName, char* outputFileName)
 	token_llist_free(tokenList);
 	deleteVariableList(varList);
 
-
 }
 
 
