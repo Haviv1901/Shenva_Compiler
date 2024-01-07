@@ -96,35 +96,173 @@ main:
 
 
 
-push 1
+push 119
 pop eax
-cmp eax, 0
-je label_1
+call WriteChar
+push 104
+pop eax
+call WriteChar
+push 97
+pop eax
+call WriteChar
+push 116
+pop eax
+call WriteChar
+push 32
+pop eax
+call WriteChar
+push 121
+pop eax
+call WriteChar
+push 101
+pop eax
+call WriteChar
+push 97
+pop eax
+call WriteChar
+push 114
+pop eax
+call WriteChar
+push 32
+pop eax
+call WriteChar
+push 119
+pop eax
+call WriteChar
+push 101
+pop eax
+call WriteChar
+push 114
+pop eax
+call WriteChar
+push 101
+pop eax
+call WriteChar
+push 32
+pop eax
+call WriteChar
+push 121
+pop eax
+call WriteChar
+push 111
+pop eax
+call WriteChar
+push 117
+pop eax
+call WriteChar
+push 32
+pop eax
+call WriteChar
+push 98
+pop eax
+call WriteChar
+push 111
+pop eax
+call WriteChar
+push 114
+pop eax
+call WriteChar
+push 110
+pop eax
+call WriteChar
+push 58
+pop eax
+call WriteChar
+push 32
+pop eax
+call WriteChar
 call readInt
 push eax
 push [ebp - 4]
 fild dword ptr [esp]
 fstp dword ptr [esp]
-push 10
+push 0
 fild dword ptr [esp]
 fstp dword ptr [esp]
 pop ebx
 pop eax
 xor edx, edx
 cmp eax, ebx
-jne label_2
+jng label_1
 mov edx, 1
-label_2:
+label_1:
 mov eax, edx
 push eax
 pop eax
 cmp eax, 0
-je label_3
-push [ebp - 4]
+je label_2
+push 85
+pop eax
+call WriteChar
+push 114
+pop eax
+call WriteChar
+push 32
+pop eax
+call WriteChar
+push 97
+pop eax
+call WriteChar
+push 103
+pop eax
+call WriteChar
+push 101
+pop eax
+call WriteChar
+push 32
+pop eax
+call WriteChar
+push 105
+pop eax
+call WriteChar
+push 115
+pop eax
+call WriteChar
+push 58
+pop eax
+call WriteChar
+push 32
+pop eax
+call WriteChar
+push [ebp - 8]
 call print_number_signed
-label_3:
 add esp, 4
+label_2:
+push [ebp - 4]
+fild dword ptr [esp]
+fstp dword ptr [esp]
+push 0
+fild dword ptr [esp]
+fstp dword ptr [esp]
+pop ebx
+pop eax
+xor edx, edx
+cmp eax, ebx
+jnl label_3
+mov edx, 1
 label_3:
+mov eax, edx
+push eax
+pop eax
+cmp eax, 0
+je label_4
+push 69
+pop eax
+call WriteChar
+push 82
+pop eax
+call WriteChar
+push 82
+pop eax
+call WriteChar
+push 79
+pop eax
+call WriteChar
+push 82
+pop eax
+call WriteChar
+add esp, 4
+label_4:
 
 mov esp, ebp
 pop ebp

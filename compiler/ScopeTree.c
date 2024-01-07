@@ -53,39 +53,84 @@ ScopeTreeNode* addChild(ScopeTreeNode* tree, int value)
     return child->value;
 }
 
-// Function to check if a node is an ancestor of another node or if they are the same node
-int isAncestor(ScopeTreeNode* tree, int descendantValue, int potentialAncestorValue)
+// get scope tree node from int value and head pointer
+ScopeTreeNode* getNodeByScope(ScopeTreeNode* treeScopeHead, int scope)
 {
-    // If the tree is NULL, return 0
-    if (tree == NULL) 
+	if (treeScopeHead == NULL)
+	{
+		return NULL;
+	}
+
+	if (treeScopeHead->value == scope)
+	{
+		return treeScopeHead;
+	}
+
+	ChildrenNode* currentChild = treeScopeHead->children;
+	while (currentChild != NULL)
+	{
+		ScopeTreeNode* temp = getNodeByScope(currentChild->value, scope);
+		if (temp != NULL)
+		{
+			return temp;
+		}
+		currentChild = currentChild->next;
+	}
+	return NULL;
+}
+
+int isAncestorByNodes(ScopeTreeNode* potentialAncestorNode, ScopeTreeNode* childNode)
+{
+    // If the potential ancestor node is NULL, we've reached the bottom of the tree without finding the child
+    if (potentialAncestorNode == NULL)
     {
         return 0;
     }
-    // If the value of the current node is equal to the potential ancestor value
-    if (tree->value == potentialAncestorValue) {
-        // If the potential ancestor value is equal to the descendant value, return 1
-        if (potentialAncestorValue == descendantValue) {
+
+    // Check the children of the current node
+    ChildrenNode* currentChild = potentialAncestorNode->children;
+    while (currentChild != NULL)
+    {
+        // If the current child is the child node, return true
+        if (currentChild->value == childNode) 
+        {
             return 1;
         }
-        // Check if the descendant node is in the children of the current node
-        ChildrenNode* currentChild = tree->children;
-        while (currentChild != NULL) {
-            if (currentChild->value->value == descendantValue) {
-                return 1;
-            }
-            currentChild = currentChild->next;
-        }
-    }
-    // Recursively call the function for each child of the current node
-    ChildrenNode* currentChild = tree->children;
-    while (currentChild != NULL) {
-        if (isAncestor(currentChild->value, descendantValue, potentialAncestorValue)) {
-            return 1;
-        }
+
+		// Otherwise, check the children of the current child
+		if (isAncestorByNodes(currentChild->value, childNode))
+		{
+			return 1;
+		}
+
         currentChild = currentChild->next;
     }
-    // If the descendant node is not found in the tree rooted at the potential ancestor node, return 0
+
+    // If we've checked all children and found no match, return false
     return 0;
+}
+
+
+
+// Function to check if a node is an ancestor of another node or if they are the same node
+int isAncestor(ScopeTreeNode* treeScopeHead, int descendantValue, int potentialAncestorValue)
+{
+
+    if(descendantValue == potentialAncestorValue || potentialAncestorValue == 0) // 0 is global scope
+    {
+        return 1;
+    }
+
+    ScopeTreeNode* descendantNode = getNodeByScope(treeScopeHead, descendantValue);
+    ScopeTreeNode* potentialAncestorNode = getNodeByScope(treeScopeHead, potentialAncestorValue);
+
+    if(descendantNode == NULL || potentialAncestorNode == NULL)
+    {
+		return -1;
+    }
+    
+    return isAncestorByNodes(potentialAncestorNode, descendantNode);
+
 }
 
 
