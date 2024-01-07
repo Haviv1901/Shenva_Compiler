@@ -96,14 +96,24 @@ main:
 
 
 
-push 200
 push 1
 pop eax
 cmp eax, 0
 je label_1
+push 10
 push [ebp - 4]
 call print_number_signed
+add esp, 4
 label_1:
+push 1
+pop eax
+cmp eax, 0
+je label_2
+push 100
+push [ebp - 4]
+call print_number_signed
+add esp, 4
+label_2:
 
 mov esp, ebp
 pop ebp

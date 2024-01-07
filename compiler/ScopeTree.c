@@ -25,12 +25,11 @@ ChildrenNode* createChild()
     node->next = NULL;
     return node;
 }
-// Function to add a child to a tree
-void addChild(ScopeTreeNode* tree, int value)
+ScopeTreeNode* addChild(ScopeTreeNode* tree, int value)
 {
-    if(tree == NULL)
+    if (tree == NULL)
     {
-        return;
+        return NULL;
     }
 
     ChildrenNode* child = createChild();
@@ -38,18 +37,20 @@ void addChild(ScopeTreeNode* tree, int value)
 
     ChildrenNode* temp = tree->children;
 
-    if(temp == NULL)
+    if (temp == NULL)
     {
         tree->children = child;
-		return;
+        return;
     }
 
-	while(temp->next != NULL)
-	{
-		temp = temp->next;
-	}
+    while (temp->next != NULL)
+    {
+        temp = temp->next;
+    }
 
     temp->next = child;
+
+    return child->value;
 }
 
 // Function to check if a node is an ancestor of another node or if they are the same node

@@ -25,5 +25,5 @@ ScopeTreeNode* createTree(int value);
 ChildrenNode* createChild();
 ScopeTreeNode* createNode(int value);
 void deleteScopeTree(ScopeTreeNode* tree);
-void addChild(ScopeTreeNode* tree, int value);
+ScopeTreeNode* addChild(ScopeTreeNode* tree, int value);
 int isAncestor(ScopeTreeNode* tree, int currentNodeValue, int potentialAncestorValue);

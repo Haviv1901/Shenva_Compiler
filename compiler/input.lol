@@ -1,7 +1,13 @@
-int b = 200
 if (1)
 {
-	printInt(b)
+	int b = intInput()
+	if (b == 10)
+	{
+		printInt(b)
+	}
 }
+
+
+
 
 

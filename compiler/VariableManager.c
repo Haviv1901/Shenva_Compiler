@@ -224,7 +224,7 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 	}
 	else
 	{
-		addChild(currentScopeNode, currentScope);
+		currentScopeNode = addChild(currentScopeNode, currentScope);
 	}
 	
 
