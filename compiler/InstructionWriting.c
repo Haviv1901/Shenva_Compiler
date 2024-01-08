@@ -77,6 +77,7 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 
 	Token* currentToken;
 	ASTNode* next = NULL;
+	int labelHolder = 0;
 	bool isNullFlag = false;
 	if (tree->token == NULL)
 	{
@@ -116,7 +117,10 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 	}
 	else if(currentToken->type == TOKEN_IF)
 	{
-		writeConditionBranch(tree, asmFile, varList);
+		labelHolder = lableNum;
+		lableNum++;
+		writeConditionBranch(tree, asmFile, varList, labelHolder);
+		fprintf(asmFile, "label_%d:\n", labelHolder);
 	}
 	if (next != NULL)
 	{
@@ -126,32 +130,58 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 }
 
 
-
-void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
+/*
+writeConditionBranch: this fucntion will write a condition bracnch
+input: the branch, asm file, vairable list and the label to the end of the block
+output: non
+*/
+void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList, int endLabel)
 {
 	int finishLabel = lableNum, scopeSaver = currentScope, scopeSize = 0;
 	lableNum++;
-	writeBranch(branch->children[CONDITION], asmFile, varList);
+
+	ASTNode* elseBranch = branch->children[ELSE];
+	writeBranch(branch->children[CONDITION], asmFile, varList);//writing condition
+
 	fprintf(asmFile, "pop eax\n");
 	fprintf(asmFile, "cmp eax, 0\n");
-	fprintf(asmFile, "je label_%d\n", lableNum);
+	fprintf(asmFile, "je label_%d\n", finishLabel);//going to next if
+
 	ScopeCounter++;
-	currentScope = ScopeCounter;
-	writeBranch(branch->children[CODE], asmFile, varList);
-	currentScope = scopeSaver;
-	scopeSize = getSizeOfScope(varList, currentScope + 1);
+	currentScope = ScopeCounter;//going into scope
+
+	writeBranch(branch->children[CODE], asmFile, varList);//writing the block
+	currentScope = scopeSaver;//retreiving scope
+
+	scopeSize = getSizeOfScope(varList, currentScope + 1);//deleteing scope
 	if (scopeSize != 0)
 	{
 		fprintf(asmFile, "add esp, %d\n", scopeSize);
 	}
-	fprintf(asmFile, "label_%d:\n", lableNum);
 
+	fprintf(asmFile, "jmp label_%d\n", endLabel);//ending label, and opening next
+	fprintf(asmFile, "label_%d:\n", finishLabel);
 
+	lableNum++;
+	if (elseBranch != NULL)//if there is an else branch
+	{
+		if (elseBranch->children[0] == NULL)//if empty else
+		{
+			return;
+		}
+		else if (elseBranch->children[0]->token == NULL)//is virgin else
+		{
+			ScopeCounter++;
+			currentScope = ScopeCounter;
 
-
-
-
-
+			writeBranch(elseBranch->children[0], asmFile, varList);
+			currentScope = scopeSaver;
+		}
+		else// if else if
+		{
+			writeConditionBranch(elseBranch->children[0], asmFile, varList, endLabel);
+		}
+	}
 }
 
 

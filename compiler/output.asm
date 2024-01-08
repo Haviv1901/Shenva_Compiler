@@ -96,81 +96,6 @@ main:
 
 
 
-push 119
-pop eax
-call WriteChar
-push 104
-pop eax
-call WriteChar
-push 97
-pop eax
-call WriteChar
-push 116
-pop eax
-call WriteChar
-push 32
-pop eax
-call WriteChar
-push 121
-pop eax
-call WriteChar
-push 101
-pop eax
-call WriteChar
-push 97
-pop eax
-call WriteChar
-push 114
-pop eax
-call WriteChar
-push 32
-pop eax
-call WriteChar
-push 119
-pop eax
-call WriteChar
-push 101
-pop eax
-call WriteChar
-push 114
-pop eax
-call WriteChar
-push 101
-pop eax
-call WriteChar
-push 32
-pop eax
-call WriteChar
-push 121
-pop eax
-call WriteChar
-push 111
-pop eax
-call WriteChar
-push 117
-pop eax
-call WriteChar
-push 32
-pop eax
-call WriteChar
-push 98
-pop eax
-call WriteChar
-push 111
-pop eax
-call WriteChar
-push 114
-pop eax
-call WriteChar
-push 110
-pop eax
-call WriteChar
-push 58
-pop eax
-call WriteChar
-push 32
-pop eax
-call WriteChar
 call readInt
 push eax
 push [ebp - 4]
@@ -183,86 +108,144 @@ pop ebx
 pop eax
 xor edx, edx
 cmp eax, ebx
-jng label_1
+jng label_2
 mov edx, 1
-label_1:
+label_2:
 mov eax, edx
 push eax
 pop eax
 cmp eax, 0
-je label_2
-push 85
-pop eax
-call WriteChar
-push 114
-pop eax
-call WriteChar
-push 32
-pop eax
-call WriteChar
-push 97
-pop eax
-call WriteChar
-push 103
-pop eax
-call WriteChar
-push 101
-pop eax
-call WriteChar
-push 32
-pop eax
-call WriteChar
-push 105
-pop eax
-call WriteChar
-push 115
-pop eax
-call WriteChar
-push 58
-pop eax
-call WriteChar
-push 32
-pop eax
-call WriteChar
-push [ebp - 8]
-call print_number_signed
-add esp, 4
-label_2:
+je label_1
 push [ebp - 4]
 fild dword ptr [esp]
 fstp dword ptr [esp]
-push 0
+push 1
 fild dword ptr [esp]
 fstp dword ptr [esp]
 pop ebx
 pop eax
 xor edx, edx
 cmp eax, ebx
-jnl label_3
+jne label_5
 mov edx, 1
-label_3:
+label_5:
 mov eax, edx
 push eax
 pop eax
 cmp eax, 0
 je label_4
-push 69
+push 111
 pop eax
 call WriteChar
-push 82
+push 32
 pop eax
 call WriteChar
-push 82
+push 121
 pop eax
 call WriteChar
-push 79
+push 101
 pop eax
 call WriteChar
-push 82
+push 101
 pop eax
 call WriteChar
-add esp, 4
+push 101
+pop eax
+call WriteChar
+push 101
+pop eax
+call WriteChar
+push 101
+pop eax
+call WriteChar
+jmp label_3
 label_4:
+push [ebp - 4]
+fild dword ptr [esp]
+fstp dword ptr [esp]
+push 2
+fild dword ptr [esp]
+fstp dword ptr [esp]
+pop ebx
+pop eax
+xor edx, edx
+cmp eax, ebx
+jne label_8
+mov edx, 1
+label_8:
+mov eax, edx
+push eax
+pop eax
+cmp eax, 0
+je label_7
+push 119
+pop eax
+call WriteChar
+push 104
+pop eax
+call WriteChar
+push 97
+pop eax
+call WriteChar
+push 97
+pop eax
+call WriteChar
+push 97
+pop eax
+call WriteChar
+push 116
+pop eax
+call WriteChar
+jmp label_3
+label_7:
+push [ebp - 4]
+fild dword ptr [esp]
+fstp dword ptr [esp]
+push 3
+fild dword ptr [esp]
+fstp dword ptr [esp]
+pop ebx
+pop eax
+xor edx, edx
+cmp eax, ebx
+jne label_11
+mov edx, 1
+label_11:
+mov eax, edx
+push eax
+pop eax
+cmp eax, 0
+je label_10
+push 101
+pop eax
+call WriteChar
+push 120
+pop eax
+call WriteChar
+push 112
+pop eax
+call WriteChar
+push 108
+pop eax
+call WriteChar
+push 97
+pop eax
+call WriteChar
+push 105
+pop eax
+call WriteChar
+push 110
+pop eax
+call WriteChar
+jmp label_3
+label_10:
+push 33
+pop eax
+call WriteChar
+label_3:
+jmp label_0
+label_1:
+label_0:
 
 mov esp, ebp
 pop ebp

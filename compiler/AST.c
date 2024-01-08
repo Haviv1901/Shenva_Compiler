@@ -200,8 +200,13 @@ int isExpressionToken(Token token)
 		token.type == TOKEN_INPUT_FLOAT ||
 		token.type == TOKEN_INPUT_INT ||
 		token.type == TOKEN_LPARN ||
-		token.type == TOKEN_NOT || 
-		token.type == TOKEN_VAR) // if numeric expression
+		token.type == TOKEN_NOT ||
+		token.type == TOKEN_VAR || // if numeric expression
+		token.type == TOKEN_ADD ||
+		token.type == TOKEN_SUB ||
+		token.type == TOKEN_MUL ||
+		token.type == TOKEN_DIV ||
+		token.type == TOKEN_MODULO)
 	{
 		return 1;
 	}
