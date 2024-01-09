@@ -9,7 +9,73 @@
  */
 ASTNode* buildASTNumeric(struct node** curr)
 {
-	return parseLast(curr);
+	return parseLogicalOps(curr);
+}
+
+/// <summary>
+/// builds AST from the level of logical operators
+/// </summary>
+/// <param name="curr"></param>
+/// <returns></returns>
+ASTNode* parseLogicalOps(struct node** curr)
+{
+	ASTNode* holder = NULL, * node = NULL;
+	holder = parseNotOp(curr);
+	if (!((*curr) != NULL && ((((Token*)(*curr)->data)->type) == TOKEN_AND || ((Token*)(*curr)->data)->type == TOKEN_OR)))
+	{
+		return holder;
+	}
+	while ((*curr) != NULL && ((((Token*)(*curr)->data)->type) == TOKEN_AND || ((Token*)(*curr)->data)->type == TOKEN_OR))
+	{
+		node = createNewASTnode((Token*)(*curr)->data);
+		node->children[0] = holder;
+		(*curr) = (*curr)->next;
+		node->children[1] = parseLogicalOps(curr);
+		holder = node;
+
+	}
+	return node;
+}
+
+/// <summary>
+/// builds AST from the level of boolean operators
+/// </summary>
+/// <param name="curr"></param>
+/// <returns></returns>
+ASTNode* parseNotOp(struct node** curr)
+{
+	ASTNode* holder = NULL, * node = NULL;
+	if (((Token*)(*curr)->data)->type == TOKEN_NOT)
+	{
+		node = createNewASTnode((Token*)(*curr)->data);
+		(*curr) = (*curr)->next;
+		node->children[0] = parseBooleanOps(curr);
+		return node;
+	}
+	else
+	{
+		return parseBooleanOps(curr);
+	}
+}
+
+/// <summary>
+/// builds AST from the level of boolean operators
+/// </summary>
+/// <param name="curr"></param>
+/// <returns></returns>
+ASTNode* parseBooleanOps(struct node** curr)
+{
+	ASTNode* holder = parseLast(curr), * node = NULL;
+	if (!((*curr) != NULL && isBooleanExpressionToken(((Token*)(*curr)->data)->type)))
+	{
+		return holder;
+	}
+	node = createNewASTnode((Token*)(*curr)->data);
+	node->children[0] = holder;
+	(*curr) = (*curr)->next;
+	node->children[1] = parseLast(curr);
+	holder = node;
+	return node;
 }
 
 
@@ -73,7 +139,7 @@ ASTNode* parseFirst(struct node** curr)
 		if (((Token*)(*curr)->data)->type == TOKEN_LPARN)
 		{
 			(*curr) = (*curr)->next; // Consume the opening parenthesis.
-			ASTNode* node = parseLast(curr);
+			ASTNode* node = parseLogicalOps(curr);
 
 			if (((Token*)(*curr)->data)->type == TOKEN_RPARN)
 			{

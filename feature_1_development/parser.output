@@ -1,0 +1,2049 @@
+Rules useless in parser due to conflicts
+
+   13 else_part: /* empty */
+
+
+State 108 conflicts: 1 shift/reduce
+State 122 conflicts: 1 shift/reduce
+State 125 conflicts: 1 shift/reduce
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: blocks
+
+    2 blocks: block
+    3       | blocks block
+
+    4 block: statement ENDL
+    5      | condition ENDL
+    6      | ENDL
+
+    7 empty_space: ENDL
+    8            | empty_space ENDL
+    9            | /* empty */
+
+   10 condition: IF LPAREN expression RPAREN empty_space LBRACK blocks RBRACK else_part
+
+   11 else_part: ENDL ELSE empty_space LBRACK blocks RBRACK
+   12          | ENDL ELSE condition
+   13          | /* empty */
+
+   14 statement: PRINTINT LPAREN expression_list RPAREN
+   15          | PRINTCHAR LPAREN expression_list RPAREN
+   16          | PRINTFLOAT LPAREN expression_list RPAREN
+   17          | expression
+   18          | declaration
+   19          | assignment
+   20          | ERROR
+
+   21 declaration: INT decleration_list
+   22            | CHAR decleration_list
+   23            | FLOAT decleration_list
+   24            | BOOL decleration_list
+
+   25 decleration_list: VAR
+   26                 | VAR ASSIGN expression
+   27                 | decleration_list COMMA VAR
+   28                 | decleration_list COMMA VAR ASSIGN expression
+
+   29 expression_list: expression
+   30                | expression_list COMMA expression
+
+   31 assignment: VAR ASSIGN expression
+   32           | VAR ADDEQ expression
+   33           | VAR SUBEQ expression
+   34           | VAR MULEQ expression
+   35           | VAR DIVEQ expression
+   36           | VAR MODEQ expression
+
+   37 input: INTINPUT
+   38      | FLOATINPUT
+   39      | CHARINPUT
+
+   40 expression: boolean_expression
+   41           | numeric_expression
+
+   42 boolean_expression: numeric_expression EQUALS numeric_expression
+   43                   | numeric_expression NOTEQUALS numeric_expression
+   44                   | numeric_expression GREATER numeric_expression
+   45                   | numeric_expression NOTGREATER numeric_expression
+   46                   | numeric_expression LESSER numeric_expression
+   47                   | numeric_expression NOTLESSER numeric_expression
+   48                   | numeric_expression GREATEREQUALS numeric_expression
+   49                   | numeric_expression LESSEREQUALS numeric_expression
+   50                   | LPAREN boolean_expression RPAREN
+   51                   | boolean_expression OR boolean_expression
+   52                   | boolean_expression AND boolean_expression
+   53                   | NOT boolean_expression
+
+   54 numeric_expression: NUM
+   55                   | VAR
+   56                   | TRUE
+   57                   | FALSE
+   58                   | LETTER
+   59                   | DECIMAL
+   60                   | input LPAREN RPAREN
+   61                   | numeric_expression ADD numeric_expression
+   62                   | numeric_expression SUB numeric_expression
+   63                   | numeric_expression MUL numeric_expression
+   64                   | numeric_expression DIV numeric_expression
+   65                   | numeric_expression MOD numeric_expression
+   66                   | LPAREN numeric_expression RPAREN
+   67                   | error
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256) 67
+NUM (258) 54
+LETTER (259) 58
+DECIMAL (260) 59
+BOOL (261) 24
+ADD (262) 61
+SUB (263) 62
+MUL (264) 63
+DIV (265) 64
+MOD (266) 65
+LPAREN (267) 10 14 15 16 50 60 66
+RPAREN (268) 10 14 15 16 50 60 66
+EQUALS (269) 42
+NOTEQUALS (270) 43
+GREATER (271) 44
+NOTGREATER (272) 45
+LESSER (273) 46
+NOTLESSER (274) 47
+GREATEREQUALS (275) 48
+LESSEREQUALS (276) 49
+NOT (277) 53
+OR (278) 51
+AND (279) 52
+IF (280) 10
+ELSE (281) 11 12
+LBRACK (282) 10 11
+RBRACK (283) 10 11
+ERROR (284) 20
+PRINTINT (285) 14
+PRINTCHAR (286) 15
+PRINTFLOAT (287) 16
+COMMA (288) 27 28 30
+INTINPUT (289) 37
+FLOATINPUT (290) 38
+CHARINPUT (291) 39
+TRUE (292) 56
+FALSE (293) 57
+ENDL (294) 4 5 6 7 8 11 12
+ASSIGN (295) 26 28 31
+INT (296) 21
+CHAR (297) 22
+FLOAT (298) 23
+VAR (299) 25 26 27 28 31 32 33 34 35 36 55
+ADDEQ (300) 32
+SUBEQ (301) 33
+MULEQ (302) 34
+DIVEQ (303) 35
+MODEQ (304) 36
+
+
+Nonterminals, with rules where they appear
+
+$accept (50)
+    on left: 0
+program (51)
+    on left: 1, on right: 0
+blocks (52)
+    on left: 2 3, on right: 1 3 10 11
+block (53)
+    on left: 4 5 6, on right: 2 3
+empty_space (54)
+    on left: 7 8 9, on right: 8 10 11
+condition (55)
+    on left: 10, on right: 5 12
+else_part (56)
+    on left: 11 12 13, on right: 10
+statement (57)
+    on left: 14 15 16 17 18 19 20, on right: 4
+declaration (58)
+    on left: 21 22 23 24, on right: 18
+decleration_list (59)
+    on left: 25 26 27 28, on right: 21 22 23 24 27 28
+expression_list (60)
+    on left: 29 30, on right: 14 15 16 30
+assignment (61)
+    on left: 31 32 33 34 35 36, on right: 19
+input (62)
+    on left: 37 38 39, on right: 60
+expression (63)
+    on left: 40 41, on right: 10 17 26 28 29 30 31 32 33 34 35 36
+boolean_expression (64)
+    on left: 42 43 44 45 46 47 48 49 50 51 52 53, on right: 40 50 51
+    52 53
+numeric_expression (65)
+    on left: 54 55 56 57 58 59 60 61 62 63 64 65 66 67, on right: 41
+    42 43 44 45 46 47 48 49 61 62 63 64 65 66
+
+
+state 0
+
+    0 $accept: . program $end
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    BOOL        shift, and go to state 5
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    IF          shift, and go to state 8
+    ERROR       shift, and go to state 9
+    PRINTINT    shift, and go to state 10
+    PRINTCHAR   shift, and go to state 11
+    PRINTFLOAT  shift, and go to state 12
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    ENDL        shift, and go to state 18
+    INT         shift, and go to state 19
+    CHAR        shift, and go to state 20
+    FLOAT       shift, and go to state 21
+    VAR         shift, and go to state 22
+
+    program             go to state 23
+    blocks              go to state 24
+    block               go to state 25
+    condition           go to state 26
+    statement           go to state 27
+    declaration         go to state 28
+    assignment          go to state 29
+    input               go to state 30
+    expression          go to state 31
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 1
+
+   67 numeric_expression: error .
+
+    $default  reduce using rule 67 (numeric_expression)
+
+
+state 2
+
+   54 numeric_expression: NUM .
+
+    $default  reduce using rule 54 (numeric_expression)
+
+
+state 3
+
+   58 numeric_expression: LETTER .
+
+    $default  reduce using rule 58 (numeric_expression)
+
+
+state 4
+
+   59 numeric_expression: DECIMAL .
+
+    $default  reduce using rule 59 (numeric_expression)
+
+
+state 5
+
+   24 declaration: BOOL . decleration_list
+
+    VAR  shift, and go to state 34
+
+    decleration_list  go to state 35
+
+
+state 6
+
+   50 boolean_expression: LPAREN . boolean_expression RPAREN
+   66 numeric_expression: LPAREN . numeric_expression RPAREN
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    boolean_expression  go to state 37
+    numeric_expression  go to state 38
+
+
+state 7
+
+   53 boolean_expression: NOT . boolean_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    boolean_expression  go to state 39
+    numeric_expression  go to state 40
+
+
+state 8
+
+   10 condition: IF . LPAREN expression RPAREN empty_space LBRACK blocks RBRACK else_part
+
+    LPAREN  shift, and go to state 41
+
+
+state 9
+
+   20 statement: ERROR .
+
+    $default  reduce using rule 20 (statement)
+
+
+state 10
+
+   14 statement: PRINTINT . LPAREN expression_list RPAREN
+
+    LPAREN  shift, and go to state 42
+
+
+state 11
+
+   15 statement: PRINTCHAR . LPAREN expression_list RPAREN
+
+    LPAREN  shift, and go to state 43
+
+
+state 12
+
+   16 statement: PRINTFLOAT . LPAREN expression_list RPAREN
+
+    LPAREN  shift, and go to state 44
+
+
+state 13
+
+   37 input: INTINPUT .
+
+    $default  reduce using rule 37 (input)
+
+
+state 14
+
+   38 input: FLOATINPUT .
+
+    $default  reduce using rule 38 (input)
+
+
+state 15
+
+   39 input: CHARINPUT .
+
+    $default  reduce using rule 39 (input)
+
+
+state 16
+
+   56 numeric_expression: TRUE .
+
+    $default  reduce using rule 56 (numeric_expression)
+
+
+state 17
+
+   57 numeric_expression: FALSE .
+
+    $default  reduce using rule 57 (numeric_expression)
+
+
+state 18
+
+    6 block: ENDL .
+
+    $default  reduce using rule 6 (block)
+
+
+state 19
+
+   21 declaration: INT . decleration_list
+
+    VAR  shift, and go to state 34
+
+    decleration_list  go to state 45
+
+
+state 20
+
+   22 declaration: CHAR . decleration_list
+
+    VAR  shift, and go to state 34
+
+    decleration_list  go to state 46
+
+
+state 21
+
+   23 declaration: FLOAT . decleration_list
+
+    VAR  shift, and go to state 34
+
+    decleration_list  go to state 47
+
+
+state 22
+
+   31 assignment: VAR . ASSIGN expression
+   32           | VAR . ADDEQ expression
+   33           | VAR . SUBEQ expression
+   34           | VAR . MULEQ expression
+   35           | VAR . DIVEQ expression
+   36           | VAR . MODEQ expression
+   55 numeric_expression: VAR .
+
+    ASSIGN  shift, and go to state 48
+    ADDEQ   shift, and go to state 49
+    SUBEQ   shift, and go to state 50
+    MULEQ   shift, and go to state 51
+    DIVEQ   shift, and go to state 52
+    MODEQ   shift, and go to state 53
+
+    $default  reduce using rule 55 (numeric_expression)
+
+
+state 23
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 54
+
+
+state 24
+
+    1 program: blocks .
+    3 blocks: blocks . block
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    BOOL        shift, and go to state 5
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    IF          shift, and go to state 8
+    ERROR       shift, and go to state 9
+    PRINTINT    shift, and go to state 10
+    PRINTCHAR   shift, and go to state 11
+    PRINTFLOAT  shift, and go to state 12
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    ENDL        shift, and go to state 18
+    INT         shift, and go to state 19
+    CHAR        shift, and go to state 20
+    FLOAT       shift, and go to state 21
+    VAR         shift, and go to state 22
+
+    $end  reduce using rule 1 (program)
+
+    block               go to state 55
+    condition           go to state 26
+    statement           go to state 27
+    declaration         go to state 28
+    assignment          go to state 29
+    input               go to state 30
+    expression          go to state 31
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 25
+
+    2 blocks: block .
+
+    $default  reduce using rule 2 (blocks)
+
+
+state 26
+
+    5 block: condition . ENDL
+
+    ENDL  shift, and go to state 56
+
+
+state 27
+
+    4 block: statement . ENDL
+
+    ENDL  shift, and go to state 57
+
+
+state 28
+
+   18 statement: declaration .
+
+    $default  reduce using rule 18 (statement)
+
+
+state 29
+
+   19 statement: assignment .
+
+    $default  reduce using rule 19 (statement)
+
+
+state 30
+
+   60 numeric_expression: input . LPAREN RPAREN
+
+    LPAREN  shift, and go to state 58
+
+
+state 31
+
+   17 statement: expression .
+
+    $default  reduce using rule 17 (statement)
+
+
+state 32
+
+   40 expression: boolean_expression .
+   51 boolean_expression: boolean_expression . OR boolean_expression
+   52                   | boolean_expression . AND boolean_expression
+
+    OR   shift, and go to state 59
+    AND  shift, and go to state 60
+
+    $default  reduce using rule 40 (expression)
+
+
+state 33
+
+   41 expression: numeric_expression .
+   42 boolean_expression: numeric_expression . EQUALS numeric_expression
+   43                   | numeric_expression . NOTEQUALS numeric_expression
+   44                   | numeric_expression . GREATER numeric_expression
+   45                   | numeric_expression . NOTGREATER numeric_expression
+   46                   | numeric_expression . LESSER numeric_expression
+   47                   | numeric_expression . NOTLESSER numeric_expression
+   48                   | numeric_expression . GREATEREQUALS numeric_expression
+   49                   | numeric_expression . LESSEREQUALS numeric_expression
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    ADD            shift, and go to state 61
+    SUB            shift, and go to state 62
+    MUL            shift, and go to state 63
+    DIV            shift, and go to state 64
+    MOD            shift, and go to state 65
+    EQUALS         shift, and go to state 66
+    NOTEQUALS      shift, and go to state 67
+    GREATER        shift, and go to state 68
+    NOTGREATER     shift, and go to state 69
+    LESSER         shift, and go to state 70
+    NOTLESSER      shift, and go to state 71
+    GREATEREQUALS  shift, and go to state 72
+    LESSEREQUALS   shift, and go to state 73
+
+    $default  reduce using rule 41 (expression)
+
+
+state 34
+
+   25 decleration_list: VAR .
+   26                 | VAR . ASSIGN expression
+
+    ASSIGN  shift, and go to state 74
+
+    $default  reduce using rule 25 (decleration_list)
+
+
+state 35
+
+   24 declaration: BOOL decleration_list .
+   27 decleration_list: decleration_list . COMMA VAR
+   28                 | decleration_list . COMMA VAR ASSIGN expression
+
+    COMMA  shift, and go to state 75
+
+    $default  reduce using rule 24 (declaration)
+
+
+state 36
+
+   55 numeric_expression: VAR .
+
+    $default  reduce using rule 55 (numeric_expression)
+
+
+state 37
+
+   50 boolean_expression: LPAREN boolean_expression . RPAREN
+   51                   | boolean_expression . OR boolean_expression
+   52                   | boolean_expression . AND boolean_expression
+
+    RPAREN  shift, and go to state 76
+    OR      shift, and go to state 59
+    AND     shift, and go to state 60
+
+
+state 38
+
+   42 boolean_expression: numeric_expression . EQUALS numeric_expression
+   43                   | numeric_expression . NOTEQUALS numeric_expression
+   44                   | numeric_expression . GREATER numeric_expression
+   45                   | numeric_expression . NOTGREATER numeric_expression
+   46                   | numeric_expression . LESSER numeric_expression
+   47                   | numeric_expression . NOTLESSER numeric_expression
+   48                   | numeric_expression . GREATEREQUALS numeric_expression
+   49                   | numeric_expression . LESSEREQUALS numeric_expression
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+   66                   | LPAREN numeric_expression . RPAREN
+
+    ADD            shift, and go to state 61
+    SUB            shift, and go to state 62
+    MUL            shift, and go to state 63
+    DIV            shift, and go to state 64
+    MOD            shift, and go to state 65
+    RPAREN         shift, and go to state 77
+    EQUALS         shift, and go to state 66
+    NOTEQUALS      shift, and go to state 67
+    GREATER        shift, and go to state 68
+    NOTGREATER     shift, and go to state 69
+    LESSER         shift, and go to state 70
+    NOTLESSER      shift, and go to state 71
+    GREATEREQUALS  shift, and go to state 72
+    LESSEREQUALS   shift, and go to state 73
+
+
+state 39
+
+   51 boolean_expression: boolean_expression . OR boolean_expression
+   52                   | boolean_expression . AND boolean_expression
+   53                   | NOT boolean_expression .
+
+    $default  reduce using rule 53 (boolean_expression)
+
+
+state 40
+
+   42 boolean_expression: numeric_expression . EQUALS numeric_expression
+   43                   | numeric_expression . NOTEQUALS numeric_expression
+   44                   | numeric_expression . GREATER numeric_expression
+   45                   | numeric_expression . NOTGREATER numeric_expression
+   46                   | numeric_expression . LESSER numeric_expression
+   47                   | numeric_expression . NOTLESSER numeric_expression
+   48                   | numeric_expression . GREATEREQUALS numeric_expression
+   49                   | numeric_expression . LESSEREQUALS numeric_expression
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    ADD            shift, and go to state 61
+    SUB            shift, and go to state 62
+    MUL            shift, and go to state 63
+    DIV            shift, and go to state 64
+    MOD            shift, and go to state 65
+    EQUALS         shift, and go to state 66
+    NOTEQUALS      shift, and go to state 67
+    GREATER        shift, and go to state 68
+    NOTGREATER     shift, and go to state 69
+    LESSER         shift, and go to state 70
+    NOTLESSER      shift, and go to state 71
+    GREATEREQUALS  shift, and go to state 72
+    LESSEREQUALS   shift, and go to state 73
+
+
+state 41
+
+   10 condition: IF LPAREN . expression RPAREN empty_space LBRACK blocks RBRACK else_part
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    expression          go to state 78
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 42
+
+   14 statement: PRINTINT LPAREN . expression_list RPAREN
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    expression_list     go to state 79
+    input               go to state 30
+    expression          go to state 80
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 43
+
+   15 statement: PRINTCHAR LPAREN . expression_list RPAREN
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    expression_list     go to state 81
+    input               go to state 30
+    expression          go to state 80
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 44
+
+   16 statement: PRINTFLOAT LPAREN . expression_list RPAREN
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    expression_list     go to state 82
+    input               go to state 30
+    expression          go to state 80
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 45
+
+   21 declaration: INT decleration_list .
+   27 decleration_list: decleration_list . COMMA VAR
+   28                 | decleration_list . COMMA VAR ASSIGN expression
+
+    COMMA  shift, and go to state 75
+
+    $default  reduce using rule 21 (declaration)
+
+
+state 46
+
+   22 declaration: CHAR decleration_list .
+   27 decleration_list: decleration_list . COMMA VAR
+   28                 | decleration_list . COMMA VAR ASSIGN expression
+
+    COMMA  shift, and go to state 75
+
+    $default  reduce using rule 22 (declaration)
+
+
+state 47
+
+   23 declaration: FLOAT decleration_list .
+   27 decleration_list: decleration_list . COMMA VAR
+   28                 | decleration_list . COMMA VAR ASSIGN expression
+
+    COMMA  shift, and go to state 75
+
+    $default  reduce using rule 23 (declaration)
+
+
+state 48
+
+   31 assignment: VAR ASSIGN . expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    expression          go to state 83
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 49
+
+   32 assignment: VAR ADDEQ . expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    expression          go to state 84
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 50
+
+   33 assignment: VAR SUBEQ . expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    expression          go to state 85
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 51
+
+   34 assignment: VAR MULEQ . expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    expression          go to state 86
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 52
+
+   35 assignment: VAR DIVEQ . expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    expression          go to state 87
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 53
+
+   36 assignment: VAR MODEQ . expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    expression          go to state 88
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 54
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+state 55
+
+    3 blocks: blocks block .
+
+    $default  reduce using rule 3 (blocks)
+
+
+state 56
+
+    5 block: condition ENDL .
+
+    $default  reduce using rule 5 (block)
+
+
+state 57
+
+    4 block: statement ENDL .
+
+    $default  reduce using rule 4 (block)
+
+
+state 58
+
+   60 numeric_expression: input LPAREN . RPAREN
+
+    RPAREN  shift, and go to state 89
+
+
+state 59
+
+   51 boolean_expression: boolean_expression OR . boolean_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    boolean_expression  go to state 90
+    numeric_expression  go to state 40
+
+
+state 60
+
+   52 boolean_expression: boolean_expression AND . boolean_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    boolean_expression  go to state 91
+    numeric_expression  go to state 40
+
+
+state 61
+
+   61 numeric_expression: numeric_expression ADD . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 93
+
+
+state 62
+
+   62 numeric_expression: numeric_expression SUB . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 94
+
+
+state 63
+
+   63 numeric_expression: numeric_expression MUL . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 95
+
+
+state 64
+
+   64 numeric_expression: numeric_expression DIV . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 96
+
+
+state 65
+
+   65 numeric_expression: numeric_expression MOD . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 97
+
+
+state 66
+
+   42 boolean_expression: numeric_expression EQUALS . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 98
+
+
+state 67
+
+   43 boolean_expression: numeric_expression NOTEQUALS . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 99
+
+
+state 68
+
+   44 boolean_expression: numeric_expression GREATER . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 100
+
+
+state 69
+
+   45 boolean_expression: numeric_expression NOTGREATER . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 101
+
+
+state 70
+
+   46 boolean_expression: numeric_expression LESSER . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 102
+
+
+state 71
+
+   47 boolean_expression: numeric_expression NOTLESSER . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 103
+
+
+state 72
+
+   48 boolean_expression: numeric_expression GREATEREQUALS . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 104
+
+
+state 73
+
+   49 boolean_expression: numeric_expression LESSEREQUALS . numeric_expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 105
+
+
+state 74
+
+   26 decleration_list: VAR ASSIGN . expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    expression          go to state 106
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 75
+
+   27 decleration_list: decleration_list COMMA . VAR
+   28                 | decleration_list COMMA . VAR ASSIGN expression
+
+    VAR  shift, and go to state 107
+
+
+state 76
+
+   50 boolean_expression: LPAREN boolean_expression RPAREN .
+
+    $default  reduce using rule 50 (boolean_expression)
+
+
+state 77
+
+   66 numeric_expression: LPAREN numeric_expression RPAREN .
+
+    $default  reduce using rule 66 (numeric_expression)
+
+
+state 78
+
+   10 condition: IF LPAREN expression . RPAREN empty_space LBRACK blocks RBRACK else_part
+
+    RPAREN  shift, and go to state 108
+
+
+state 79
+
+   14 statement: PRINTINT LPAREN expression_list . RPAREN
+   30 expression_list: expression_list . COMMA expression
+
+    RPAREN  shift, and go to state 109
+    COMMA   shift, and go to state 110
+
+
+state 80
+
+   29 expression_list: expression .
+
+    $default  reduce using rule 29 (expression_list)
+
+
+state 81
+
+   15 statement: PRINTCHAR LPAREN expression_list . RPAREN
+   30 expression_list: expression_list . COMMA expression
+
+    RPAREN  shift, and go to state 111
+    COMMA   shift, and go to state 110
+
+
+state 82
+
+   16 statement: PRINTFLOAT LPAREN expression_list . RPAREN
+   30 expression_list: expression_list . COMMA expression
+
+    RPAREN  shift, and go to state 112
+    COMMA   shift, and go to state 110
+
+
+state 83
+
+   31 assignment: VAR ASSIGN expression .
+
+    $default  reduce using rule 31 (assignment)
+
+
+state 84
+
+   32 assignment: VAR ADDEQ expression .
+
+    $default  reduce using rule 32 (assignment)
+
+
+state 85
+
+   33 assignment: VAR SUBEQ expression .
+
+    $default  reduce using rule 33 (assignment)
+
+
+state 86
+
+   34 assignment: VAR MULEQ expression .
+
+    $default  reduce using rule 34 (assignment)
+
+
+state 87
+
+   35 assignment: VAR DIVEQ expression .
+
+    $default  reduce using rule 35 (assignment)
+
+
+state 88
+
+   36 assignment: VAR MODEQ expression .
+
+    $default  reduce using rule 36 (assignment)
+
+
+state 89
+
+   60 numeric_expression: input LPAREN RPAREN .
+
+    $default  reduce using rule 60 (numeric_expression)
+
+
+state 90
+
+   51 boolean_expression: boolean_expression . OR boolean_expression
+   51                   | boolean_expression OR boolean_expression .
+   52                   | boolean_expression . AND boolean_expression
+
+    $default  reduce using rule 51 (boolean_expression)
+
+
+state 91
+
+   51 boolean_expression: boolean_expression . OR boolean_expression
+   52                   | boolean_expression . AND boolean_expression
+   52                   | boolean_expression AND boolean_expression .
+
+    $default  reduce using rule 52 (boolean_expression)
+
+
+state 92
+
+   66 numeric_expression: LPAREN . numeric_expression RPAREN
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 92
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    numeric_expression  go to state 113
+
+
+state 93
+
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   61                   | numeric_expression ADD numeric_expression .
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    MUL  shift, and go to state 63
+    DIV  shift, and go to state 64
+    MOD  shift, and go to state 65
+
+    $default  reduce using rule 61 (numeric_expression)
+
+
+state 94
+
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   62                   | numeric_expression SUB numeric_expression .
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    MUL  shift, and go to state 63
+    DIV  shift, and go to state 64
+    MOD  shift, and go to state 65
+
+    $default  reduce using rule 62 (numeric_expression)
+
+
+state 95
+
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   63                   | numeric_expression MUL numeric_expression .
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    $default  reduce using rule 63 (numeric_expression)
+
+
+state 96
+
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   64                   | numeric_expression DIV numeric_expression .
+   65                   | numeric_expression . MOD numeric_expression
+
+    $default  reduce using rule 64 (numeric_expression)
+
+
+state 97
+
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+   65                   | numeric_expression MOD numeric_expression .
+
+    $default  reduce using rule 65 (numeric_expression)
+
+
+state 98
+
+   42 boolean_expression: numeric_expression EQUALS numeric_expression .
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    ADD  shift, and go to state 61
+    SUB  shift, and go to state 62
+    MUL  shift, and go to state 63
+    DIV  shift, and go to state 64
+    MOD  shift, and go to state 65
+
+    $default  reduce using rule 42 (boolean_expression)
+
+
+state 99
+
+   43 boolean_expression: numeric_expression NOTEQUALS numeric_expression .
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    ADD  shift, and go to state 61
+    SUB  shift, and go to state 62
+    MUL  shift, and go to state 63
+    DIV  shift, and go to state 64
+    MOD  shift, and go to state 65
+
+    $default  reduce using rule 43 (boolean_expression)
+
+
+state 100
+
+   44 boolean_expression: numeric_expression GREATER numeric_expression .
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    ADD  shift, and go to state 61
+    SUB  shift, and go to state 62
+    MUL  shift, and go to state 63
+    DIV  shift, and go to state 64
+    MOD  shift, and go to state 65
+
+    $default  reduce using rule 44 (boolean_expression)
+
+
+state 101
+
+   45 boolean_expression: numeric_expression NOTGREATER numeric_expression .
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    ADD  shift, and go to state 61
+    SUB  shift, and go to state 62
+    MUL  shift, and go to state 63
+    DIV  shift, and go to state 64
+    MOD  shift, and go to state 65
+
+    $default  reduce using rule 45 (boolean_expression)
+
+
+state 102
+
+   46 boolean_expression: numeric_expression LESSER numeric_expression .
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    ADD  shift, and go to state 61
+    SUB  shift, and go to state 62
+    MUL  shift, and go to state 63
+    DIV  shift, and go to state 64
+    MOD  shift, and go to state 65
+
+    $default  reduce using rule 46 (boolean_expression)
+
+
+state 103
+
+   47 boolean_expression: numeric_expression NOTLESSER numeric_expression .
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    ADD  shift, and go to state 61
+    SUB  shift, and go to state 62
+    MUL  shift, and go to state 63
+    DIV  shift, and go to state 64
+    MOD  shift, and go to state 65
+
+    $default  reduce using rule 47 (boolean_expression)
+
+
+state 104
+
+   48 boolean_expression: numeric_expression GREATEREQUALS numeric_expression .
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    ADD  shift, and go to state 61
+    SUB  shift, and go to state 62
+    MUL  shift, and go to state 63
+    DIV  shift, and go to state 64
+    MOD  shift, and go to state 65
+
+    $default  reduce using rule 48 (boolean_expression)
+
+
+state 105
+
+   49 boolean_expression: numeric_expression LESSEREQUALS numeric_expression .
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+
+    ADD  shift, and go to state 61
+    SUB  shift, and go to state 62
+    MUL  shift, and go to state 63
+    DIV  shift, and go to state 64
+    MOD  shift, and go to state 65
+
+    $default  reduce using rule 49 (boolean_expression)
+
+
+state 106
+
+   26 decleration_list: VAR ASSIGN expression .
+
+    $default  reduce using rule 26 (decleration_list)
+
+
+state 107
+
+   27 decleration_list: decleration_list COMMA VAR .
+   28                 | decleration_list COMMA VAR . ASSIGN expression
+
+    ASSIGN  shift, and go to state 114
+
+    $default  reduce using rule 27 (decleration_list)
+
+
+state 108
+
+   10 condition: IF LPAREN expression RPAREN . empty_space LBRACK blocks RBRACK else_part
+
+    ENDL  shift, and go to state 115
+
+    ENDL      [reduce using rule 9 (empty_space)]
+    $default  reduce using rule 9 (empty_space)
+
+    empty_space  go to state 116
+
+
+state 109
+
+   14 statement: PRINTINT LPAREN expression_list RPAREN .
+
+    $default  reduce using rule 14 (statement)
+
+
+state 110
+
+   30 expression_list: expression_list COMMA . expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    expression          go to state 117
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 111
+
+   15 statement: PRINTCHAR LPAREN expression_list RPAREN .
+
+    $default  reduce using rule 15 (statement)
+
+
+state 112
+
+   16 statement: PRINTFLOAT LPAREN expression_list RPAREN .
+
+    $default  reduce using rule 16 (statement)
+
+
+state 113
+
+   61 numeric_expression: numeric_expression . ADD numeric_expression
+   62                   | numeric_expression . SUB numeric_expression
+   63                   | numeric_expression . MUL numeric_expression
+   64                   | numeric_expression . DIV numeric_expression
+   65                   | numeric_expression . MOD numeric_expression
+   66                   | LPAREN numeric_expression . RPAREN
+
+    ADD     shift, and go to state 61
+    SUB     shift, and go to state 62
+    MUL     shift, and go to state 63
+    DIV     shift, and go to state 64
+    MOD     shift, and go to state 65
+    RPAREN  shift, and go to state 77
+
+
+state 114
+
+   28 decleration_list: decleration_list COMMA VAR ASSIGN . expression
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    VAR         shift, and go to state 36
+
+    input               go to state 30
+    expression          go to state 118
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 115
+
+    7 empty_space: ENDL .
+
+    $default  reduce using rule 7 (empty_space)
+
+
+state 116
+
+    8 empty_space: empty_space . ENDL
+   10 condition: IF LPAREN expression RPAREN empty_space . LBRACK blocks RBRACK else_part
+
+    LBRACK  shift, and go to state 119
+    ENDL    shift, and go to state 120
+
+
+state 117
+
+   30 expression_list: expression_list COMMA expression .
+
+    $default  reduce using rule 30 (expression_list)
+
+
+state 118
+
+   28 decleration_list: decleration_list COMMA VAR ASSIGN expression .
+
+    $default  reduce using rule 28 (decleration_list)
+
+
+state 119
+
+   10 condition: IF LPAREN expression RPAREN empty_space LBRACK . blocks RBRACK else_part
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    BOOL        shift, and go to state 5
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    IF          shift, and go to state 8
+    ERROR       shift, and go to state 9
+    PRINTINT    shift, and go to state 10
+    PRINTCHAR   shift, and go to state 11
+    PRINTFLOAT  shift, and go to state 12
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    ENDL        shift, and go to state 18
+    INT         shift, and go to state 19
+    CHAR        shift, and go to state 20
+    FLOAT       shift, and go to state 21
+    VAR         shift, and go to state 22
+
+    blocks              go to state 121
+    block               go to state 25
+    condition           go to state 26
+    statement           go to state 27
+    declaration         go to state 28
+    assignment          go to state 29
+    input               go to state 30
+    expression          go to state 31
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 120
+
+    8 empty_space: empty_space ENDL .
+
+    $default  reduce using rule 8 (empty_space)
+
+
+state 121
+
+    3 blocks: blocks . block
+   10 condition: IF LPAREN expression RPAREN empty_space LBRACK blocks . RBRACK else_part
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    BOOL        shift, and go to state 5
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    IF          shift, and go to state 8
+    RBRACK      shift, and go to state 122
+    ERROR       shift, and go to state 9
+    PRINTINT    shift, and go to state 10
+    PRINTCHAR   shift, and go to state 11
+    PRINTFLOAT  shift, and go to state 12
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    ENDL        shift, and go to state 18
+    INT         shift, and go to state 19
+    CHAR        shift, and go to state 20
+    FLOAT       shift, and go to state 21
+    VAR         shift, and go to state 22
+
+    block               go to state 55
+    condition           go to state 26
+    statement           go to state 27
+    declaration         go to state 28
+    assignment          go to state 29
+    input               go to state 30
+    expression          go to state 31
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 122
+
+   10 condition: IF LPAREN expression RPAREN empty_space LBRACK blocks RBRACK . else_part
+
+    ENDL  shift, and go to state 123
+
+    ENDL  [reduce using rule 13 (else_part)]
+
+    else_part  go to state 124
+
+
+state 123
+
+   11 else_part: ENDL . ELSE empty_space LBRACK blocks RBRACK
+   12          | ENDL . ELSE condition
+
+    ELSE  shift, and go to state 125
+
+
+state 124
+
+   10 condition: IF LPAREN expression RPAREN empty_space LBRACK blocks RBRACK else_part .
+
+    $default  reduce using rule 10 (condition)
+
+
+state 125
+
+   11 else_part: ENDL ELSE . empty_space LBRACK blocks RBRACK
+   12          | ENDL ELSE . condition
+
+    IF    shift, and go to state 8
+    ENDL  shift, and go to state 115
+
+    ENDL      [reduce using rule 9 (empty_space)]
+    $default  reduce using rule 9 (empty_space)
+
+    empty_space  go to state 126
+    condition    go to state 127
+
+
+state 126
+
+    8 empty_space: empty_space . ENDL
+   11 else_part: ENDL ELSE empty_space . LBRACK blocks RBRACK
+
+    LBRACK  shift, and go to state 128
+    ENDL    shift, and go to state 120
+
+
+state 127
+
+   12 else_part: ENDL ELSE condition .
+
+    $default  reduce using rule 12 (else_part)
+
+
+state 128
+
+   11 else_part: ENDL ELSE empty_space LBRACK . blocks RBRACK
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    BOOL        shift, and go to state 5
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    IF          shift, and go to state 8
+    ERROR       shift, and go to state 9
+    PRINTINT    shift, and go to state 10
+    PRINTCHAR   shift, and go to state 11
+    PRINTFLOAT  shift, and go to state 12
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    ENDL        shift, and go to state 18
+    INT         shift, and go to state 19
+    CHAR        shift, and go to state 20
+    FLOAT       shift, and go to state 21
+    VAR         shift, and go to state 22
+
+    blocks              go to state 129
+    block               go to state 25
+    condition           go to state 26
+    statement           go to state 27
+    declaration         go to state 28
+    assignment          go to state 29
+    input               go to state 30
+    expression          go to state 31
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 129
+
+    3 blocks: blocks . block
+   11 else_part: ENDL ELSE empty_space LBRACK blocks . RBRACK
+
+    error       shift, and go to state 1
+    NUM         shift, and go to state 2
+    LETTER      shift, and go to state 3
+    DECIMAL     shift, and go to state 4
+    BOOL        shift, and go to state 5
+    LPAREN      shift, and go to state 6
+    NOT         shift, and go to state 7
+    IF          shift, and go to state 8
+    RBRACK      shift, and go to state 130
+    ERROR       shift, and go to state 9
+    PRINTINT    shift, and go to state 10
+    PRINTCHAR   shift, and go to state 11
+    PRINTFLOAT  shift, and go to state 12
+    INTINPUT    shift, and go to state 13
+    FLOATINPUT  shift, and go to state 14
+    CHARINPUT   shift, and go to state 15
+    TRUE        shift, and go to state 16
+    FALSE       shift, and go to state 17
+    ENDL        shift, and go to state 18
+    INT         shift, and go to state 19
+    CHAR        shift, and go to state 20
+    FLOAT       shift, and go to state 21
+    VAR         shift, and go to state 22
+
+    block               go to state 55
+    condition           go to state 26
+    statement           go to state 27
+    declaration         go to state 28
+    assignment          go to state 29
+    input               go to state 30
+    expression          go to state 31
+    boolean_expression  go to state 32
+    numeric_expression  go to state 33
+
+
+state 130
+
+   11 else_part: ENDL ELSE empty_space LBRACK blocks RBRACK .
+
+    $default  reduce using rule 11 (else_part)

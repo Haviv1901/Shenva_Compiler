@@ -7,6 +7,16 @@
 void tokenPrint(void* data);
 
 
+void printVariaballsWithScope(VariableList* curr)
+{
+	while (curr)
+	{
+		printf("%s: %d\n", curr->var->Id, curr->var->scope);
+		curr = curr->next;
+	}
+}
+
+
 /* main function, compile a txt file into a .exe file */
 void Compile(char* inputFileName, char* outputFileName)
 {
@@ -28,20 +38,21 @@ void Compile(char* inputFileName, char* outputFileName)
 		return;
 	}
 
-	
+	printVariaballsWithScope(varList);
 
-	ASTNode* tree = buildTree(tokenList); // build AST
+	ASTNode* tree = buildTree(tokenList); // build AST 
 
 	convertASTToASM(tree, outputFileName, varList); // convert AST to ASM code.
 	runMasmAndLink(outputFileName);
 	deleteAST(tree); // free alocated memory of AST
 	*tokenList = hold;
-
+	callDeleteScopeTree();
 	token_llist_free(tokenList);
 	deleteVariableList(varList);
 
-
 }
+
+
 
 VariableList* createVariableList(llist* tokenList)
 {

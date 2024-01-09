@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AST.c" />
+    <ClCompile Include="ASTconditions.c" />
     <ClCompile Include="ASTdeclerations.c" />
     <ClCompile Include="ASTfunctions.c" />
     <ClCompile Include="ASTManager.c" />
@@ -151,11 +152,13 @@
     <ClCompile Include="llist.c" />
     <ClCompile Include="masmAndLink.c" />
     <ClCompile Include="prog.c" />
+    <ClCompile Include="ScopeTree.c" />
     <ClCompile Include="TokenGetter.c" />
     <ClCompile Include="VariableManager.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST.h" />
+    <ClInclude Include="ASTconditions.h" />
     <ClInclude Include="ASTdeclerations.h" />
     <ClInclude Include="ASTfunctions.h" />
     <ClInclude Include="ASTManager.h" />
@@ -166,6 +169,7 @@
     <ClInclude Include="InstructionWriting.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="llist.h" />
+    <ClInclude Include="ScopeTree.h" />
     <ClInclude Include="TokenGetter.h" />
     <ClInclude Include="VariableManager.h" />
   </ItemGroup>

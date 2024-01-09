@@ -11,11 +11,14 @@ FILE* errorFile;
     int num;
     char *str;  // Add a string field
 }
-%token NUM LETTER DECIMAL
+%token NUM LETTER DECIMAL BOOL
 %token ADD SUB MUL DIV MOD
 %token LPAREN RPAREN
+%token EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS NOT OR AND
+%token IF ELSE LBRACK RBRACK
 %token <str> ERROR
 %token PRINTINT PRINTCHAR PRINTFLOAT COMMA INTINPUT FLOATINPUT CHARINPUT
+%token TRUE FALSE
 %token ENDL
 %token ASSIGN
 %token INT CHAR FLOAT
@@ -23,31 +26,49 @@ FILE* errorFile;
 %token ADDEQ SUBEQ MULEQ DIVEQ MODEQ
 %left ADD SUB
 %left MUL DIV MOD
-
+%left EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS OR AND
+%nonassoc NOT ELSE
+%nonassoc LOWER_THAN_ELSE
 %%
 
 
-program : statements
+program : blocks
         ;
 
-statements : statement
-           | statements statement
-           ;
+blocks : block
+        | blocks block
+        ;
+		   
+block : statement
+		| condition
+		;
+		
+condition : IF LPAREN expression RPAREN empty_space LBRACK blocks RBRACK ENDL else_part
+          ;
 
+else_part : ELSE empty_space LBRACK blocks RBRACK ENDL
+          | ELSE condition %prec LOWER_THAN_ELSE
+          | /* empty, if there's no else part */
+          ;
+
+empty_space : ENDL
+            | empty_space ENDL
+            ;
+		
 statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
-		  |  PRINTCHAR LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
+		  |  PRINTCHAR LPAREN expression_list RPAREN  ENDL { /* Handle print statement */ }
 		  |  PRINTFLOAT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
-
 		  | expression ENDL
           | declaration ENDL
           | assignment ENDL
 		  | ENDL
           | ERROR {fprintf(errorFile, "syntax error, unrecognized \"%s\" in the code (line %d)\n", $1, yylineno);}
           ;
-
+		
 declaration : INT decleration_list
             | CHAR decleration_list
 			| FLOAT decleration_list
+			| BOOL decleration_list
             ;
 
 decleration_list : VAR
@@ -74,20 +95,44 @@ input : INTINPUT
 	  | CHARINPUT 
 	  ;
 
-expression : NUM
+
+expression: boolean_expression
+	| numeric_expression
+	;
+
+
+
+boolean_expression : numeric_expression EQUALS numeric_expression
+	| numeric_expression NOTEQUALS numeric_expression
+	| numeric_expression GREATER numeric_expression
+	| numeric_expression NOTGREATER numeric_expression
+	| numeric_expression LESSER numeric_expression
+	| numeric_expression NOTLESSER numeric_expression
+	| numeric_expression GREATEREQUALS numeric_expression
+	| numeric_expression LESSEREQUALS numeric_expression
+	| LPAREN boolean_expression RPAREN
+	| boolean_expression OR boolean_expression
+	| boolean_expression AND boolean_expression
+	| NOT boolean_expression
+	;
+
+
+
+numeric_expression : NUM
 		   | VAR
+		   | TRUE
+		   | FALSE
 		   | LETTER
 		   | DECIMAL
 		   | input LPAREN RPAREN
-           | expression ADD expression { /* Handle addition here */ }
-           | expression SUB expression { /* Handle subtraction here */ }
-           | expression MUL expression { /* Handle multiplication here */ }
-           | expression DIV expression { /* Handle division here */ }
-		   | expression MOD expression {}
-           | LPAREN expression RPAREN   { /* Handle parentheses here */ }
+           | numeric_expression ADD numeric_expression { /* Handle addition here */ }
+           | numeric_expression SUB numeric_expression { /* Handle subtraction here */ }
+           | numeric_expression MUL numeric_expression { /* Handle multiplication here */ }
+           | numeric_expression DIV numeric_expression { /* Handle division here */ }
+		   | numeric_expression MOD numeric_expression {}
+           | LPAREN numeric_expression RPAREN   { /* Handle parentheses here */ }
 		   | error 
            ;
-
 
 
 %%
@@ -285,6 +330,76 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "floating point number");
 			i += 6;
+		}
+		else if (strncmp(msg + i, "NOT", 3) == 0)
+		{
+			fprintf(errorFile, "!");
+			i += 2;
+		}
+		else if (strncmp(msg + i, "EQUALS", 6) == 0)
+		{
+			fprintf(errorFile, "==");
+			i += 5;
+		}
+		else if (strncmp(msg + i, "NOTEQUALS", 9) == 0)
+		{
+			fprintf(errorFile, "!=");
+			i += 8;
+		}
+		else if (strncmp(msg + i, "GREATER", 7) == 0)
+		{
+			fprintf(errorFile, ">");
+			i += 6;
+		}
+		else if (strncmp(msg + i, "NOTGREATER", 10) == 0)
+		{
+			fprintf(errorFile, "!>");
+			i += 9;
+		}
+		else if (strncmp(msg + i, "LESSER", 6) == 0)
+		{
+			fprintf(errorFile, "<");
+			i += 5;
+		}
+		else if (strncmp(msg + i, "NOTLESSER", 9) == 0)
+		{
+			fprintf(errorFile, "!<");
+			i += 8;
+		}
+		else if (strncmp(msg + i, "GREATEREQUALS", 13) == 0)
+		{
+			fprintf(errorFile, ">=");
+			i += 12;
+		}
+		else if (strncmp(msg + i, "LESSEREQUALS", 12) == 0)
+		{
+			fprintf(errorFile, "<=");
+			i += 11;
+		}
+		else if (strncmp(msg + i, "TRUE", 4) == 0)
+		{
+			fprintf(errorFile, "True");
+			i += 3;
+		}
+		else if (strncmp(msg + i, "FALSE", 5) == 0)
+		{
+			fprintf(errorFile, "False");
+			i += 4;
+		}
+		else if (strncmp(msg + i, "OR", 2) == 0)
+		{
+			fprintf(errorFile, "\"or\"");
+			i += 1;
+		}
+		else if (strncmp(msg + i, "AND", 3) == 0)
+		{
+			fprintf(errorFile, "\"and\"");
+			i += 2;
+		}
+		else if (strncmp(msg + i, "BOOL", 4) == 0)
+		{
+			fprintf(errorFile, "bool");
+			i += 3;
 		}
 		else
 		{

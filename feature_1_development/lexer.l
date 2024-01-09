@@ -56,13 +56,48 @@ void set_output_file(FILE* file) {
 "helkeiShave"	  { fprintf(outputFile, "=\nv %s\n5\n", lastIdentifier); return DIVEQ;}
 "%="	  { fprintf(outputFile, "=\nv %s\n%%\n", lastIdentifier); return MODEQ;}
 "sheeritShave"	  { fprintf(outputFile, "=\nv %s\n%%\n", lastIdentifier); return MODEQ;}
+"=="	  { fprintf(outputFile, "S\n"); return EQUALS;}
+"shaveshave"	  { fprintf(outputFile, "S\n"); return EQUALS;}
+"!="	  { fprintf(outputFile, "U\n"); return NOTEQUALS;}
+"loshave"	  { fprintf(outputFile, "U\n"); return NOTEQUALS;}
+">"	  { fprintf(outputFile, "G\n"); return GREATER;}
+"gadol"	  { fprintf(outputFile, "G\n"); return GREATER;}
+"!>"	  { fprintf(outputFile, "H\n"); return NOTGREATER;}
+"logadol"	  { fprintf(outputFile, "H\n"); return NOTGREATER;}
+"<"	  { fprintf(outputFile, "K\n"); return LESSER;}
+"katan"	  { fprintf(outputFile, "K\n"); return LESSER;}
+"!<"	  { fprintf(outputFile, "M\n"); return NOTLESSER;}
+"lokatan"	  { fprintf(outputFile, "M\n"); return NOTLESSER;}
+"gadolshave"	  { fprintf(outputFile, "N\n"); return GREATEREQUALS;}
+">="	  { fprintf(outputFile, "N\n"); return GREATEREQUALS;}
+"katanshave"	  { fprintf(outputFile, "O\n"); return LESSEREQUALS;}
+"<="	  { fprintf(outputFile, "O\n"); return LESSEREQUALS;}
+"!"	  { fprintf(outputFile, "!\n"); return NOT;}
+"true"    { fprintf(outputFile, "1 1\n"); return TRUE;}
+"emet"    { fprintf(outputFile, "1 1\n"); return TRUE;}
+"false"    { fprintf(outputFile, "1 0\n"); return FALSE;}
+"sheker"    { fprintf(outputFile, "1 0\n"); return FALSE;}
+"or"    { fprintf(outputFile, "o\n"); return OR;}
+"oshe"    { fprintf(outputFile, "o\n"); return OR;}
+"and"    { fprintf(outputFile, "a\n"); return AND;}
+"vegamshe"    { fprintf(outputFile, "a\n"); return AND;}
 "shave"	  { fprintf(outputFile, "=\n"); return ASSIGN;}
 "int"	  { fprintf(outputFile, "i\n"); return INT;}
 "mispar"	  { fprintf(outputFile, "i\n"); return INT;}
 "char"	  { fprintf(outputFile, "c\n"); return CHAR;}
 "ot"	  { fprintf(outputFile, "c\n"); return CHAR;}
 "float"	  { fprintf(outputFile, "f\n"); return FLOAT;}
-"Tzaf"	  { fprintf(outputFile, "f\n"); return FLOAT;}
+"tzaf"	  { fprintf(outputFile, "f\n"); return FLOAT;}
+"bool"	  { fprintf(outputFile, "b\n"); return BOOL;}
+"meteg"	  { fprintf(outputFile, "b\n"); return BOOL;}
+"if"	  { fprintf(outputFile, "I\n"); return IF;}
+"em"	  { fprintf(outputFile, "I\n"); return IF;}
+"else"	  { fprintf(outputFile, "E\n"); return ELSE;}
+"aheret"	  { fprintf(outputFile, "E\n"); return ELSE;}
+"{"	  { fprintf(outputFile, "{\n"); return LBRACK;}
+"}"	  { fprintf(outputFile, "}\n"); return RBRACK;}
+
+
 [a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); strcpy(lastIdentifier, yytext); return VAR; }
 '([^\\'\n"\r\b\t\f]|\\[\\'n"tbrf])'   {fprintf(outputFile, "l %s\n", yytext); return LETTER; }
 [-]?[0-9]+   { fprintf(outputFile, "1 %s\n", yytext); return NUM;}
