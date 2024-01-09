@@ -16,6 +16,7 @@
 #define FIRST false
 #define SECOND true
 
+
 void copyBoneFile(FILE* asmFile, bool boneFileNumber);
 void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList);
 
@@ -27,5 +28,11 @@ int isInputToken(Token token);
 void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 int getIEEE754(float val);
+int writeLogicalBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
+int writeBooleanBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
+void writeJMPcondition(FILE* asmFile, enum TokenTypes type);
+void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
+
+
 
 #endif

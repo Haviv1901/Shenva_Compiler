@@ -31,6 +31,19 @@ ASTNode* createNewASTnode(Token* token)
 		result->children[1] = NULL;
 
 	}
+	else if (token->type == TOKEN_IF)
+	{
+		result->children = (ASTNode**)malloc((TWO_CHILDREN_NODE + 1) * sizeof(ASTNode*));
+		if (result->children == NULL)
+		{
+			free(result);
+			return NULL;
+		}
+		result->children[0] = NULL; // setting children to NULL, the outer function can change that
+		result->children[1] = NULL;
+		result->children[2] = NULL;
+
+	}
 	else if (isOneChildNode(token->type)) // checking if the token is a one child type of token	
 	{
 		result->children = (ASTNode**)malloc(ONE_CHILD_NODE * sizeof(ASTNode*));
@@ -66,6 +79,23 @@ void deleteAST(ASTNode* head)
 		}
 		free(head->children);
 	}
+	else if (isThreeChildNode(head->token->type))
+	{
+		// 3 child
+		if (head->children[0] != NULL)
+		{
+			deleteAST(head->children[0]);
+		}
+		if (head->children[1] != NULL)
+		{
+			deleteAST(head->children[1]);
+		}
+		if (head->children[2] != NULL)
+		{
+			deleteAST(head->children[2]);
+		}
+		free(head->children);
+	}
 	else if (isOneChildNode(head->token->type)) // checking if the token is a one child type of token
 	{
 		if (head->children[0] != NULL)
@@ -82,6 +112,16 @@ void deleteAST(ASTNode* head)
 	free(head);
 }
 
+
+int isThreeChildNode(enum TokenTypes token)
+{
+	if (token == TOKEN_IF)
+	{
+		return 1;
+	}
+	return 0;
+}
+
 int isTwoChildNode(enum TokenTypes token)
 {
 	if (token == TOKEN_ADD ||
@@ -92,7 +132,18 @@ int isTwoChildNode(enum TokenTypes token)
 		token == TOKEN_INT ||
 		token == TOKEN_CHAR ||
 		token == TOKEN_FLOAT ||
-		token == TOKEN_ASSIGN)
+		token == TOKEN_ASSIGN ||
+		token == TOKEN_OR ||
+		token == TOKEN_AND || 
+		token == TOKEN_EQUALS || 
+		token == TOKEN_NOT_EQUALS || 
+		token == TOKEN_GREATER || 
+		token == TOKEN_NOT_GREATER || 
+		token == TOKEN_LESSER || 
+		token == TOKEN_NOT_LESSER || 
+		token == TOKEN_GREATER_EQUALS || 
+		token == TOKEN_LESSER_EQUALS ||
+		token == TOKEN_BOOL)
 	{
 		return 1;
 	}
@@ -107,7 +158,9 @@ int isOneChildNode(enum TokenTypes token)
 		token == TOKEN_RPARN ||
 		token == TOKEN_PRINT_CHAR ||
 		token == TOKEN_PRINT_FLOAT ||
-		token == TOKEN_PRINT_INT)
+		token == TOKEN_PRINT_INT ||
+		token == TOKEN_NOT || 
+		token == TOKEN_ELSE)
 	{
 		return 1;
 	}
@@ -130,7 +183,8 @@ int isVariableToken(Token token)
 {
 	if (token.type == TOKEN_INT ||
 		token.type == TOKEN_CHAR ||
-		token.type == TOKEN_FLOAT)
+		token.type == TOKEN_FLOAT ||
+		token.type == TOKEN_BOOL)
 	{
 		return 1;
 	}
@@ -145,7 +199,31 @@ int isExpressionToken(Token token)
 		token.type == TOKEN_INPUT_CHAR ||
 		token.type == TOKEN_INPUT_FLOAT ||
 		token.type == TOKEN_INPUT_INT ||
-		token.type == TOKEN_LPARN) // if numeric expression
+		token.type == TOKEN_LPARN ||
+		token.type == TOKEN_NOT ||
+		token.type == TOKEN_VAR || // if numeric expression
+		token.type == TOKEN_ADD ||
+		token.type == TOKEN_SUB ||
+		token.type == TOKEN_MUL ||
+		token.type == TOKEN_DIV ||
+		token.type == TOKEN_MODULO)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+
+int isBooleanExpressionToken(enum TokenTypes token)
+{
+	if (token == TOKEN_EQUALS ||
+		token == TOKEN_NOT_EQUALS ||
+		token == TOKEN_GREATER ||
+		token == TOKEN_NOT_GREATER ||
+		token == TOKEN_LESSER ||
+		token == TOKEN_NOT_LESSER ||
+		token == TOKEN_GREATER_EQUALS ||
+		token == TOKEN_LESSER_EQUALS)
 	{
 		return 1;
 	}

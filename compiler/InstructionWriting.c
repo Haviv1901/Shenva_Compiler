@@ -5,12 +5,11 @@
 #include <stdio.h>
 
 
-
-#ifndef FILEHELPER_H
 #include "fileHelper.h"
-#endif
-
 bool isLastValFloat = false;
+unsigned long lableNum = 0;
+int currentScope = 0;
+int ScopeCounter = 0;
 
 /// <summary>
 /// function to copy the functions and the assembly code bone to the assembly file
@@ -78,6 +77,7 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 
 	Token* currentToken;
 	ASTNode* next = NULL;
+	int labelHolder = 0;
 	bool isNullFlag = false;
 	if (tree->token == NULL)
 	{
@@ -93,9 +93,9 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 	}
 
 
-	if (isExpressionToken(*currentToken)) // checking for expression branch
+	if (isExpressionToken(*currentToken) || isBooleanExpressionToken(currentToken->type) || currentToken->type == TOKEN_OR || currentToken->type == TOKEN_AND) // checking for expression branch
 	{
-		isLastValFloat = writeNumericBranch(tree, asmFile, varList);
+		isLastValFloat = writeLogicalBranch(tree, asmFile, varList);
 		if (isNullFlag)
 		{
 			fprintf(asmFile, "pop eax\n");
@@ -107,7 +107,7 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 	}
 	else if (currentToken->type == TOKEN_INT ||
 		currentToken->type == TOKEN_CHAR ||
-		currentToken->type == TOKEN_FLOAT)// checking for decleration branch
+		currentToken->type == TOKEN_FLOAT || currentToken->type == TOKEN_BOOL)// checking for decleration branch
 	{
 		writeDeclerationBranch(tree, asmFile, varList);
 	}
@@ -115,7 +115,13 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 	{
 		writeAssignBranch(tree, asmFile, varList);
 	}
-
+	else if(currentToken->type == TOKEN_IF)
+	{
+		labelHolder = lableNum;
+		lableNum++;
+		writeConditionBranch(tree, asmFile, varList, labelHolder);
+		fprintf(asmFile, "label_%d:\n", labelHolder);
+	}
 	if (next != NULL)
 	{
 		writeBranch(next, asmFile, varList);
@@ -125,35 +131,99 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 
 
 /*
+writeConditionBranch: this fucntion will write a condition bracnch
+input: the branch, asm file, vairable list and the label to the end of the block
+output: non
+*/
+void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList, int endLabel)
+{
+	int finishLabel = lableNum, scopeSaver = currentScope, scopeSize = 0;
+	lableNum++;
+
+	ASTNode* elseBranch = branch->children[ELSE];
+	writeBranch(branch->children[CONDITION], asmFile, varList);//writing condition
+
+	fprintf(asmFile, "pop eax\n");
+	fprintf(asmFile, "cmp eax, 0\n");
+	fprintf(asmFile, "je label_%d\n", finishLabel);//going to next if
+
+	ScopeCounter++;
+	currentScope = ScopeCounter;//going into scope
+
+	writeBranch(branch->children[CODE], asmFile, varList);//writing the block
+	currentScope = scopeSaver;//retreiving scope
+
+	scopeSize = getSizeOfScope(varList, currentScope + 1);//deleteing scope
+	if (scopeSize != 0)
+	{
+		fprintf(asmFile, "add esp, %d\n", scopeSize);
+	}
+
+	fprintf(asmFile, "jmp label_%d\n", endLabel);//ending label, and opening next
+	fprintf(asmFile, "label_%d:\n", finishLabel);
+
+	lableNum++;
+	if (elseBranch != NULL)//if there is an else branch
+	{
+		if (elseBranch->children[0] == NULL)//if empty else
+		{
+			return;
+		}
+		else if (elseBranch->children[0]->token == NULL)//is virgin else
+		{
+			ScopeCounter++;
+			currentScope = ScopeCounter;
+
+			writeBranch(elseBranch->children[0], asmFile, varList);
+			currentScope = scopeSaver;
+		}
+		else// if else if
+		{
+			writeConditionBranch(elseBranch->children[0], asmFile, varList, endLabel);
+		}
+	}
+}
+
+
+
+
+
+/*
 writeAssignBranch: this function will write an assign branch into the asm file
 input: the decleration branch, and the asm file
 output: non
 */
-void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
+void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList) 
 {
 	writeBranch(branch->children[1], asmFile, varList);
-	if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_CHAR)
+	if (getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->Type == VAR_CHAR || getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->Type == VAR_BOOL)
 	{
 		if (isLastValFloat)
 		{
 			fprintf(asmFile, "call ConvertFloatToInt\n");
 		}
 		fprintf(asmFile, "pop eax\n");
-		fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+		fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
+		
 	}
-	else if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_INT)
+	else if (getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->Type == VAR_INT)
 	{
 		if (isLastValFloat)
 		{
 			fprintf(asmFile, "call ConvertFloatToInt\n");
 		}
 		fprintf(asmFile, "pop eax\n");
-		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
 	}
-	else if (getVariable(varList, (char*)(branch->children[0]->token->value))->Type == VAR_FLOAT)
+	else if (getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->Type == VAR_FLOAT)
 	{
+		if (!isLastValFloat)
+		{
+			fprintf(asmFile, "fild dword ptr [esp]\n");
+			fprintf(asmFile, "fstp dword ptr [esp]\n");
+		}
 		fprintf(asmFile, "pop eax\n");
-		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
 	}
 
 }
@@ -196,7 +266,7 @@ void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varLis
 			fprintf(asmFile, "push 0\n");
 		}
 	}
-	else if (branch->token->type == TOKEN_CHAR)
+	else if (branch->token->type == TOKEN_CHAR || branch->token->type == TOKEN_BOOL)
 	{
 
 		fprintf(asmFile, "sub esp, 1\n");
@@ -209,12 +279,155 @@ void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varLis
 				fprintf(asmFile, "call ConvertFloatToInt\n");
 			}
 			fprintf(asmFile, "pop eax\n");
-			fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariable(varList, (char*)(branch->children[0]->token->value))->placeInMemory);
+			fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
 		}
 		else
 		{
 			fprintf(asmFile, "mov byte ptr[esp], 0\n");
 		}
+	}
+
+}
+
+
+
+
+
+/*
+writeLogicalBranch: this function will write a logical branch
+input: the vranch, the asm file and the varlist.
+output: a true or false for the isLastValFloat bool
+*/
+int writeLogicalBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
+{
+	bool is_float = false;
+	if (branch->token->type == TOKEN_NOT)
+	{
+		writeLogicalBranch(branch->children[0], asmFile, varList);
+		fprintf(asmFile, "xor dword ptr [esp], 1\n");// xoring the first bit
+		return false;
+	}
+	else if (branch->token->type == TOKEN_AND)
+	{
+		writeLogicalBranch(branch->children[0], asmFile, varList);
+		writeLogicalBranch(branch->children[1], asmFile, varList);
+
+		fprintf(asmFile, "pop eax\n");
+		fprintf(asmFile, "pop ebx\n");
+
+		fprintf(asmFile, "and eax, ebx\n");// logical and
+		fprintf(asmFile, "push eax\n");
+		return false;
+	}
+	else if (branch->token->type == TOKEN_OR)
+	{
+		writeLogicalBranch(branch->children[0], asmFile, varList);
+
+		fprintf(asmFile, "cmp dword ptr [esp], 1\n");
+		fprintf(asmFile, "je label_%d\n", lableNum);
+
+		writeLogicalBranch(branch->children[1], asmFile, varList);// doing so only if the first value isnt 1
+		fprintf(asmFile, "pop eax\n");
+
+		fprintf(asmFile, "mov dword ptr [esp], eax\n");
+		fprintf(asmFile, "label_%d:\n", lableNum);
+		lableNum += 1;
+		return false;
+	}
+	else
+	{
+		is_float = writeBooleanBranch(branch, asmFile, varList);// going to the next precendence
+		return is_float;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+/*
+writeBooleanBranch: this function will write a boolean branch
+input: the vranch, the asm file and the varlist.
+output: a true or false for the isLastValFloat bool
+*/
+int writeBooleanBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
+{
+	bool float_val = false;
+	if (isBooleanExpressionToken(branch->token->type))// checking for boolean expressions
+	{
+		float_val = writeNumericBranch(branch->children[0], asmFile, varList);
+		if (!float_val)
+		{
+			fprintf(asmFile, "fild dword ptr [esp]\n");
+			fprintf(asmFile, "fstp dword ptr [esp]\n");
+		}
+		float_val = writeNumericBranch(branch->children[1], asmFile, varList);
+		if (!float_val)
+		{
+			fprintf(asmFile, "fild dword ptr [esp]\n");
+			fprintf(asmFile, "fstp dword ptr [esp]\n");
+		}
+		fprintf(asmFile, "pop ebx\n");
+		fprintf(asmFile, "pop eax\n");
+
+		fprintf(asmFile, "xor edx, edx\n");
+		fprintf(asmFile, "cmp eax, ebx\n");
+
+		writeJMPcondition(asmFile, branch->token->type);// taking coresponding jmp condition
+		fprintf(asmFile, "mov edx, 1\n");
+		fprintf(asmFile, "label_%d:\n", lableNum);
+
+		fprintf(asmFile, "mov eax, edx\n");
+		fprintf(asmFile, "push eax\n");
+		lableNum += 1;
+		return false;
+	}
+	else
+	{
+		float_val = writeNumericBranch(branch, asmFile, varList);
+		return float_val;
+	}
+}
+
+
+/*
+this switch case will get a bool compairson type, and wrtie the right jmp condition
+*/
+void writeJMPcondition(FILE* asmFile, enum TokenTypes type)
+{
+	switch (type)
+	{
+	case TOKEN_EQUALS:// each condition is the opposite of the token's condition
+		fprintf(asmFile, "jne label_%d\n", lableNum);
+		break;
+	case TOKEN_NOT_EQUALS:
+		fprintf(asmFile, "je label_%d\n", lableNum);
+		break;
+	case TOKEN_GREATER:
+		fprintf(asmFile, "jng label_%d\n", lableNum);
+		break;
+	case TOKEN_NOT_GREATER:
+		fprintf(asmFile, "jg label_%d\n", lableNum);
+		break;
+	case TOKEN_LESSER:
+		fprintf(asmFile, "jnl label_%d\n", lableNum);
+		break;
+	case TOKEN_NOT_LESSER:
+		fprintf(asmFile, "jl label_%d\n", lableNum);
+		break;
+	case TOKEN_GREATER_EQUALS:
+		fprintf(asmFile, "jl label_%d\n", lableNum);
+		break;
+	case TOKEN_LESSER_EQUALS:
+		fprintf(asmFile, "jg label_%d\n", lableNum);
+		break;
+	default:
+		break;
 	}
 
 }
@@ -243,18 +456,18 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	}
 	if (branch->token->type == TOKEN_VAR)
 	{
-		if (getVariable(varList, (char*)(branch->token->value))->Type == VAR_CHAR)
+		if (getVariableByScope(varList, (char*)(branch->token->value), currentScope)->Type == VAR_CHAR || getVariableByScope(varList, (char*)(branch->token->value), currentScope)->Type == VAR_BOOL)
 		{
 			fprintf(asmFile, "xor eax, eax\n");
-			fprintf(asmFile, "mov al, byte ptr [ebp - %d]\n", getVariable(varList, (char*)(branch->token->value))->placeInMemory);
+			fprintf(asmFile, "mov al, byte ptr [ebp - %d]\n", getVariableByScope(varList, (char*)(branch->token->value), currentScope)->placeInMemory);
 			fprintf(asmFile, "push eax\n");
 		}
 		else
 		{
-			fprintf(asmFile, "push [ebp - %d]\n", getVariable(varList, (char*)(branch->token->value))->placeInMemory);// getting the stack position of this specific var from the var list
+			fprintf(asmFile, "push [ebp - %d]\n", getVariableByScope(varList, (char*)(branch->token->value), currentScope)->placeInMemory);// getting the stack position of this specific var from the var list
 		}
 
-		if (getVariable(varList, (char*)(branch->token->value))->Type == VAR_FLOAT)
+		if (getVariableByScope(varList, (char*)(branch->token->value), currentScope)->Type == VAR_FLOAT)
 		{
 			return true;
 		}

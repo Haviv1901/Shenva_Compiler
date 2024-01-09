@@ -8,8 +8,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-
+int reformattedStackPointer = 0; // new stack pointer that works with variables in size of less then 4 bytes
+ScopeTreeNode* scopeTreeHead = NULL;
+VariableList* varListHead = NULL;
+int nextScope = -1;
 
 int getSizeByType(enum VarTypes type)
 {
@@ -53,7 +55,7 @@ void deleteVariableList(VariableList* varList) // deletes allocated memory for t
  * \param type type of new var
  * \param placeInMemory place in memory of new var
  */
-void createNewVariable(char* identifier, enum VarTypes type, VariableList** list)
+void createNewVariable(char* identifier, enum VarTypes type, VariableList** varList, int varScope)
 {
 
 	// create new veriable
@@ -66,15 +68,16 @@ void createNewVariable(char* identifier, enum VarTypes type, VariableList** list
 	newVarNode->var->size = getSizeByType(type);
 	reformattedStackPointer += newVarNode->var->size; // update the stack pointer
 	newVarNode->var->placeInMemory = reformattedStackPointer;
+	newVarNode->var->scope = varScope;
 	
 	newVarNode->next = NULL;
-	if (*list == NULL)
+	if (*varList == NULL)
 	{
-		*list = newVarNode;
+		*varList = newVarNode;
 	}
 	else
 	{
-		curr = *list;
+		curr = *varList;
 		while (curr->next != NULL)
 		{
 			curr = curr->next;
@@ -91,15 +94,46 @@ void createNewVariable(char* identifier, enum VarTypes type, VariableList** list
  * \param identifier 
  * \return return 0 if not 1 if exist
  */
-int isVariableExist(VariableList* varList, char* identifier)
+int isVariableExistInScope(VariableList* varList, char* identifier, int varScope)
+{
+
+	Variable* curr = getVariableByScope(varList, identifier, varScope);
+	if (curr)
+	{
+		return 1;
+	}
+
+	return 0;
+
+}
+
+// function to get a variable's scope by name
+int getVariableScope(VariableList* varList, char* identifier)
 {
 	Variable* var = getVariable(varList, identifier);
 	if (var == NULL)
 	{
-		return 0;
+		return -1;
 	}
-	return 1;
+	return var->scope;
+}
 
+/*
+ * get variable by scope
+ * return: variable in  scope inputed
+ */
+Variable* getVariableByScope(VariableList* varList, char* identifier, int scope)
+{
+	VariableList* curr = varList;
+	while (curr != NULL)
+	{
+		if (strcmp(curr->var->Id, identifier) == 0 && isAncestor(scopeTreeHead, scope, curr->var->scope))
+		{
+			return curr->var;
+		}
+		curr = curr->next;
+	}
+	return NULL;
 }
 
 /**
@@ -123,15 +157,9 @@ Variable* getVariable(VariableList* varList, char* identifier)
 }
 
 
-bool callIsVariablexist(VariableList* varList, char* identifier)
+bool callIsVariablExist(VariableList* varList, char* identifier, int currentScope)
 {
-	if (isVariableExist(varList, identifier)) // checking if id already exists
-	{
-		printf("Semantic error: variable %s is already defined\n", identifier);
-		deleteVariableList(varList);
-		return true;
-	}
-	return false;
+	return isVariableExistInScope(varList, identifier, currentScope); // checking if id already exists
 }
 
 enum VarTypes getVarByTokenType(enum TokenTypes currentToken)
@@ -152,26 +180,61 @@ enum VarTypes getVarByTokenType(enum TokenTypes currentToken)
 	{
 		return VAR_STRING;
 	}
-	else
+	else if (currentToken == TOKEN_BOOL)
 	{
-		if (currentToken == TOKEN_BOOL)
-		{
-			return VAR_BOOL;
-		}
+		return VAR_BOOL;
 	}
 }
+
+
+VariableList* createVariableListFromToken(llist* tokenList)
+{
+
+	if(createVariableListFromScope(tokenList, -1 , scopeTreeHead) == 0)
+	{
+		printf("Semantic  analysis failed.\n");
+		deleteScopeTree(scopeTreeHead);
+		return NULL;
+	}
+	return varListHead;
+}
+
+
+void callDeleteScopeTree()
+{
+	deleteScopeTree(scopeTreeHead);
+}
+
+
+
 /*
-createVariableListFromToken: this function will produce the var list from the tokens
+createVariableListFromScope: this function will produce the var list from the tokens
 input; the token list. 
 output: a variable list, or NULL if there is a semantic error, or if there are no vars
 */
-VariableList* createVariableListFromToken(llist* tokenList)
+int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNode* currentScopeNode)
 {
-	VariableList* varList = NULL;
+
+	nextScope++;
+	currentScope = nextScope;
+	if (scopeTreeHead == NULL)
+	{
+		scopeTreeHead = createNode(currentScope);
+		currentScopeNode = scopeTreeHead;
+	}
+	else
+	{
+		currentScopeNode = addChild(currentScopeNode, currentScope);
+	}
+	
+
+	int holderForPlacceInMemory;
+	int outerBracketBalance = 1;
+
 
 	if (tokenList == NULL)
 	{
-		return NULL;
+		return 0;
 	}
 
 	struct node* curr = *tokenList;
@@ -179,38 +242,128 @@ VariableList* createVariableListFromToken(llist* tokenList)
 	while (curr != NULL) // going through the token list
 	{
 		enum TokenTypes currentToken = ((Token*)(curr->data))->type;
-		if (currentToken == TOKEN_INT || currentToken == TOKEN_CHAR || currentToken == TOKEN_FLOAT) // if its an int token
+		if (currentToken == TOKEN_INT || currentToken == TOKEN_CHAR || currentToken == TOKEN_FLOAT || currentToken == TOKEN_BOOL)
+			// if its a decleration token
 		{
 			curr = curr->next;
 			identifier = (char*)(((Token*)(curr->data))->value);//getting identifier
-			if(callIsVariablexist(varList, identifier))
+			if(callIsVariablExist(varListHead, identifier, currentScope))
 			{
-				return NULL;
+				printf("Semantic error: variable %s is already defined in scope\n", identifier);
+				deleteVariableList(varListHead);
+				return 0;
 			}
-			createNewVariable(identifier, getVarByTokenType(currentToken), &varList);//adding var
+			createNewVariable(identifier, getVarByTokenType(currentToken), &varListHead, currentScope);//adding var
 		}
 		else if (currentToken == TOKEN_VAR)//if its a variable
 		{
 			identifier = (char*)(((Token*)(curr->data))->value);
-			if (!isVariableExist(varList, identifier)) // checking if variable has been declared before
+			if (!callIsVariablExist(varListHead, identifier, currentScope)) // checking if variable has been declared before
 			{
 				printf("Semantic error: '%s' is undefined\n", identifier);
-				deleteVariableList(varList);
-				return NULL;
+				deleteVariableList(varListHead);
+				return 0;
 			}
 		}
 		else if (currentToken == TOKEN_ERROR)
 		{
 			printf("Error occurred.\n");
-			deleteVariableList(varList);
-			return NULL;
+			deleteVariableList(varListHead);
+			return 0;
+		}
+		else if (currentToken == TOKEN_LBRACK)
+		{
+			outerBracketBalance++;
+			holderForPlacceInMemory = reformattedStackPointer;
+			curr = curr->next; // skipping the left bracket token
+
+
+			if(createVariableListFromScope(&curr, currentScope, currentScopeNode) == 0)
+			{
+				return 0;
+			}
+			
+
+			// skip all tokens until after the right bracket.
+			int bracketBalance = 1;
+			while (bracketBalance != 0)
+			{
+
+				if (((Token*)(curr->data))->type == TOKEN_LBRACK)
+				{
+					bracketBalance++;
+				}
+
+
+				if(((Token*)(curr->data))->type == TOKEN_RBRACK)
+				{
+					bracketBalance--;
+				}
+
+				curr = curr->next;
+			}
+
+			reformattedStackPointer = holderForPlacceInMemory;
+		}
+		else if (currentToken == TOKEN_RBRACK)
+		{
+			//outerBracketBalance--;
+			//if(outerBracketBalance == 0)
+			//{
+			//	return 1;
+			//}
+
+			return 1;
+
 		}
 		curr = curr->next;
 	}
 
-	return varList;
+	return 1;
 
 }
+
+/*
+getSizeOfScope: this function will count the size of a given scope
+input: the list of vars and the scope
+output: the combined size of all of the variables in the scope
+*/
+int getSizeOfScope(VariableList* list, int scope)
+{
+	int result = 0;
+	VariableList* curr = list;
+	while (curr)
+	{
+		if (curr->var->scope == scope)
+		{
+			result += curr->var->size;//gettuing size
+
+		}
+		curr = curr->next;
+	}
+
+	return result;
+}
+
+
+
+void appendVariableList(VariableList** list1, VariableList* list2)
+{
+	if (*list1 == NULL) 
+	{
+		*list1 = list2;
+	}
+	else 
+	{
+		VariableList* temp = *list1;
+		while (temp->next != NULL)
+		{
+			temp = temp->next;
+		}
+		temp->next = list2;
+	}
+}
+
 
 
 /*

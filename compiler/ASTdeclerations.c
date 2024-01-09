@@ -15,7 +15,7 @@ ASTNode* buildASTVariables(struct node** curr)
 	Token* currentToken = (*curr)->data;
 	ASTNode* result = NULL;
 
-	if(currentToken->type == TOKEN_INT || currentToken->type == TOKEN_CHAR || currentToken->type == TOKEN_FLOAT)
+	if(currentToken->type == TOKEN_INT || currentToken->type == TOKEN_CHAR || currentToken->type == TOKEN_FLOAT || currentToken->type == TOKEN_BOOL)
 	{
 		result = buildASTDeclerationsNumeric(curr);
 	}
