@@ -10,7 +10,7 @@ ASTNode* buildASTConditions(struct node** curr)
 {
     Token* tok = (*curr)->data;
     struct node* node = NULL;
-    ASTNode* result = createNewASTnode((Token*)(*curr)->data); // Creating the IF node
+    ASTNode* result = createNewASTnode((Token*)(*curr)->data); // Creating the IF node (or while)
 
     *curr = (*curr)->next;
     result->children[CONDITION] = buildASTNumeric(curr); // Making the condition in child 1 (0)

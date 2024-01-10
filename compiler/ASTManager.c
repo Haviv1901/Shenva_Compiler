@@ -94,7 +94,7 @@ ASTNode* buildTree(struct node** FirstNode)
 			result->children[NEXT] = buildTree(FirstNode);
 		}
 	}
-	else if (firstToken->type == TOKEN_IF)
+	else if (firstToken->type == TOKEN_IF || firstToken->type == TOKEN_WHILE)
 	{
 		int parenthesesEqualizer = 0;
 

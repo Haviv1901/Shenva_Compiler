@@ -1,1 +1,15 @@
+int a = intInput()
+if(a > 2)
+{
+	printInt(a)
+}
+else
+{
+	printInt(0)
+}
+
+
+
+
+
 
