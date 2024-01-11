@@ -418,6 +418,11 @@ llist* extractToken(FILE* file)
 			token->type = TOKEN_IF;
 			token->value = NULL;
 		}
+		else if (charFromfile == TOKEN_WHILE)
+		{
+			token->type = TOKEN_WHILE;
+			token->value = NULL;
+		}
 		else if (charFromfile == TOKEN_ELSE)
 		{
 			token->type = TOKEN_ELSE;
@@ -632,6 +637,10 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_MODULO)
 	{
 		printf("%%");
+	}
+	else if (token->type == TOKEN_WHILE)
+	{
+		printf("while");
 	}
 	else
 	{
