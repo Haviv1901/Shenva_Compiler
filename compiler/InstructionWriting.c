@@ -133,8 +133,7 @@ output: non
 */
 void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
-	int labelHolder = 0
-		;
+	int labelHolder = 0;
     if (branch->token->type == TOKEN_IF)
 	{
 		labelHolder = lableNum;

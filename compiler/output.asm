@@ -96,22 +96,22 @@ main:
 
 
 
+call readInt
+push eax
 push 0
 push 1
-pop eax
-mov [ebp - 4], eax
-label_0:
+push 0
 push [ebp - 4]
 fild dword ptr [esp]
 fstp dword ptr [esp]
-push 20
+push 1
 fild dword ptr [esp]
 fstp dword ptr [esp]
 pop ebx
 pop eax
 xor edx, edx
 cmp eax, ebx
-jg label_2
+jl label_2
 mov edx, 1
 label_2:
 mov eax, edx
@@ -119,12 +119,85 @@ push eax
 pop eax
 cmp eax, 0
 je label_1
-push [ebp - 4]
+push [ebp - 8]
 call print_number_signed
 push 10
 pop eax
 call WriteChar
+jmp label_0
+label_1:
+label_0:
 push [ebp - 4]
+fild dword ptr [esp]
+fstp dword ptr [esp]
+push 2
+fild dword ptr [esp]
+fstp dword ptr [esp]
+pop ebx
+pop eax
+xor edx, edx
+cmp eax, ebx
+jl label_6
+mov edx, 1
+label_6:
+mov eax, edx
+push eax
+pop eax
+cmp eax, 0
+je label_5
+push [ebp - 12]
+call print_number_signed
+push 10
+pop eax
+call WriteChar
+jmp label_4
+label_5:
+label_4:
+push 3
+label_8:
+push [ebp - 20]
+fild dword ptr [esp]
+fstp dword ptr [esp]
+push [ebp - 4]
+fild dword ptr [esp]
+fstp dword ptr [esp]
+pop ebx
+pop eax
+xor edx, edx
+cmp eax, ebx
+jg label_10
+mov edx, 1
+label_10:
+mov eax, edx
+push eax
+pop eax
+cmp eax, 0
+je label_9
+push [ebp - 8]
+push [ebp - 12]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop eax
+mov [ebp - 16], eax
+push [ebp - 16]
+call print_number_signed
+push 10
+pop eax
+call WriteChar
+push [ebp - 12]
+pop eax
+mov [ebp - 8], eax
+push [ebp - 16]
+pop eax
+mov [ebp - 12], eax
+push [ebp - 20]
 push 1
 pop ebx
 pop eax
@@ -136,9 +209,9 @@ fadd
 fstp dword ptr[esp]
 call ConvertFloatToInt
 pop eax
-mov [ebp - 4], eax
-jmp label_0
-label_1:
+mov [ebp - 20], eax
+jmp label_8
+label_9:
 
 mov esp, ebp
 pop ebp

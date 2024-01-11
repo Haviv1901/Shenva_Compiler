@@ -1,52 +1,26 @@
-printChar('w')
-printChar('h')
-printChar('a')
-printChar('t')
-printChar(' ')
-printChar('y')
-printChar('e')
-printChar('a')
-printChar('r')
-printChar(' ')
-printChar('w')
-printChar('e')
-printChar('r')
-printChar('e')
-printChar(' ')
-printChar('y')
-printChar('o')
-printChar('u')
-printChar(' ')
-printChar('b')
-printChar('o')
-printChar('r')
-printChar('n')
-printChar(':')
-printChar(' ')
-int a = intInput()
-if(a > 0)
-{
-    printChar('U')
-    printChar('r')
-    printChar(' ')
-    printChar('a')
-    printChar('g')
-    printChar('e')
-    printChar(' ')
-    printChar('i')
-    printChar('s')
-    printChar(':')
-    printChar(' ')
-    int b = 2024 - a
-    printInt(b)    
+int index = intInput()
 
+
+int a = 0, b = 1, c =  0
+
+if (index >= 1)
+{
+    printInt(a)
+    printChar('\n')
+}
+if (index >= 2)
+{
+    printInt(b)
+    printChar('\n')
 }
 
-if(a < 0)
+int i = 3
+while(i <= index)
 {
-    printChar('E')
-    printChar('R')
-    printChar('R')
-    printChar('O')
-    printChar('R')
+    c = a + b
+    printInt(c)
+    printChar('\n')
+    a = b
+    b = c
+    i += 1
 }

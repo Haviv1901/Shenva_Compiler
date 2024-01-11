@@ -15,7 +15,7 @@ FILE* errorFile;
 %token ADD SUB MUL DIV MOD
 %token LPAREN RPAREN
 %token EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS NOT OR AND
-%token IF ELSE LBRACK RBRACK WHILE
+%token IF ELSE LBRACK RBRACK WHILE FOR
 %token <str> ERROR
 %token PRINTINT PRINTCHAR PRINTFLOAT COMMA INTINPUT FLOATINPUT CHARINPUT
 %token TRUE FALSE
@@ -42,9 +42,10 @@ blocks : block
 block : statement
 		| condition
 		;
-		
+
 condition : IF LPAREN expression RPAREN empty_space LBRACK blocks RBRACK ENDL else_part
 		  |	WHILE LPAREN expression RPAREN empty_space LBRACK blocks RBRACK ENDL
+		  | FOR LPAREN boolean_expression COMMA decleration_list RPAREN empty_space LBRACK blocks RBRACK ENDL
           ;
 
 else_part : ELSE empty_space LBRACK blocks RBRACK ENDL
@@ -201,6 +202,11 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "letter");
 			i += 5;
+		}
+		else if (strncmp(msg + i, "FOR", 3) == 0)
+		{
+			fprintf(errorFile, "for");
+			i += 2;
 		}
 		else if (strncmp(msg + i, "ADDEQ", 5) == 0)
 		{
