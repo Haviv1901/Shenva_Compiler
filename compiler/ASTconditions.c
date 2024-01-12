@@ -62,7 +62,7 @@ ASTNode* buildASTForLoops(struct node** curr)
     ASTNode* result = createNewASTnode((Token*)(*curr)->data); // Creating the 'for' node
 
     *curr = (*curr)->next;
-    result->children[CONDITION] = buildASTNumeric(curr); // Making the condition in the first child  
+    result->children[CONDITION] = buildASTNumeric(curr); // Making the condition in the first child
 
     *curr = (*curr)->next; // skeeping the comma
     result->children[OPPERATION_TO_DO_EVERY_ITER] = buildASTVariablesAssign(curr); // Making the assign in the second child
