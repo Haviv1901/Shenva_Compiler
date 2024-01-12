@@ -21,10 +21,10 @@ void printVariaballsWithScope(VariableList* curr)
 void Compile(char* inputFileName, char* outputFileName)
 {
 
-	if (!activateLexer(inputFileName)) // lex inpput file
-	{
-		return;
-	}
+	//if (!activateLexer(inputFileName)) // lex inpput file
+	//{
+	//	return;
+	//}
 
 	llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME); // extract tokens to c memory
 	llist hold = *tokenList;

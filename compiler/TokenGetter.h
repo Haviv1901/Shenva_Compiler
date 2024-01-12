@@ -38,7 +38,7 @@ struct Token
 llist* extractToken(FILE* file);
 void printToken(Token* token);
 
-float extractNumber(char charFromfile, FILE* file);
+int extractNumber(char charFromfile, FILE* file);
 char* extractIdentifier(char charFromfile, FILE* file);
 void* extractLetter(char charFromfile, FILE* file);
 

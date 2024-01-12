@@ -45,7 +45,7 @@ block : statement
 
 condition : IF LPAREN expression RPAREN empty_space LBRACK blocks RBRACK ENDL else_part
 		  |	WHILE LPAREN expression RPAREN empty_space LBRACK blocks RBRACK ENDL
-		  | FOR LPAREN boolean_expression COMMA decleration_list RPAREN empty_space LBRACK blocks RBRACK ENDL
+		  | FOR LPAREN expression COMMA expression RPAREN empty_space LBRACK blocks RBRACK ENDL
           ;
 
 else_part : ELSE empty_space LBRACK blocks RBRACK ENDL

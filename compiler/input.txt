@@ -1,26 +1,9 @@
-int index = intInput()
 
-
-int a = 0, b = 1, c =  0
-
-if (index >= 1)
+int a 
+for(a < 3, a +=1)
 {
-    printInt(a)
-    printChar('\n')
-}
-if (index >= 2)
-{
-    printInt(b)
-    printChar('\n')
+
+
+	
 }
 
-int i = 3
-while(i <= index)
-{
-    c = a + b
-    printInt(c)
-    printChar('\n')
-    a = b
-    b = c
-    i += 1
-}

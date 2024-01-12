@@ -643,6 +643,10 @@ void printToken(Token* token)
 	{
 		printf("%%");
 	}
+	else if (token->type == TOKEN_COMMA)
+	{
+		printf(",");
+	}
 	else if (token->type == TOKEN_WHILE)
 	{
 		printf("while");
