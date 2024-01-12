@@ -98,9 +98,19 @@ ASTNode* buildTree(struct node** FirstNode)
 	{
 		int parenthesesEqualizer = 0;
 
-		currentNode = currentNode->next; // skipping the PRINT token
-		currentToken = ((Token*)currentNode->data);
-		result->children[EXPRESSION] = buildASTConditions(FirstNode);
+		currentNode = currentNode->next; 
+		currentToken = (currentNode->data);
+
+		if(firstToken->type == TOKEN_FOR)
+		{
+			result->children[EXPRESSION] = buildASTForLoops(FirstNode);
+		}
+		else
+		{
+			result->children[EXPRESSION] = buildASTConditionsOrWhileLoops(FirstNode);
+		}
+
+		
 		result->children[NEXT] = buildTree(FirstNode);
 	}
 	else if (firstToken->type == TOKEN_VAR) // if variable id
