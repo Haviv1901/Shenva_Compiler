@@ -14,6 +14,6 @@
 #include "ASTManager.h"
 #endif
 
-ASTNode* buildASTConditions(struct node** curr);
+ASTNode* buildASTConditionsOrLoops(struct node** curr);
 
 struct node* beracketEqualizer(struct node* curr);
