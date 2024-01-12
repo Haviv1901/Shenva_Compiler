@@ -12,12 +12,12 @@ output: the ptr to the new node
 */
 ASTNode* createNewASTnode(Token* token)
 {
-	ASTNode* result = (ASTNode*)malloc(sizeof(ASTNode));//allocating the node
+	ASTNode* result = (ASTNode*)malloc(sizeof(ASTNode)); //allocating the node
 	if (result == NULL)
 	{
 		return NULL;
 	}
-	result->token = token;//setting token
+	result->token = token; //setting token
 
 	if (token == NULL || isTwoChildNode(token->type)) // checking if the token is a two child type of token
 	{

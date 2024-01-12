@@ -42,7 +42,7 @@ float extractDecimal(char charFromfile, FILE* file)
 	}
 	while (charFromfile = fgetc(file))
 	{
-		if (charFromfile == NEW_LINE_CHARACTER)
+		if (charFromfile == NEW_LINE_CHARACTER || charFromfile == ' ')
 		{
 			break;
 		}
@@ -206,75 +206,75 @@ llist* extractToken(FILE* file)
 		}
 
 		Token* token = (Token*)malloc(sizeof(Token));
-		if (charFromfile == TOKEN_NUM)
+		if (charFromfile == TOKEN_NUM) // num
 		{
 			token->type = TOKEN_NUM;
 			token->value = (int*)malloc(sizeof(int));
 			*((int*)(token->value)) = extractNumber(charFromfile, file);
 		}
-		else if (charFromfile == TOKEN_DECIMAL)
+		else if (charFromfile == TOKEN_DECIMAL) // float number
 		{
 			token->type = TOKEN_DECIMAL;
 			token->value = (float*)malloc(sizeof(float));
 			*((float*)(token->value)) = extractDecimal(charFromfile, file);
 		}
-		else if (charFromfile == TOKEN_ADD)
+		else if (charFromfile == TOKEN_ADD) // +
 		{
 			token->type = TOKEN_ADD;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_SUB)
+		else if (charFromfile == TOKEN_SUB) // -
 		{
 			token->type = TOKEN_SUB;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_MUL)
+		else if (charFromfile == TOKEN_MUL) // *
 		{
 			token->type = TOKEN_MUL;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_DIV)
+		else if (charFromfile == TOKEN_DIV) // /
 		{
 			token->type = TOKEN_DIV;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_MODULO)
+		else if (charFromfile == TOKEN_MODULO) // %
 		{
 			token->type = TOKEN_MODULO;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_LPARN)
+		else if (charFromfile == TOKEN_LPARN) // (
 		{
 			token->type = TOKEN_LPARN;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_RPARN)
+		else if (charFromfile == TOKEN_RPARN) // )
 		{
 			token->type = TOKEN_RPARN;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_PRINT_INT)
+		else if (charFromfile == TOKEN_PRINT_INT) // printInt
 		{
 			token->type = TOKEN_PRINT_INT;
 			lastVoidType = TOKEN_PRINT_INT;
 			token->value = NULL;
 			isPrintLine = true;
 		}
-		else if (charFromfile == TOKEN_PRINT_CHAR)
+		else if (charFromfile == TOKEN_PRINT_CHAR) // printChar
 		{
 			token->type = TOKEN_PRINT_CHAR;
 			lastVoidType = TOKEN_PRINT_CHAR;
 			token->value = NULL;
 			isPrintLine = true;
 		}
-		else if (charFromfile == TOKEN_PRINT_FLOAT)
+		else if (charFromfile == TOKEN_PRINT_FLOAT) // printFloat
 		{
 			token->type = TOKEN_PRINT_FLOAT;
 			lastVoidType = TOKEN_PRINT_FLOAT;
 			token->value = NULL;
 			isPrintLine = true;
 		}
-		else if (charFromfile == TOKEN_INPUT_FLOAT)
+		else if (charFromfile == TOKEN_INPUT_FLOAT) // inputFloat
 		{
 			token->type = TOKEN_INPUT_FLOAT;
 			lastVoidType = TOKEN_INPUT_FLOAT;
@@ -284,114 +284,106 @@ llist* extractToken(FILE* file)
 			charFromfile = fgetc(file); // skip the space
 			charFromfile = fgetc(file); // skip the space
 		}
-		else if (charFromfile == TOKEN_INPUT_INT)
+		else if (charFromfile == TOKEN_INPUT_INT) // intInput
 		{
 			token->type = TOKEN_INPUT_INT;
 			token->value = NULL;
-			charFromfile = fgetc(file); // skip the space
-			charFromfile = fgetc(file); // skip the space
-			charFromfile = fgetc(file); // skip the space
-			charFromfile = fgetc(file); // skip the space
 		}
-		else if (charFromfile == TOKEN_INPUT_CHAR)
+		else if (charFromfile == TOKEN_INPUT_CHAR) // charInput
 		{
 			token->type = TOKEN_INPUT_CHAR;
 			token->value = NULL;
-			charFromfile = fgetc(file); // skip the space
-			charFromfile = fgetc(file); // skip the space
-			charFromfile = fgetc(file); // skip the space
-			charFromfile = fgetc(file); // skip the space
 
 		}
-		else if (charFromfile == TOKEN_ENDL)
+		else if (charFromfile == TOKEN_ENDL) // endl
 		{
 			token->type = TOKEN_ENDL;
 			token->value = NULL;
 			isPrintLine = false;
 			isDecLine = false;
 		}
-		else if (charFromfile == TOKEN_INT)
+		else if (charFromfile == TOKEN_INT) // int var
 		{
 			token->type = TOKEN_INT;
 			token->value = NULL;
 			lastVoidType = TOKEN_INT;
 			isDecLine = true;
 		}
-		else if (charFromfile == TOKEN_BOOL)
+		else if (charFromfile == TOKEN_BOOL) // bool var
 		{
 			token->type = TOKEN_BOOL;
 			token->value = NULL;
 			lastVoidType = TOKEN_BOOL;
 			isDecLine = true;
 		}
-		else if (charFromfile == TOKEN_FLOAT)
+		else if (charFromfile == TOKEN_FLOAT) // float var
 		{
 			token->type = TOKEN_FLOAT;
 			token->value = NULL;
 			lastVoidType = TOKEN_FLOAT;
 			isDecLine = true;
 		}
-		else if (charFromfile == TOKEN_EQUALS)
+		else if (charFromfile == TOKEN_EQUALS)  // ==
 		{
 			token->type = TOKEN_EQUALS;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_NOT_EQUALS)
+		else if (charFromfile == TOKEN_NOT_EQUALS) // !=
 		{
 			token->type = TOKEN_NOT_EQUALS;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_GREATER)
+		else if (charFromfile == TOKEN_GREATER) // >
 		{
 			token->type = TOKEN_GREATER;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_NOT_GREATER)
+		else if (charFromfile == TOKEN_NOT_GREATER) // !<
 		{
 			token->type = TOKEN_NOT_GREATER;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_LESSER)
+		else if (charFromfile == TOKEN_LESSER) // <
 		{
 			token->type = TOKEN_LESSER;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_NOT_LESSER)
+		else if (charFromfile == TOKEN_NOT_LESSER) // !<
 		{
 			token->type = TOKEN_NOT_LESSER;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_GREATER_EQUALS)
+		else if (charFromfile == TOKEN_GREATER_EQUALS) // >=
 		{
 			token->type = TOKEN_GREATER_EQUALS;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_LESSER_EQUALS)
+		else if (charFromfile == TOKEN_LESSER_EQUALS) // <=
 		{
 			token->type = TOKEN_LESSER_EQUALS;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_NOT)
+		else if (charFromfile == TOKEN_NOT) // !
 		{
 			token->type = TOKEN_NOT;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_OR)
+		else if (charFromfile == TOKEN_OR) // ||
 		{
 			token->type = TOKEN_OR;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_AND)
+		else if (charFromfile == TOKEN_AND) // &&
 		{
 			token->type = TOKEN_AND;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_ASSIGN)
+		else if (charFromfile == TOKEN_ASSIGN) // =
 		{
 			token->type = TOKEN_ASSIGN;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_VAR)
+		else if (charFromfile == TOKEN_VAR) // variable id
 		{
 			token->type = TOKEN_VAR;
 			token->value = extractIdentifier(charFromfile, file);
@@ -413,32 +405,37 @@ llist* extractToken(FILE* file)
 			token->type = TOKEN_LETTER;
 			token->value = extractLetter(charFromfile, file);
 		}
-		else if (charFromfile == TOKEN_IF)
+		else if (charFromfile == TOKEN_IF) // if
 		{
 			token->type = TOKEN_IF;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_WHILE)
+		else if (charFromfile == TOKEN_WHILE) // while
 		{
 			token->type = TOKEN_WHILE;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_ELSE)
+		else if (charFromfile == TOKEN_FOR) // for
+		{
+			token->type = TOKEN_FOR;
+			token->value = NULL;
+		}
+		else if (charFromfile == TOKEN_ELSE) // else
 		{
 			token->type = TOKEN_ELSE;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_LBRACK)
+		else if (charFromfile == TOKEN_LBRACK) // {
 		{
 			token->type = TOKEN_LBRACK;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_RBRACK)
+		else if (charFromfile == TOKEN_RBRACK) // }
 		{
 			token->type = TOKEN_RBRACK;
 			token->value = NULL;
 		}
-		else if (charFromfile == TOKEN_COMMA)
+		else if (charFromfile == TOKEN_COMMA) // ,
 		{
 			if (isPrintLine)
 			{
@@ -458,10 +455,14 @@ llist* extractToken(FILE* file)
 				token->type = lastVoidType;
 				token->value = NULL;
 			}
-
+			else
+			{
+				token->type = TOKEN_COMMA;
+				token->value = NULL;
+			}
 
 		}
-		else
+		else // ERROR
 		{
 			token->type = TOKEN_ERROR;
 			token->value = NULL;
@@ -633,6 +634,10 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_ERROR)
 	{
 		printf("TOKEN_ERROR");
+	}
+	else if (token->type == TOKEN_FOR)
+	{
+		printf("for");
 	}
 	else if (token->type == TOKEN_MODULO)
 	{
