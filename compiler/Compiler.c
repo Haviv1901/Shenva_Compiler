@@ -21,10 +21,10 @@ void printVariaballsWithScope(VariableList* curr)
 void Compile(char* inputFileName, char* outputFileName)
 {
 
-	//if (!activateLexer(inputFileName)) // lex inpput file
-	//{
-	//	return;
-	//}
+	if (!activateLexer(inputFileName)) // lex inpput file
+	{
+		return;
+	}
 
 	llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME); // extract tokens to c memory
 	llist hold = *tokenList;
@@ -42,8 +42,8 @@ void Compile(char* inputFileName, char* outputFileName)
 
 	ASTNode* tree = buildTree(tokenList); // build AST 
 
-	//convertASTToASM(tree, outputFileName, varList); // convert AST to ASM code.
-	//runMasmAndLink(outputFileName);
+	convertASTToASM(tree, outputFileName, varList); // convert AST to ASM code.
+	runMasmAndLink(outputFileName);
 	deleteAST(tree); // free alocated memory of AST
 	*tokenList = hold;
 	callDeleteScopeTree();

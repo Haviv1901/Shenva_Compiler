@@ -59,20 +59,37 @@ ASTNode* buildASTForLoops(struct node** curr)
 {
     Token* tok = (*curr)->data;
     struct node* node = NULL;
-    ASTNode* result = createNewASTnode((Token*)(*curr)->data); // Creating the 'for' node
+    tok->type = TOKEN_WHILE;
+    ASTNode* result = createNewASTnode(tok), *operation = NULL, *holder = NULL; // Creating the 'for' node
 
-    *curr = (*curr)->next;
+    *curr = (*curr)->next->next;
+    tok = (*curr)->data;
     result->children[CONDITION] = buildASTNumeric(curr); // Making the condition in the first child
-
     *curr = (*curr)->next; // skeeping the comma
-    result->children[OPPERATION_TO_DO_EVERY_ITER] = buildASTVariablesAssign(curr); // Making the assign in the second child
+    tok = (*curr)->data;
+    operation = buildTree(curr); // Making the assign in the second child
 
 
-    *curr = (*curr)->next; // Going to the openBracket
+    *curr = (*curr)->next->next; // Going to the openBracket
+    tok = (*curr)->data;
     node = beracketEqualizer(*curr);
 
     *curr = (*curr)->next; // Going into the code
     result->children[CODE] = buildTree(curr); // Making the numeric tree there
+    holder = result->children[CODE];
+    if (holder == NULL)
+    {
+        result->children[CODE] = operation;
+    }
+    else
+    {
+        while (holder->children[NEXT] != NULL)
+        {
+            holder = holder->children[NEXT];
+        }
+        holder->children[NEXT] = operation;
+    }
+    *curr = node;
 
     return result;
 }

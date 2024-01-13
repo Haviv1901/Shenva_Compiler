@@ -12,7 +12,7 @@ ASTNode* buildTree(struct node** FirstNode)
 	Token* firstToken = (Token*)(*FirstNode)->data, * currentToken = NULL;
 	ASTNode* result = NULL;
 	struct node* currentNode = *FirstNode;
-	if (((Token*)currentNode->data)->type != TOKEN_ENDL && ((Token*)currentNode->data)->type != TOKEN_RBRACK)
+	if (((Token*)currentNode->data)->type != TOKEN_ENDL && ((Token*)currentNode->data)->type != TOKEN_RBRACK && ((Token*)currentNode->data)->type != TOKEN_RPARN)
 	{
 		result = createNewASTnode(NULL);
 	}
