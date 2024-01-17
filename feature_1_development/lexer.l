@@ -100,6 +100,9 @@ void set_output_file(FILE* file) {
 "avor"	  { fprintf(outputFile, "F\n"); return FOR;}
 "{"	  { fprintf(outputFile, "{\n"); return LBRACK;}
 "}"	  { fprintf(outputFile, "}\n"); return RBRACK;}
+"def" { fprintf(outputFile, "D\n"); return DEF;}
+"func" { fprintf(outputFile, "D\n"); return DEF;}
+"functzia" { fprintf(outputFile, "D\n"); return DEF;}
 
 
 [a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); strcpy(lastIdentifier, yytext); return VAR; }

@@ -24,6 +24,7 @@ FILE* errorFile;
 %token INT CHAR FLOAT
 %token VAR
 %token ADDEQ SUBEQ MULEQ DIVEQ MODEQ
+%token DEF
 %left ADD SUB
 %left MUL DIV MOD
 %left EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS OR AND
@@ -32,8 +33,36 @@ FILE* errorFile;
 %%
 
 
-program : blocks
+program : lines
         ;
+		
+lines: line
+	| lines line
+	;
+		
+line : function
+	| block
+	 ;
+	 
+
+	
+	
+	
+function: DEF VAR LPAREN parameterList RPAREN empty_space LBRACK blocks RBRACK ENDL
+	|	DEF VAR LPAREN RPAREN empty_space LBRACK blocks RBRACK ENDL
+	;
+
+
+parameterList: INT VAR
+		| CHAR VAR
+		| BOOL VAR
+		| FLOAT VAR
+		| parameterList COMMA INT VAR
+		| parameterList COMMA CHAR VAR
+		| parameterList COMMA BOOL VAR
+		| parameterList COMMA FLOAT VAR
+		;
+
 
 blocks : block
         | blocks block
@@ -129,6 +158,8 @@ numeric_expression : NUM
 		   | LETTER
 		   | DECIMAL
 		   | input LPAREN RPAREN
+		   | VAR LPAREN expression_list RPAREN
+		   | VAR LPAREN RPAREN
            | numeric_expression ADD numeric_expression { /* Handle addition here */ }
            | numeric_expression SUB numeric_expression { /* Handle subtraction here */ }
            | numeric_expression MUL numeric_expression { /* Handle multiplication here */ }
