@@ -93,7 +93,11 @@ void set_output_file(FILE* file) {
 "if"	  { fprintf(outputFile, "I\n"); return IF;}
 "em"	  { fprintf(outputFile, "I\n"); return IF;}
 "else"	  { fprintf(outputFile, "E\n"); return ELSE;}
-"aheret"	  { fprintf(outputFile, "E\n"); return ELSE;}
+"aheret"  { fprintf(outputFile, "E\n"); return ELSE;}
+"while"	  { fprintf(outputFile, "w\n"); return WHILE;}
+"colOd"	  { fprintf(outputFile, "w\n"); return WHILE;}
+"for"	  { fprintf(outputFile, "F\n"); return FOR;}
+"avor"	  { fprintf(outputFile, "F\n"); return FOR;}
 "{"	  { fprintf(outputFile, "{\n"); return LBRACK;}
 "}"	  { fprintf(outputFile, "}\n"); return RBRACK;}
 

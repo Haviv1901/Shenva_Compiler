@@ -98,17 +98,24 @@ main:
 
 call readInt
 push eax
-push [ebp - 4]
+push 1
+push 1
+sub esp, 1
+push 0
+pop eax
+mov byte ptr [ebp - 13], al
+label_0:
+push [ebp - 8]
 fild dword ptr [esp]
 fstp dword ptr [esp]
-push 0
+push [ebp - 4]
 fild dword ptr [esp]
 fstp dword ptr [esp]
 pop ebx
 pop eax
 xor edx, edx
 cmp eax, ebx
-jng label_2
+jg label_2
 mov edx, 1
 label_2:
 mov eax, edx
@@ -116,10 +123,20 @@ push eax
 pop eax
 cmp eax, 0
 je label_1
-push [ebp - 4]
-fild dword ptr [esp]
-fstp dword ptr [esp]
-push 1
+push 7
+push [ebp - 8]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fprem
+fstp dword ptr[esp]
+sub esp, 4
+fstp dword ptr[esp]
+add esp, 4
+push 0
 fild dword ptr [esp]
 fstp dword ptr [esp]
 pop ebx
@@ -134,118 +151,46 @@ push eax
 pop eax
 cmp eax, 0
 je label_4
-push 111
+push 1
 pop eax
-call WriteChar
-push 32
-pop eax
-call WriteChar
-push 121
-pop eax
-call WriteChar
-push 101
-pop eax
-call WriteChar
-push 101
-pop eax
-call WriteChar
-push 101
-pop eax
-call WriteChar
-push 101
-pop eax
-call WriteChar
-push 101
-pop eax
-call WriteChar
+mov byte ptr [ebp - 13], al
 jmp label_3
 label_4:
-push [ebp - 4]
-fild dword ptr [esp]
-fstp dword ptr [esp]
-push 2
-fild dword ptr [esp]
-fstp dword ptr [esp]
-pop ebx
-pop eax
-xor edx, edx
-cmp eax, ebx
-jne label_8
-mov edx, 1
-label_8:
-mov eax, edx
-push eax
-pop eax
-cmp eax, 0
-je label_7
-push 119
-pop eax
-call WriteChar
-push 104
-pop eax
-call WriteChar
-push 97
-pop eax
-call WriteChar
-push 97
-pop eax
-call WriteChar
-push 97
-pop eax
-call WriteChar
-push 116
-pop eax
-call WriteChar
-jmp label_3
-label_7:
-push [ebp - 4]
-fild dword ptr [esp]
-fstp dword ptr [esp]
-push 3
-fild dword ptr [esp]
-fstp dword ptr [esp]
-pop ebx
-pop eax
-xor edx, edx
-cmp eax, ebx
-jne label_11
-mov edx, 1
-label_11:
-mov eax, edx
-push eax
-pop eax
-cmp eax, 0
-je label_10
-push 101
-pop eax
-call WriteChar
-push 120
-pop eax
-call WriteChar
-push 112
-pop eax
-call WriteChar
-push 108
-pop eax
-call WriteChar
-push 97
-pop eax
-call WriteChar
-push 105
-pop eax
-call WriteChar
-push 110
-pop eax
-call WriteChar
-jmp label_3
-label_10:
-push 33
-pop eax
-call WriteChar
 label_3:
+xor eax, eax
+mov al, byte ptr [ebp - 13]
+push eax
+pop eax
+cmp eax, 0
+je label_8
+push -1
+call print_number_signed
+push 0
+pop eax
+mov byte ptr [ebp - 13], al
+jmp label_7
+label_8:
+push [ebp - 8]
+call print_number_signed
+label_7:
+push 10
+pop eax
+call WriteChar
+push [ebp - 8]
+push 1
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop eax
+mov [ebp - 8], eax
 jmp label_0
 label_1:
-label_0:
 
 mov esp, ebp
 pop ebp

@@ -1,21 +1,28 @@
-int doWeHaveConditions = intInput()
-if (doWeHaveConditions > 0)
+int a = intInput(), b = 1, c = 1
+bool is_boom = false
+
+for (b <= a, b += 1)
 {
-	if (doWeHaveConditions == 1)
+	if (b % 7 == 0)
 	{
-		printChar('o',' ','y','e','e','e','e','e')
+		is_boom = true
 	}
-	else if (doWeHaveConditions == 2)
+	
+	
+	if (is_boom)
 	{
-		printChar('w','h','a','a','a','t')
-	}
-	else if (doWeHaveConditions == 3)
-	{
-		printChar('e','x','p','l','a','i','n')
+		printInt(-1)
+		is_boom = false
 	}
 	else
 	{
-		printChar('!')
+		printInt(b)
 	}
+	printChar('\n')
 }
+
+
+
+
+
 

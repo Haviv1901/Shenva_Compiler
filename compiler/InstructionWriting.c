@@ -77,7 +77,6 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 
 	Token* currentToken;
 	ASTNode* next = NULL;
-	int labelHolder = 0;
 	bool isNullFlag = false;
 	if (tree->token == NULL)
 	{
@@ -93,7 +92,7 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 	}
 
 
-	if (isExpressionToken(*currentToken) || isBooleanExpressionToken(currentToken->type) || currentToken->type == TOKEN_OR || currentToken->type == TOKEN_AND) // checking for expression branch
+	if (isExpressionToken(*currentToken) || isBooleanExpressionToken(currentToken->type) || currentToken->type == TOKEN_OR || currentToken->type == TOKEN_AND || currentToken->type == TOKEN_VAR) // checking for expression branch
 	{
 		isLastValFloat = writeLogicalBranch(tree, asmFile, varList);
 		if (isNullFlag)
@@ -115,12 +114,9 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 	{
 		writeAssignBranch(tree, asmFile, varList);
 	}
-	else if(currentToken->type == TOKEN_IF)
+	else if(currentToken->type == TOKEN_IF || currentToken->type == TOKEN_WHILE)
 	{
-		labelHolder = lableNum;
-		lableNum++;
-		writeConditionBranch(tree, asmFile, varList, labelHolder);
-		fprintf(asmFile, "label_%d:\n", labelHolder);
+		writeConditionBranch(tree, asmFile, varList);
 	}
 	if (next != NULL)
 	{
@@ -131,11 +127,64 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 
 
 /*
-writeConditionBranch: this fucntion will write a condition bracnch
+writeconditionBranch: this function will handle conditions and scope managment
+input: the branch the asm file, and the var list
+output: non
+*/
+void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
+{
+	int labelHolder = 0;
+    if (branch->token->type == TOKEN_IF)
+	{
+		labelHolder = lableNum;
+		lableNum++;
+		writeIfBranch(branch, asmFile, varList, labelHolder);
+		fprintf(asmFile, "label_%d:\n", labelHolder);
+	}
+	else if (branch->token->type == TOKEN_WHILE)
+	{
+		writeLoopBranch(branch, asmFile, varList);
+	}
+}
+
+
+
+
+void writeLoopBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
+{
+	int labelHolder = lableNum, scopeHolder = currentScope, endlabel = 0, scopeSize;
+	lableNum++;
+	endlabel = lableNum;
+	lableNum++;
+	fprintf(asmFile, "label_%d:\n", labelHolder);
+	writeBranch(branch->children[CONDITION], asmFile, varList);//writing condition
+
+	fprintf(asmFile, "pop eax\n");
+	fprintf(asmFile, "cmp eax, 0\n");
+	fprintf(asmFile, "je label_%d\n", endlabel);//going to next if
+	ScopeCounter++;
+	currentScope = ScopeCounter;//going into scope
+
+	writeBranch(branch->children[CODE], asmFile, varList);//writing the block
+	currentScope = scopeHolder;//retreiving scope
+
+	scopeSize = getSizeOfScope(varList, currentScope + 1);//deleteing scope
+	if (scopeSize != 0)
+	{
+		fprintf(asmFile, "add esp, %d\n", scopeSize);
+	}
+	fprintf(asmFile, "jmp label_%d\n", labelHolder);//ending label, and opening next
+	fprintf(asmFile, "label_%d:\n", endlabel);
+}
+
+
+
+/*
+writeIfBranch: this fucntion will write a condition bracnch
 input: the branch, asm file, vairable list and the label to the end of the block
 output: non
 */
-void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList, int endLabel)
+void writeIfBranch(ASTNode* branch, FILE* asmFile, VariableList* varList, int endLabel)
 {
 	int finishLabel = lableNum, scopeSaver = currentScope, scopeSize = 0;
 	lableNum++;
@@ -565,8 +614,17 @@ void writeNumericInstruction(Token* operand, FILE* asmFile, bool isEAXdecimal, b
 
 
 	// extract result to eax
-	fprintf(asmFile, "fstp dword ptr[esp]\n");
-
+	if (operand->type == TOKEN_MODULO)
+	{
+		fprintf(asmFile, "fstp dword ptr[esp]\n");
+		fprintf(asmFile, "sub esp, 4\n");
+		fprintf(asmFile, "fstp dword ptr[esp]\n");
+		fprintf(asmFile, "add esp, 4\n");
+	}
+	else
+	{
+		fprintf(asmFile, "fstp dword ptr[esp]\n");
+	}
 }
 
 

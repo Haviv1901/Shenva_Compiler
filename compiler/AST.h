@@ -14,8 +14,8 @@ enum { LEAF=0,ONE_CHILD_NODE=1,TWO_CHILDREN_NODE=2};
 // when handling with tokenless nodes
 enum {ONLY_CHILD = 0, NEXT=0, EXPRESSION = 1};
 
-// if nodes
-enum {CONDITION = 0 , CODE = 1, ELSE = 2};
+// 'if' / 'while' nodes
+enum {CONDITION = 0 , CODE = 1, ELSE = 2, OPPERATION_TO_DO_EVERY_ITER = 2};
 
 struct ASTNode
 {
@@ -35,6 +35,7 @@ int isThreeChildNode(enum TokenTypes token);
 int isPrintToken(Token token);
 int isVariableToken(Token token);
 int isExpressionToken(Token token);
+int isConditionOrLoopToken(Token token);
 int isBooleanExpressionToken(enum TokenTypes token);
 
 

@@ -1,16 +1,18 @@
 #include "ASTconditions.h"
 
+#include "ASTdeclerations.h"
+
 
 /*
 buildASTconditions: this function will build a condition branch
 input: the token list
 output: the condition branch
 */
-ASTNode* buildASTConditions(struct node** curr)
+ASTNode* buildASTConditionsOrWhileLoops(struct node** curr)
 {
     Token* tok = (*curr)->data;
     struct node* node = NULL;
-    ASTNode* result = createNewASTnode((Token*)(*curr)->data); // Creating the IF node
+    ASTNode* result = createNewASTnode((Token*)(*curr)->data); // Creating the IF node (or while)
 
     *curr = (*curr)->next;
     result->children[CONDITION] = buildASTNumeric(curr); // Making the condition in child 1 (0)
@@ -32,7 +34,7 @@ ASTNode* buildASTConditions(struct node** curr)
 
         if (tok->type == TOKEN_IF) // In case of else if
         {
-            result->children[ELSE]->children[NEXT] = buildASTConditions(curr);
+            result->children[ELSE]->children[NEXT] = buildASTConditionsOrWhileLoops(curr);
         }
         else // In case of a virgin else
         {
@@ -44,6 +46,51 @@ ASTNode* buildASTConditions(struct node** curr)
             *curr = node;
         }
     }
+    return result;
+}
+
+
+/*
+buildASTconditions: this function will build a condition branch
+input: the token list
+output: the condition branch
+*/
+ASTNode* buildASTForLoops(struct node** curr)
+{
+    Token* tok = (*curr)->data;
+    struct node* node = NULL;
+    tok->type = TOKEN_WHILE;
+    ASTNode* result = createNewASTnode(tok), *operation = NULL, *holder = NULL; // Creating the 'for' node
+
+    *curr = (*curr)->next->next;
+    tok = (*curr)->data;
+    result->children[CONDITION] = buildASTNumeric(curr); // Making the condition in the first child
+    *curr = (*curr)->next; // skeeping the comma
+    tok = (*curr)->data;
+    operation = buildTree(curr); // Making the assign in the second child
+
+
+    *curr = (*curr)->next->next; // Going to the openBracket
+    tok = (*curr)->data;
+    node = beracketEqualizer(*curr);
+
+    *curr = (*curr)->next; // Going into the code
+    result->children[CODE] = buildTree(curr); // Making the numeric tree there
+    holder = result->children[CODE];
+    if (holder == NULL)
+    {
+        result->children[CODE] = operation;
+    }
+    else
+    {
+        while (holder->children[NEXT] != NULL)
+        {
+            holder = holder->children[NEXT];
+        }
+        holder->children[NEXT] = operation;
+    }
+    *curr = node;
+
     return result;
 }
 

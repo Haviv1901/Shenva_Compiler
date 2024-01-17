@@ -12,12 +12,12 @@ output: the ptr to the new node
 */
 ASTNode* createNewASTnode(Token* token)
 {
-	ASTNode* result = (ASTNode*)malloc(sizeof(ASTNode));//allocating the node
+	ASTNode* result = (ASTNode*)malloc(sizeof(ASTNode)); //allocating the node
 	if (result == NULL)
 	{
 		return NULL;
 	}
-	result->token = token;//setting token
+	result->token = token; //setting token
 
 	if (token == NULL || isTwoChildNode(token->type)) // checking if the token is a two child type of token
 	{
@@ -31,7 +31,7 @@ ASTNode* createNewASTnode(Token* token)
 		result->children[1] = NULL;
 
 	}
-	else if (token->type == TOKEN_IF)
+	else if (isThreeChildNode(token->type))
 	{
 		result->children = (ASTNode**)malloc((TWO_CHILDREN_NODE + 1) * sizeof(ASTNode*));
 		if (result->children == NULL)
@@ -115,7 +115,7 @@ void deleteAST(ASTNode* head)
 
 int isThreeChildNode(enum TokenTypes token)
 {
-	if (token == TOKEN_IF)
+	if (token == TOKEN_IF || token == TOKEN_FOR)
 	{
 		return 1;
 	}
@@ -143,7 +143,8 @@ int isTwoChildNode(enum TokenTypes token)
 		token == TOKEN_NOT_LESSER || 
 		token == TOKEN_GREATER_EQUALS || 
 		token == TOKEN_LESSER_EQUALS ||
-		token == TOKEN_BOOL)
+		token == TOKEN_BOOL ||
+		token == TOKEN_WHILE)
 	{
 		return 1;
 	}
@@ -161,6 +162,18 @@ int isOneChildNode(enum TokenTypes token)
 		token == TOKEN_PRINT_INT ||
 		token == TOKEN_NOT || 
 		token == TOKEN_ELSE)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+
+int isConditionOrLoopToken(Token token)
+{
+	if (token.type == TOKEN_IF ||
+		token.type == TOKEN_FOR ||
+		token.type == TOKEN_WHILE)
 	{
 		return 1;
 	}
@@ -200,8 +213,7 @@ int isExpressionToken(Token token)
 		token.type == TOKEN_INPUT_FLOAT ||
 		token.type == TOKEN_INPUT_INT ||
 		token.type == TOKEN_LPARN ||
-		token.type == TOKEN_NOT ||
-		token.type == TOKEN_VAR || // if numeric expression
+		token.type == TOKEN_NOT || // if numeric expression
 		token.type == TOKEN_ADD ||
 		token.type == TOKEN_SUB ||
 		token.type == TOKEN_MUL ||
