@@ -121,12 +121,20 @@ ASTNode* parseSecond(struct node** curr)
 	{
 
 		node = createNewASTnode((Token*)(*curr)->data);
-		node->children[0] = holder;
-		(*curr) = (*curr)->next;
-		node->children[1] = parseFirst(curr);
-		holder = node;
-
-
+		if (((Token*)(*curr)->data)->type == TOKEN_MODULO)
+		{
+			node->children[1] = holder;
+			(*curr) = (*curr)->next;
+			node->children[0] = parseFirst(curr);
+			holder = node;
+		}
+		else
+		{
+			node->children[1] = holder;
+			(*curr) = (*curr)->next;
+			node->children[0] = parseFirst(curr);
+			holder = node;
+		}
 	}
 	return node;
 }
@@ -134,6 +142,7 @@ ASTNode* parseSecond(struct node** curr)
 // Function to parse a factor.
 ASTNode* parseFirst(struct node** curr)
 {
+	Token* tok = NULL;
 	if ((*curr) != NULL && ((Token*)(*curr)->data)->type != TOKEN_ENDL)
 	{
 		if (((Token*)(*curr)->data)->type == TOKEN_LPARN)
@@ -151,7 +160,16 @@ ASTNode* parseFirst(struct node** curr)
 		{
 			// It's a number or var
 			ASTNode* node = createNewASTnode((Token*)(*curr)->data);
+			tok = (*curr)->data;
+			if (tok->type == TOKEN_INPUT_INT || tok->type == TOKEN_INPUT_CHAR || tok->type == TOKEN_INPUT_FLOAT)
+			{
+				(*curr) = (*curr)->next;
+				(*curr) = (*curr)->next;
+			}
+			tok = (*curr)->data;
 			(*curr) = (*curr)->next;
+			tok = (*curr)->data;
+
 			return node;
 		}
 	}

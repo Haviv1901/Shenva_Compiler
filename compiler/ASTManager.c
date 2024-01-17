@@ -12,7 +12,7 @@ ASTNode* buildTree(struct node** FirstNode)
 	Token* firstToken = (Token*)(*FirstNode)->data, * currentToken = NULL;
 	ASTNode* result = NULL;
 	struct node* currentNode = *FirstNode;
-	if (((Token*)currentNode->data)->type != TOKEN_ENDL && ((Token*)currentNode->data)->type != TOKEN_RBRACK)
+	if (((Token*)currentNode->data)->type != TOKEN_ENDL && ((Token*)currentNode->data)->type != TOKEN_RBRACK && ((Token*)currentNode->data)->type != TOKEN_RPARN)
 	{
 		result = createNewASTnode(NULL);
 	}
@@ -94,13 +94,23 @@ ASTNode* buildTree(struct node** FirstNode)
 			result->children[NEXT] = buildTree(FirstNode);
 		}
 	}
-	else if (firstToken->type == TOKEN_IF || firstToken->type == TOKEN_WHILE)
+	else if (isConditionOrLoopToken(*firstToken))
 	{
 		int parenthesesEqualizer = 0;
 
-		currentNode = currentNode->next; // skipping the PRINT token
-		currentToken = ((Token*)currentNode->data);
-		result->children[EXPRESSION] = buildASTConditions(FirstNode);
+		currentNode = currentNode->next; 
+		currentToken = (currentNode->data);
+
+		if(firstToken->type == TOKEN_FOR)
+		{
+			result->children[EXPRESSION] = buildASTForLoops(FirstNode);
+		}
+		else
+		{
+			result->children[EXPRESSION] = buildASTConditionsOrWhileLoops(FirstNode);
+		}
+
+		
 		result->children[NEXT] = buildTree(FirstNode);
 	}
 	else if (firstToken->type == TOKEN_VAR) // if variable id

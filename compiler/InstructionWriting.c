@@ -133,8 +133,7 @@ output: non
 */
 void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
-	int labelHolder = 0
-		;
+	int labelHolder = 0;
     if (branch->token->type == TOKEN_IF)
 	{
 		labelHolder = lableNum;
@@ -615,8 +614,17 @@ void writeNumericInstruction(Token* operand, FILE* asmFile, bool isEAXdecimal, b
 
 
 	// extract result to eax
-	fprintf(asmFile, "fstp dword ptr[esp]\n");
-
+	if (operand->type == TOKEN_MODULO)
+	{
+		fprintf(asmFile, "fstp dword ptr[esp]\n");
+		fprintf(asmFile, "sub esp, 4\n");
+		fprintf(asmFile, "fstp dword ptr[esp]\n");
+		fprintf(asmFile, "add esp, 4\n");
+	}
+	else
+	{
+		fprintf(asmFile, "fstp dword ptr[esp]\n");
+	}
 }
 
 

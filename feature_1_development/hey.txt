@@ -1,14 +1,13 @@
-int a = intInput()
-if(a > 2)
+int a 
+for(a < 3, a + 1)
 {
-	printInt(a)
-}
-else
-{
-	printInt(0)
+
+
+	
 }
 
 
+a = 5 + 2
 
 
 

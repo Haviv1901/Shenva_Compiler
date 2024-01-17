@@ -96,6 +96,8 @@ void set_output_file(FILE* file) {
 "aheret"  { fprintf(outputFile, "E\n"); return ELSE;}
 "while"	  { fprintf(outputFile, "w\n"); return WHILE;}
 "colOd"	  { fprintf(outputFile, "w\n"); return WHILE;}
+"for"	  { fprintf(outputFile, "F\n"); return FOR;}
+"avor"	  { fprintf(outputFile, "F\n"); return FOR;}
 "{"	  { fprintf(outputFile, "{\n"); return LBRACK;}
 "}"	  { fprintf(outputFile, "}\n"); return RBRACK;}
 

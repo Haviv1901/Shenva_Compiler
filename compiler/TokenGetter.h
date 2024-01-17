@@ -21,7 +21,7 @@ enum TokenTypes {TOKEN_ERROR = '0', TOKEN_NUM = '1', TOKEN_DECIMAL = 'd', TOKEN_
 				 TOKEN_INPUT_CHAR = 'L', TOKEN_EQUALS = 'S', TOKEN_NOT_EQUALS = 'U', TOKEN_GREATER = 'G', TOKEN_NOT_GREATER = 'H',
 				 TOKEN_LESSER = 'K', TOKEN_NOT_LESSER = 'M', TOKEN_GREATER_EQUALS = 'N', TOKEN_LESSER_EQUALS = 'O',
 				 TOKEN_NOT = '!', TOKEN_OR = 'o', TOKEN_AND = 'a', TOKEN_IF = 'I', TOKEN_ELSE = 'E', TOKEN_LBRACK = '{',
-				 TOKEN_RBRACK = '}', TOKEN_WHILE = 'w'
+				 TOKEN_RBRACK = '}', TOKEN_WHILE = 'w', TOKEN_FOR = 'F'
 };
 
 #endif 
@@ -38,7 +38,7 @@ struct Token
 llist* extractToken(FILE* file);
 void printToken(Token* token);
 
-float extractNumber(char charFromfile, FILE* file);
+int extractNumber(char charFromfile, FILE* file);
 char* extractIdentifier(char charFromfile, FILE* file);
 void* extractLetter(char charFromfile, FILE* file);
 
