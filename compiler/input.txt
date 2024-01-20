@@ -1,9 +1,15 @@
 
-int a 
-for(a < 3, a +=1)
+def ma(int a, int b, int c, int d)
 {
 
-
-	
 }
+
+
+
+hey()
+ma(5, 6, 1)
+
+
+
+
 

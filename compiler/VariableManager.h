@@ -53,7 +53,7 @@ bool isVars(llist* tokenList);
 FuncNode* createFunctionList(llist* tokenList);
 void callDeleteFuncList();
 int isParamNumValid(struct node* curr, int paramNum);
-bool isFuncs(llist* tokenList);
+bool isFunctionsInTheCode(llist* tokenList);
 // creates a variable list from a token list and run simple checks on the variable declarations
 
 

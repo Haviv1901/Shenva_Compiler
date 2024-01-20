@@ -298,13 +298,13 @@ FuncNode* createFunctionList(llist* tokenList)
 	return funcListHead;
 }
 
-
+// checks if there are any funcntions in the token list`
 bool isFuncs(llist* tokenList)
 {
 	struct node* curr = *tokenList;
 	while (curr)
 	{
-		if ((Token*)(curr->data)->type == TOKEN_DEF)
+		if ((curr->data)->type == TOKEN_DEF)
 		{
 			return true;
 		}
@@ -428,7 +428,7 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 			while (currentToken != TOKEN_ENDL)
 			{
 				curr = curr->next;
-				currentToken = ((Token*)(curr->data))->type;
+				currentToken = ((curr->data))->type;
 			}
 		}
 		else if (currentToken == TOKEN_ERROR)

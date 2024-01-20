@@ -46,6 +46,7 @@ FuncNode* getFuncByName(FuncNode* head, char* id)
 		{
 			return curr;
 		}
+		curr = curr->next;
 	}
 	return NULL;
 }
