@@ -270,7 +270,7 @@ FuncNode* createFunctionList(llist* tokenList)
 				type = getVarByTokenType(tok->type);// getting parameter type
 				if (type != VAR_ERROR)// if its a type and not an identifier
 				{
-					createNewVariable(id, type, &varListHead, scopeCounter + 1, true, parSize);//creating parameter in varList
+					createNewVariable((Token*)(curr->next->data)->value, type, &varListHead, scopeCounter + 1, true, parSize);//creating parameter in varList
 					parSize -= getSizeByType(type);// reducing parameter place in memory for the next one
 					paramNum += 1;//adding 1 to count
 					paramSize += getSizeByType(type);// adding to total size
@@ -299,12 +299,25 @@ FuncNode* createFunctionList(llist* tokenList)
 }
 
 
+bool isFuncs(llist* tokenList)
+{
+	struct node* curr = *tokenList;
+	while (curr)
+	{
+		if ((Token*)(curr->data)->type == TOKEN_DEF)
+		{
+			return true;
+		}
+		curr = curr->next;
+	}
+	return false;
+}
 
 
 
 VariableList* createVariableListFromToken(llist* tokenList)
 {
-	if (createFunctionList(tokenList) == NULL)
+	if (createFunctionList(tokenList) == NULL && isFuncs(tokenList))
 	{
 		printf("Semantic  analysis failed.\n");
 		callDeleteFuncList();
@@ -315,6 +328,7 @@ VariableList* createVariableListFromToken(llist* tokenList)
 	{
 		printf("Semantic  analysis failed.\n");
 		deleteScopeTree(scopeTreeHead);
+		callDeleteFuncList();
 		return NULL;
 	}
 	return varListHead;
@@ -360,6 +374,7 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 
 	struct node* curr = *tokenList;
 	char* identifier = NULL;
+	FuncNode* funcNode = NULL;
 	while (curr != NULL) // going through the token list
 	{
 		enum TokenTypes currentToken = ((Token*)(curr->data))->type;
@@ -378,12 +393,42 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 		}
 		else if (currentToken == TOKEN_VAR)//if its a variable
 		{
-			identifier = (char*)(((Token*)(curr->data))->value);
-			if (!callIsVariablExist(varListHead, identifier, currentScope)) // checking if variable has been declared before
+			if (((Token*)(curr->next->data))->type != TOKEN_LPARN)
 			{
-				printf("Semantic error: '%s' is undefined\n", identifier);
-				deleteVariableList(varListHead);
-				return 0;
+				identifier = (char*)(((Token*)(curr->data))->value);
+				if (!callIsVariablExist(varListHead, identifier, currentScope)) // checking if variable has been declared before
+				{
+					printf("Semantic error: '%s' is undefined\n", identifier);
+					deleteVariableList(varListHead);
+					return 0;
+				}
+			}
+			else
+			{
+				identifier = (char*)(((Token*)(curr->data))->value);
+				funcNode = getFuncByName(funcListHead, identifier);
+				if (funcNode == NULL) // checking if function has been declared before
+				{
+					printf("Semantic error: '%s' is undefined\n", identifier);
+					deleteVariableList(varListHead);
+					return 0;
+				}
+				curr = curr->next;
+				if (isParamNumValid(curr, funcNode->paramNum) == 0)
+				{
+					printf("Semantic error: '%s' function call dosen't have enough parameters\n", identifier);
+					deleteVariableList(varListHead);
+					return 0;
+				}
+
+			}
+		}
+		else if (currentToken == TOKEN_DEF)
+		{
+			while (currentToken != TOKEN_ENDL)
+			{
+				curr = curr->next;
+				currentToken = ((Token*)(curr->data))->type;
 			}
 		}
 		else if (currentToken == TOKEN_ERROR)
@@ -443,6 +488,69 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 	return 1;
 
 }
+
+/*
+isParamNumValid: this function will check if the function call has enough parameters 
+input: the current node and the number of parameters this function is asking for
+output: an int indicating validity
+*/
+int isParamNumValid(struct node* curr, int paramNum)
+{
+	Token* tok = curr->data;
+	int numberOfParams = 0, equalizer = 0;
+
+	curr = curr->next;
+	tok = curr->data;// going over the Lparn
+	if (tok->type != TOKEN_RPARN)// if there are even any parameters
+	{
+		numberOfParams++;// at least 1 parameter
+		curr = curr->next;
+		tok = curr->data;
+		while (tok->type != TOKEN_RPARN)
+		{
+			if (tok->type == TOKEN_COMMA)// comma meaning mor parameters after
+			{
+				numberOfParams++;
+				curr = curr->next;
+				tok = curr->data;
+			}
+			else if (tok->type == TOKEN_LPARN)// equalizing parenthasis because a function call is also an expression
+			{
+				equalizer = 0;
+				do
+				{
+					if (tok->type == TOKEN_LPARN)
+					{
+						equalizer++;
+					}
+
+					if (tok->type == TOKEN_RPARN)
+					{
+						equalizer--;
+					}
+					curr = curr->next;
+					tok = curr->data;
+				} while (equalizer != 0);
+			}
+			else
+			{
+				curr = curr->next;
+				tok = curr->data;// going to next if neither
+			}
+		}
+	}
+	if (numberOfParams == paramNum)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+
+
 
 /*
 getSizeOfScope: this function will count the size of a given scope

@@ -1,1 +1,0 @@
-syntax error, unexpected return, expecting newline (line 5)

@@ -1,15 +1,12 @@
-def ma(int a, char ch)
+
+def ma(int a, int b, int c, int d)
 {
 
 }
 
 
-def ma(int a)
-{
 
-}
-
-
+ma(5, 6, 1, ma(1, 2, 3))
 
 
 

@@ -52,6 +52,8 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 bool isVars(llist* tokenList);
 FuncNode* createFunctionList(llist* tokenList);
 void callDeleteFuncList();
+int isParamNumValid(struct node* curr, int paramNum);
+bool isFuncs(llist* tokenList);
 // creates a variable list from a token list and run simple checks on the variable declarations
 
 
