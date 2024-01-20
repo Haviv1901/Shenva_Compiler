@@ -24,7 +24,7 @@ FILE* errorFile;
 %token INT CHAR FLOAT
 %token VAR
 %token ADDEQ SUBEQ MULEQ DIVEQ MODEQ
-%token DEF
+%token DEF RETURN
 %left ADD SUB
 %left MUL DIV MOD
 %left EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS OR AND
@@ -91,12 +91,19 @@ empty_space : ENDL
 statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
 		  |  PRINTCHAR LPAREN expression_list RPAREN  ENDL { /* Handle print statement */ }
 		  |  PRINTFLOAT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
+		  | RETURN expression ENDL
+		  | RETURN ENDL
 		  | expression ENDL
           | declaration ENDL
           | assignment ENDL
 		  | ENDL
           | ERROR {fprintf(errorFile, "syntax error, unrecognized \"%s\" in the code (line %d)\n", $1, yylineno);}
           ;
+		  
+		  
+		  
+		  
+
 		
 declaration : INT decleration_list
             | CHAR decleration_list
@@ -260,6 +267,11 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "\"-=\"");
 			i += 9;
+		}
+		else if (strncmp(msg + i, "RETURN",6) == 0)
+		{
+			fprintf(errorFile, "return");
+			i += 5;
 		}
 		else if (strncmp(msg + i, "CHARINPUT", 9) == 0)
 		{

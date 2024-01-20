@@ -103,6 +103,9 @@ void set_output_file(FILE* file) {
 "def" { fprintf(outputFile, "D\n"); return DEF;}
 "func" { fprintf(outputFile, "D\n"); return DEF;}
 "functzia" { fprintf(outputFile, "D\n"); return DEF;}
+"return" { fprintf(outputFile, "r\n"); return RETURN;}
+"hahzara" { fprintf(outputFile, "r\n"); return RETURN;}
+
 
 
 [a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); strcpy(lastIdentifier, yytext); return VAR; }
