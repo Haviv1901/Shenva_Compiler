@@ -197,7 +197,7 @@ llist* extractToken(FILE* file)
 	llist* tokenList = llist_create(NULL);
 	char charFromfile;
 	enum TokenTypes lastVoidType;
-	bool isPrintLine = false, isDecLine = false;
+	bool isPrintLine = false, isDecLine = false, isDefLine = false;
 	while ((charFromfile = fgetc(file)) != EOF)
 	{
 		if (charFromfile == NEW_LINE_CHARACTER) // if newline
@@ -301,6 +301,7 @@ llist* extractToken(FILE* file)
 			token->value = NULL;
 			isPrintLine = false;
 			isDecLine = false;
+			isDefLine = false;
 		}
 		else if (charFromfile == TOKEN_INT) // int var
 		{
@@ -425,6 +426,11 @@ llist* extractToken(FILE* file)
 			token->type = TOKEN_ELSE;
 			token->value = NULL;
 		}
+		else if (charFromfile == TOKEN_RETURN) // else
+		{
+			token->type = TOKEN_RETURN;
+			token->value = NULL;
+		}
 		else if (charFromfile == TOKEN_LBRACK) // {
 		{
 			token->type = TOKEN_LBRACK;
@@ -435,9 +441,20 @@ llist* extractToken(FILE* file)
 			token->type = TOKEN_RBRACK;
 			token->value = NULL;
 		}
+		else if (charFromfile == TOKEN_DEF)
+		{
+			token->type = TOKEN_DEF;
+			token->value = NULL;
+			isDefLine = true;
+		}
 		else if (charFromfile == TOKEN_COMMA) // ,
 		{
-			if (isPrintLine)
+			if (isDefLine || (!isPrintLine && !isDecLine))
+			{
+				token->type = TOKEN_COMMA;
+				token->value = NULL;
+			}
+			else if (isPrintLine)
 			{
 				token->type = TOKEN_RPARN;
 				token->value = NULL;
@@ -453,11 +470,6 @@ llist* extractToken(FILE* file)
 			else if (isDecLine)
 			{
 				token->type = lastVoidType;
-				token->value = NULL;
-			}
-			else
-			{
-				token->type = TOKEN_COMMA;
 				token->value = NULL;
 			}
 
@@ -650,6 +662,14 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_WHILE)
 	{
 		printf("while");
+	}
+	else if (token->type == TOKEN_DEF)
+	{
+		printf("def");
+	}
+	else if (token->type == TOKEN_RETURN)
+	{
+		printf("return");
 	}
 	else
 	{

@@ -11,6 +11,7 @@
 int reformattedStackPointer = 0; // new stack pointer that works with variables in size of less then 4 bytes
 ScopeTreeNode* scopeTreeHead = NULL;
 VariableList* varListHead = NULL;
+FuncNode* funcListHead = NULL;
 int nextScope = -1;
 
 int getSizeByType(enum VarTypes type)
@@ -47,6 +48,11 @@ void deleteVariableList(VariableList* varList) // deletes allocated memory for t
 	free(varList); // free current node
 }
 
+void callDeleteFuncList()
+{
+	deleteFuncList(funcListHead);
+}
+
 
 /**
  * \brief adds new variable to the list
@@ -55,7 +61,7 @@ void deleteVariableList(VariableList* varList) // deletes allocated memory for t
  * \param type type of new var
  * \param placeInMemory place in memory of new var
  */
-void createNewVariable(char* identifier, enum VarTypes type, VariableList** varList, int varScope)
+void createNewVariable(char* identifier, enum VarTypes type, VariableList** varList, int varScope, bool isParameter, int parSize)
 {
 
 	// create new veriable
@@ -66,8 +72,16 @@ void createNewVariable(char* identifier, enum VarTypes type, VariableList** varL
 	newVarNode->var->Id = identifier;
 	newVarNode->var->Type = type;
 	newVarNode->var->size = getSizeByType(type);
-	reformattedStackPointer += newVarNode->var->size; // update the stack pointer
-	newVarNode->var->placeInMemory = reformattedStackPointer;
+	if (isParameter == false)
+	{
+		reformattedStackPointer += newVarNode->var->size; // update the stack pointer
+		newVarNode->var->placeInMemory = reformattedStackPointer;
+	}
+	else
+	{
+		newVarNode->var->placeInMemory = parSize;
+	}
+
 	newVarNode->var->scope = varScope;
 	
 	newVarNode->next = NULL;
@@ -184,12 +198,119 @@ enum VarTypes getVarByTokenType(enum TokenTypes currentToken)
 	{
 		return VAR_BOOL;
 	}
+	else
+	{
+		return VAR_ERROR;
+	}
 }
+
+
+
+
+
+
+
+
+
+/*
+createFunctionList: this function will create a list of functions
+input: the tokenList
+output: non
+*/
+FuncNode* createFunctionList(llist* tokenList)
+{
+	int scopeCounter = 0, paramNum = 0, paramSize = 0, parSize = 0;
+	FuncNode* hold = NULL, *currFunc = NULL;
+	if (tokenList == NULL)
+	{
+		return NULL;
+	}
+	struct node* curr = *tokenList;
+	char* id = NULL;
+	Token* tok = NULL;
+
+	enum VarTypes type;
+
+	while (curr)// going through the token list
+	{
+		tok = curr->data;// tok is for convinience
+		if (tok->type == TOKEN_LBRACK)// if new scope, then count it
+		{
+			scopeCounter++;
+		}
+
+		if (tok->type == TOKEN_DEF)
+		{
+			curr = curr->next;
+			tok = curr->data;// skipping to name of function
+			
+			id = tok->value;//getting name
+			if (getFuncByName(funcListHead, id) != NULL)
+			{
+				printf("Semantic error: function with the name %s, is already defined\n", id);
+				return NULL;
+			}
+
+
+
+			curr = curr->next;
+			curr = curr->next;
+			tok = curr->data;//skipping to first parameters
+
+			parSize = -8;//resetting parameters place in memory
+			paramNum = 0;//reseting the number and size of parameters
+			paramSize = 0;
+			while (tok->type != TOKEN_RPARN)//until the end of the function
+			{
+				if (tok->type == TOKEN_COMMA)// if comma then skip
+				{
+					curr = curr->next;
+					tok = curr->data;
+				}
+				type = getVarByTokenType(tok->type);// getting parameter type
+				if (type != VAR_ERROR)// if its a type and not an identifier
+				{
+					createNewVariable(id, type, &varListHead, scopeCounter + 1, true, parSize);//creating parameter in varList
+					parSize -= getSizeByType(type);// reducing parameter place in memory for the next one
+					paramNum += 1;//adding 1 to count
+					paramSize += getSizeByType(type);// adding to total size
+				}
+				curr = curr->next;			
+				tok = curr->data;
+			}
+			hold = createNewFuncNode(id, paramNum, paramSize);// creating new function node
+			if (funcListHead == NULL)
+			{
+				funcListHead = hold;
+			}
+			else
+			{
+				currFunc = funcListHead;//appending new function node
+				while (currFunc->next)
+				{
+					currFunc = currFunc->next;
+				}
+				currFunc->next = hold;
+			}
+		}
+		curr = curr->next;//going to the next token
+	}
+	return funcListHead;
+}
+
+
+
 
 
 VariableList* createVariableListFromToken(llist* tokenList)
 {
-
+	if (createFunctionList(tokenList) == NULL)
+	{
+		printf("Semantic  analysis failed.\n");
+		callDeleteFuncList();
+		deleteVariableList(varListHead);
+		return NULL;
+	}
 	if(createVariableListFromScope(tokenList, -1 , scopeTreeHead) == 0)
 	{
 		printf("Semantic  analysis failed.\n");
@@ -253,7 +374,7 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 				deleteVariableList(varListHead);
 				return 0;
 			}
-			createNewVariable(identifier, getVarByTokenType(currentToken), &varListHead, currentScope);//adding var
+			createNewVariable(identifier, getVarByTokenType(currentToken), &varListHead, currentScope, false, 0);//adding var
 		}
 		else if (currentToken == TOKEN_VAR)//if its a variable
 		{
