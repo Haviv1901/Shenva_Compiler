@@ -16,7 +16,8 @@ float extractDecimal(FILE* file)
 
 	bool isNegative = false;
 
-	char charFromFile = fgetc(file);// get the next number from the file
+	char charFromFile = fgetc(file); // skip the spcace
+	charFromFile = fgetc(file);// get the next number from the file
 	if (charFromFile == '-')
 	{
 		isNegative = true;
@@ -71,7 +72,8 @@ int extractNumber(FILE* file)
 
 	bool isNegative = false;
 
-	char charFromFile = fgetc(file);// get the next number from the file
+	char charFromFile = fgetc(file); // skip the spcace
+	charFromFile = fgetc(file);// get the next number from the file
 	if (charFromFile == '-')
 	{
 		isNegative = true;
@@ -104,7 +106,7 @@ int extractNumber(FILE* file)
 
 char* extractIdentifier(FILE* file)
 {
-	char charFromFile; 
+	char charFromFile = fgetc(file); // skip the spcace
 	char* identifier = calloc(MAX_VARIABLE_SIZE, sizeof(char));
 	while (charFromFile = fgetc(file)) // get the identifier
 	{
@@ -122,7 +124,8 @@ char* extractIdentifier(FILE* file)
 
 void* extractLetter(FILE* file)
 {
-	char charFromFile = fgetc(file); // skip the first '
+	char charFromFile = fgetc(file); // skip the spcace
+	charFromFile = fgetc(file); // skip the first '
 	charFromFile = fgetc(file);
 	bool specialCharacter = false;
 
@@ -233,12 +236,10 @@ llist* extractToken(FILE* file)
 
 	bool isEOF = false;
 	char charFromfile = 0;
-	char NextcharFromfile = 0;
 
 	while (!isEOF) // untill not end of file
 	{
-		charFromfile = NextcharFromfile;
-		NextcharFromfile = fgetc(file);
+		charFromfile = fgetc(file);
 
 		switch (charFromfile)
 		{
@@ -250,10 +251,10 @@ llist* extractToken(FILE* file)
 				break;
 		}
 
-		if(NextcharFromfile == EOF)
+		if(charFromfile == EOF)
 		{
 			isEOF = true;
-			continue; // last token before eof is allways \n
+			continue; // last token before eof is always \n
 		}
 
 		Token* token = (Token*)malloc(sizeof(Token));
@@ -344,7 +345,7 @@ llist* extractToken(FILE* file)
 				if(checkForFunction(file))
 				{
 					token->type = TOKEN_FUNCTION_CALL;
-
+					isDefLine = true;
 				}
 				else
 				{
