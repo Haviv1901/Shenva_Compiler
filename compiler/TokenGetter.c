@@ -341,15 +341,15 @@ llist* extractToken(FILE* file)
 				break;
 
 			case TOKEN_VAR: // var
-				if(checkForFunctio(file))
+				if(checkForFunction(file))
 				{
-					
+					token->type = TOKEN_FUNCTION_CALL;
+
 				}
 				else
 				{
-					
+					token->type = TOKEN_VAR;
 				}
-				token->type = TOKEN_VAR;
 				token->value = extractIdentifier(file);
 				break;
 
@@ -574,7 +574,11 @@ void printToken(Token* token)
 	}
 	else if (token->type == TOKEN_VAR)
 	{
-		printf("%s", (char*)(token->value));
+		printf("(var)%s", (char*)(token->value));
+	}
+	else if (token->type == TOKEN_FUNCTION_CALL)
+	{
+		printf("(func)%s", (char*)(token->value));
 	}
 	else if (token->type == TOKEN_ERROR)
 	{
