@@ -2,6 +2,7 @@
 #include "ASTfunctions.h"
 
 
+
 /**
  * \brief function that will get the first lparn toeken and construct a tree from the inside of the paranthesis
  * \param curr lparn token
@@ -13,17 +14,28 @@ ASTNode* buildASTFunctions(struct node** curr)
 	Token* currentToken = currentNode->data; 
 
 
-	ASTNode* result = createNewASTnode(currentToken); // PRINT token node
+	ASTNode* result = createNewASTnode(currentToken); // PRINT \ DEF \ FUNC token node
 
 
 	if(isPrintToken(*currentToken))
 	{
 		result->children[ONLY_CHILD] = buildASTFunctions_print(&currentNode);
 	}
+	if(currentToken->type == TOKEN_FUNCTION_CALL)
+	{
+		result->children[ONLY_CHILD] = buildASTFunctions_functionCall(&currentNode);
+	}
 	// in the future add support to more built-in functions or custom functions
 
 	return result;
 }
+
+
+ASTNode* buildASTFunctions_functionCall(node** node)
+{
+	
+}
+
 
 ASTNode* buildASTFunctions_print(struct node** curr)
 {

@@ -115,7 +115,9 @@ void deleteAST(ASTNode* head)
 
 int isThreeChildNode(enum TokenTypes token)
 {
-	if (token == TOKEN_IF || token == TOKEN_FOR)
+	if (token == TOKEN_IF  ||
+		token == TOKEN_DEF ||
+		token == TOKEN_FOR )
 	{
 		return 1;
 	}
@@ -144,6 +146,8 @@ int isTwoChildNode(enum TokenTypes token)
 		token == TOKEN_GREATER_EQUALS || 
 		token == TOKEN_LESSER_EQUALS ||
 		token == TOKEN_BOOL ||
+
+		token == TOKEN_FUNCTION_CALL ||
 		token == TOKEN_WHILE)
 	{
 		return 1;
