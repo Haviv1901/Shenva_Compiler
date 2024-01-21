@@ -141,7 +141,7 @@ Variable* getVariableByScope(VariableList* varList, char* identifier, int scope)
 	VariableList* curr = varList;
 	while (curr != NULL)
 	{
-		if (strcmp(curr->var->Id, identifier) == 0 && isAncestor(scopeTreeHead, scope, curr->var->scope))
+		if (strcmp(curr->var->Id, identifier) == 0 && isAncestor(scopeTreeHead, scope, curr->var->scope) && curr->var->placeInMemory > 0)
 		{
 			return curr->var;
 		}
@@ -375,6 +375,7 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 	struct node* curr = *tokenList;
 	char* identifier = NULL;
 	FuncNode* funcNode = NULL;
+	bool isNextScopeFunc = false;
 	while (curr != NULL) // going through the token list
 	{
 		enum TokenTypes currentToken = ((Token*)(curr->data))->type;
@@ -430,6 +431,7 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 				curr = curr->next;
 				currentToken = ((curr->data))->type;
 			}
+			isNextScopeFunc = true;
 		}
 		else if (currentToken == TOKEN_ERROR)
 		{
@@ -441,6 +443,10 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 		{
 			outerBracketBalance++;
 			holderForPlacceInMemory = reformattedStackPointer;
+			if (isNextScopeFunc)
+			{
+				reformattedStackPointer = 0;
+			}
 			curr = curr->next; // skipping the left bracket token
 
 

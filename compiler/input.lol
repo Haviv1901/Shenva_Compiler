@@ -1,14 +1,20 @@
-
-def ma(int a, int b, int c, int d)
+int a = 4
+def ma(int a)
 {
-
+	int e = 6
+	return a + e
 }
 
 
+def ha(char a)
+{
+	int e = 1
+	return a - e
+}
+int b = 1
 
-ma(5, 6, 1, ma(1, 2, 3))
 
-
+printInt(ma(a + ha(a)))
 
 
 
