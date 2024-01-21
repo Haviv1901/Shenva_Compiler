@@ -1,7 +1,12 @@
 
 
 
-ma(5, 6, 1)
+ma(b(),5,6)
+
+
+def b()
+{
+}
 
 def ma(int a, int b, int c, int d)
 {

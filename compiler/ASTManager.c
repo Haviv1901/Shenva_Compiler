@@ -47,9 +47,10 @@ ASTNode* buildTree(struct node** FirstNode)
 		*FirstNode = (*FirstNode)->next;
 		result = buildTree(FirstNode);
 	}
-	else if(firstToken->type == TOKEN_FUNCTION_CALL || firstToken->type == TOKEN_DEF) // function tokens
+	else if(firstToken->type == TOKEN_DEF) // function tokens
 	{
 		result->children[EXPRESSION] = buildASTFunctions(FirstNode);
+		*FirstNode = (*FirstNode)->next;
 		result->children[NEXT] = buildTree(FirstNode);
 	}
 	else if (isPrintToken(*firstToken)) // if printToken  , in the future we will add function support

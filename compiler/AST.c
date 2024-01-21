@@ -221,6 +221,7 @@ int isExpressionToken(Token token)
 		token.type == TOKEN_SUB ||
 		token.type == TOKEN_MUL ||
 		token.type == TOKEN_DIV ||
+		token.type == TOKEN_FUNCTION_CALL ||
 		token.type == TOKEN_MODULO)
 	{
 		return 1;

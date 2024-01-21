@@ -46,7 +46,7 @@ ASTNode* buildASTFunctions_functionCall(node** node)
 	Token* currentToken = (*node)->data;
 
 	ASTNode* result = createNewASTnode(NULL); // create null node
-	ASTNode** pResult = &result;
+	ASTNode* current = result;
 
 	(*node) = (*node)->next; // skipping the function call token
 	(*node) = (*node)->next; // skipping the first parentheses
@@ -54,11 +54,11 @@ ASTNode* buildASTFunctions_functionCall(node** node)
 	{
 		currentToken = (*node)->data;
 
-		if (isExpressionToken(*currentToken))
+		if (isExpressionToken(*currentToken) || currentToken->type == TOKEN_VAR)
 		{
-			result->children[EXPRESSION] = buildASTNumeric(node); // build expression tree for arg
-			result->children[NEXT] = createNewASTnode(NULL); // create null node
-			result = result->children[NEXT]; // go to that null node
+			current->children[EXPRESSION] = buildASTNumeric(node); // build expression tree for arg
+			current->children[NEXT] = createNewASTnode(NULL); // create null node
+			current = current->children[NEXT]; // go to that null node
 		}
 
 		if (currentToken->type == TOKEN_LPARN)
@@ -74,15 +74,12 @@ ASTNode* buildASTFunctions_functionCall(node** node)
 			break;
 		}
 
-
-
 		(*node) = (*node)->next;
 	}
 	(*node) = (*node)->next; // skipping the last parentheses
 
-	
 	return result;
-}	
+}
 
 
 ASTNode* buildASTFunctions_print(struct node** curr)

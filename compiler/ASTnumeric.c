@@ -1,6 +1,8 @@
 #pragma once
 #include "ASTnumeric.h"
 
+#include "ASTfunctions.h"
+
 
 /**
  * \brief function to build AST from numeric expressions
@@ -158,8 +160,16 @@ ASTNode* parseFirst(struct node** curr)
 		}
 		else
 		{
-			// It's a number or var
-			ASTNode* node = createNewASTnode((Token*)(*curr)->data);
+			// It's a number or var or a function call.
+			ASTNode* node;
+			if((*curr)->data->type == TOKEN_FUNCTION_CALL)
+			{
+				node = buildASTFunctions(curr);
+			}
+			else
+			{
+				node = createNewASTnode((*curr)->data);
+			}
 			tok = (*curr)->data;
 			if (tok->type == TOKEN_INPUT_INT || tok->type == TOKEN_INPUT_CHAR || tok->type == TOKEN_INPUT_FLOAT)
 			{
