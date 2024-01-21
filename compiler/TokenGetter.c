@@ -183,6 +183,43 @@ void* extractLetter(FILE* file)
 	charFromFile = fgetc(file); // skip the last '
 	return character;
 }
+
+/// <summary>
+/// function checks if the next token is a left parenthesis, used for indicating if a var is a function call or a var call.
+/// </summary>
+/// <param name="file"></param>
+/// <returns></returns>
+bool checkForFunction(FILE* file)
+{
+    // Save the current position in the file
+    long current_position = ftell(file);
+
+    // Initialize a variable to hold each character
+    char c;
+
+    // Loop forwards through the file until we find a newline or end of file
+    while ((c = fgetc(file)) != EOF)
+    {
+        if (c == '\n')
+        {
+            break;
+        }
+    }
+
+    // Check if the next character is '6'
+    bool isNextChar6 = false;
+    if (fgetc(file) == '6')
+    {
+        isNextChar6 = true;
+    }
+
+    // Restore the file position
+    fseek(file, current_position, SEEK_SET);
+
+    return isNextChar6;
+}
+
+
 /*
  * extracting tokens from a file.
  * file: FILE*, an opened file
@@ -203,9 +240,14 @@ llist* extractToken(FILE* file)
 		charFromfile = NextcharFromfile;
 		NextcharFromfile = fgetc(file);
 
-		if (charFromfile == NEW_LINE_CHARACTER || charFromfile == 0 || charFromfile == ' ') // if newline
+		switch (charFromfile)
 		{
-			continue;
+			case NEW_LINE_CHARACTER:
+			case NOTHING_CHARACTER:
+			case SPACE_CHARACTER: // if new line or  0 ascci char or space skip.
+				continue;
+			default:
+				break;
 		}
 
 		if(NextcharFromfile == EOF)
@@ -299,6 +341,14 @@ llist* extractToken(FILE* file)
 				break;
 
 			case TOKEN_VAR: // var
+				if(checkForFunctio(file))
+				{
+					
+				}
+				else
+				{
+					
+				}
 				token->type = TOKEN_VAR;
 				token->value = extractIdentifier(file);
 				break;

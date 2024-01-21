@@ -9,7 +9,7 @@
 struct node;
 typedef struct node* llist;
 
-enum {NEW_LINE_CHARACTER = 10, DOT_CHARACTER = '.' };
+enum {NEW_LINE_CHARACTER = 10, DOT_CHARACTER = '.' , SPACE_CHARACTER = ' ', NOTHING_CHARACTER = 0 };
 
 enum TokenTypes {TOKEN_ERROR = '0', TOKEN_NUM = '1', TOKEN_DECIMAL = 'd', TOKEN_ADD = '2', TOKEN_SUB = '3',
 				 TOKEN_MUL = '4', TOKEN_DIV = '5', TOKEN_LPARN = '6', TOKEN_RPARN = '7', 
@@ -40,6 +40,7 @@ llist* extractToken(FILE* file);
 void printToken(Token* token);
 
 int extractNumber(FILE* file);
+bool checkForFunction(FILE* file);
 char* extractIdentifier(FILE* file);
 void* extractLetter(FILE* file);
 
