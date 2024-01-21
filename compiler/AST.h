@@ -17,6 +17,9 @@ enum {ONLY_CHILD = 0, NEXT=0, EXPRESSION = 1};
 // 'if' / 'while' nodes
 enum {CONDITION = 0 , CODE = 1, ELSE = 2, OPPERATION_TO_DO_EVERY_ITER = 2};
 
+// function nodes
+enum {FUNC_IF = 0, ARGUMENT_LIST = 1, CODE_BLOCK = 2};
+
 struct ASTNode
 {
 	Token* token;

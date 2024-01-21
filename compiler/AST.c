@@ -146,8 +146,6 @@ int isTwoChildNode(enum TokenTypes token)
 		token == TOKEN_GREATER_EQUALS || 
 		token == TOKEN_LESSER_EQUALS ||
 		token == TOKEN_BOOL ||
-
-		token == TOKEN_FUNCTION_CALL ||
 		token == TOKEN_WHILE)
 	{
 		return 1;
@@ -164,7 +162,8 @@ int isOneChildNode(enum TokenTypes token)
 		token == TOKEN_PRINT_CHAR ||
 		token == TOKEN_PRINT_FLOAT ||
 		token == TOKEN_PRINT_INT ||
-		token == TOKEN_NOT || 
+		token == TOKEN_NOT ||
+		token == TOKEN_FUNCTION_CALL ||
 		token == TOKEN_ELSE)
 	{
 		return 1;
