@@ -396,3 +396,16 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# files built using NOAM AND AVIV ULLTIMATE COMPILLER
+compiler/input.txt
+compiler/input.lol
+compiler/output.asm
+compiler/output.exe
+compiler/output.tok
+compiler/output.obj
+compiler/compiler.exe
+compiler/errors.log
+compiler/errors.txt
+compiler/run.bat
+

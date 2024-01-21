@@ -1,13 +1,14 @@
 
 def ma(int a, int b, int c, int d)
 {
-
+    return 5
 }
 
 
-
-hey()
-ma(5, 6, 1)
+int a = ma(5, 6, 1) // 5
+float a = ma(5, 6, 1) // 5.00
+bool a = ma(5, 6, 1) // true
+char a = ma(5, 6, 1) // ""
 
 
 
