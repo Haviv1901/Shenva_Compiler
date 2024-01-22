@@ -208,4 +208,5 @@ ASTNode* parseFirst(struct node** curr)
 			return node;
 		}
 	}
+	return NULL;
 }

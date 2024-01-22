@@ -1,21 +1,13 @@
 int a = 4
-def ma(int a)
+def a(int b)
 {
-	int e = 6
-	return a + e
+	return b + 3
 }
 
 
-def ha(char a)
+
+def b(int b)
 {
-	int e = 1
-	return a - e
+	return b + 3
 }
-int b = 1
-
-
-printInt(ma(a + ha(a)))
-
-
-
 

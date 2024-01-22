@@ -141,7 +141,7 @@ Variable* getVariableByScope(VariableList* varList, char* identifier, int scope)
 	VariableList* curr = varList;
 	while (curr != NULL)
 	{
-		if (strcmp(curr->var->Id, identifier) == 0 && isAncestor(scopeTreeHead, scope, curr->var->scope) && curr->var->placeInMemory > 0)
+		if (strcmp(curr->var->Id, identifier) == 0 && isAncestor(scopeTreeHead, scope, curr->var->scope))
 		{
 			return curr->var;
 		}
@@ -384,7 +384,7 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 		{
 			curr = curr->next;
 			identifier = (char*)(((Token*)(curr->data))->value);//getting identifier
-			if(callIsVariablExist(varListHead, identifier, currentScope))
+			if(callIsVariablExist(varListHead, identifier, currentScope) || (currentScope == GLOBAL && getVariable(varListHead, identifier) != NULL))
 			{
 				printf("Semantic error: variable %s is already defined in scope\n", identifier);
 				deleteVariableList(varListHead);

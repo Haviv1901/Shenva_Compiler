@@ -52,6 +52,13 @@ ASTNode* buildTree(struct node** FirstNode)
 		result->children[EXPRESSION] = buildASTFunctions(FirstNode);
 		result->children[NEXT] = buildTree(FirstNode);
 	}
+	else if (firstToken->type == TOKEN_RETURN)
+	{
+		result->children[EXPRESSION] = createNewASTnode(firstToken);
+		*FirstNode = (*FirstNode)->next; 
+		result->children[EXPRESSION]->children[LEAF] = buildASTNumeric(FirstNode);// only son: the numeric expresion
+		result->children[NEXT] = buildTree(FirstNode);
+	}
 	else if (isPrintToken(*firstToken)) // if printToken  , in the future we will add function support
 	{
 		

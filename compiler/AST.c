@@ -164,7 +164,8 @@ int isOneChildNode(enum TokenTypes token)
 		token == TOKEN_PRINT_INT ||
 		token == TOKEN_NOT ||
 		token == TOKEN_FUNCTION_CALL ||
-		token == TOKEN_ELSE)
+		token == TOKEN_ELSE ||
+		token == TOKEN_RETURN)
 	{
 		return 1;
 	}

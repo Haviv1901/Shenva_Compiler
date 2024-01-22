@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include "FunctionList.h"
 enum VarTypes {VAR_INT, VAR_STRING, VAR_BOOL, VAR_CHAR, VAR_FLOAT, VAR_DOUBLE , VAR_ERROR = -1}; // types of variables
+enum ScopeTypes { GLOBAL = 0 }; // types of known scopes
 
 
 struct Variable
