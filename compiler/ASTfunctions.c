@@ -15,21 +15,22 @@ ASTNode* buildASTFunctions(struct node** curr)
 	Token* currentToken = currentNode->data; 
 
 
-	ASTNode* result = createNewASTnode(currentToken); // PRINT \ DEF \ FUNC token node
+	ASTNode* result = NULL;
 
 
 	if(isPrintToken(*currentToken))
 	{
+		result = createNewASTnode(currentToken); // PRINT 
 		result->children[ONLY_CHILD] = buildASTFunctions_print(&currentNode);
 	}
 	else if(currentToken->type == TOKEN_FUNCTION_CALL)
 	{
+		result = createNewASTnode(currentToken); // func call
 		result->children[ONLY_CHILD] = buildASTFunctions_functionCall(&currentNode);
 	}
 	else if(currentToken->type == TOKEN_DEF)
 	{
 		// in case of function definition
-
 		result = buildASTFunctions_DefFunctions(curr);
 	}
 
