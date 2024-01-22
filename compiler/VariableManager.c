@@ -394,34 +394,30 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 		}
 		else if (currentToken == TOKEN_VAR)//if its a variable
 		{
-			if (((Token*)(curr->next->data))->type != TOKEN_LPARN)
+			identifier = (char*)(((Token*)(curr->data))->value);
+			if (!callIsVariablExist(varListHead, identifier, currentScope)) // checking if variable has been declared before
 			{
-				identifier = (char*)(((Token*)(curr->data))->value);
-				if (!callIsVariablExist(varListHead, identifier, currentScope)) // checking if variable has been declared before
-				{
-					printf("Semantic error: '%s' is undefined\n", identifier);
-					deleteVariableList(varListHead);
-					return 0;
-				}
+				printf("Semantic error: '%s' is undefined\n", identifier);
+				deleteVariableList(varListHead);
+				return 0;
 			}
-			else
+		}
+		else if (currentToken == TOKEN_FUNCTION_CALL)
+		{
+			identifier = (char*)(((Token*)(curr->data))->value);
+			funcNode = getFuncByName(funcListHead, identifier);
+			if (funcNode == NULL) // checking if function has been declared before
 			{
-				identifier = (char*)(((Token*)(curr->data))->value);
-				funcNode = getFuncByName(funcListHead, identifier);
-				if (funcNode == NULL) // checking if function has been declared before
-				{
-					printf("Semantic error: '%s' is undefined\n", identifier);
-					deleteVariableList(varListHead);
-					return 0;
-				}
-				curr = curr->next;
-				if (isParamNumValid(curr, funcNode->paramNum) == 0)
-				{
-					printf("Semantic error: '%s' function call dosen't have enough parameters\n", identifier);
-					deleteVariableList(varListHead);
-					return 0;
-				}
-
+				printf("Semantic error: '%s' is undefined\n", identifier);
+				deleteVariableList(varListHead);
+				return 0;
+			}
+			curr = curr->next;
+			if (isParamNumValid(curr, funcNode->paramNum) == 0)
+			{
+				printf("Semantic error: '%s' function call dosen't have enough parameters\n", identifier);
+				deleteVariableList(varListHead);
+				return 0;
 			}
 		}
 		else if (currentToken == TOKEN_DEF)
