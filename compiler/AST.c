@@ -116,7 +116,6 @@ void deleteAST(ASTNode* head)
 int isThreeChildNode(enum TokenTypes token)
 {
 	if (token == TOKEN_IF  ||
-		token == TOKEN_DEF ||
 		token == TOKEN_FOR )
 	{
 		return 1;
@@ -139,7 +138,8 @@ int isTwoChildNode(enum TokenTypes token)
 		token == TOKEN_AND || 
 		token == TOKEN_EQUALS || 
 		token == TOKEN_NOT_EQUALS || 
-		token == TOKEN_GREATER || 
+		token == TOKEN_GREATER ||
+		token == TOKEN_DEF ||
 		token == TOKEN_NOT_GREATER || 
 		token == TOKEN_LESSER || 
 		token == TOKEN_NOT_LESSER || 

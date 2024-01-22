@@ -193,15 +193,17 @@ ASTNode* parseFirst(struct node** curr)
 			else
 			{
 				node = createNewASTnode((*curr)->data);
-			}
-			tok = (*curr)->data;
-			if (tok->type == TOKEN_INPUT_INT || tok->type == TOKEN_INPUT_CHAR || tok->type == TOKEN_INPUT_FLOAT)
-			{
-				(*curr) = (*curr)->next;
+				tok = (*curr)->data;
+				if (tok->type == TOKEN_INPUT_INT || tok->type == TOKEN_INPUT_CHAR || tok->type == TOKEN_INPUT_FLOAT)
+				{
+					(*curr) = (*curr)->next;
+					(*curr) = (*curr)->next;
+				}
 				(*curr) = (*curr)->next;
 			}
 
-			(*curr) = (*curr)->next;
+
+			
 
 			return node;
 		}
