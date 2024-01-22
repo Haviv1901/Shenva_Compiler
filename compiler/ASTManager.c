@@ -50,7 +50,6 @@ ASTNode* buildTree(struct node** FirstNode)
 	else if(firstToken->type == TOKEN_DEF) // function tokens
 	{
 		result->children[EXPRESSION] = buildASTFunctions(FirstNode);
-		*FirstNode = (*FirstNode)->next;
 		result->children[NEXT] = buildTree(FirstNode);
 	}
 	else if (isPrintToken(*firstToken)) // if printToken  , in the future we will add function support

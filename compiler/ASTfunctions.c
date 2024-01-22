@@ -1,6 +1,7 @@
 #pragma once
 #include "ASTfunctions.h"
 
+#include "ASTconditions.h"
 
 
 /**
@@ -29,15 +30,37 @@ ASTNode* buildASTFunctions(struct node** curr)
 	{
 		// in case of function definition
 
-		//result->children[ONLY_CHILD] = createNewASTnode((*curr)->next->data); // first child is the func ID
-		//result->children[ARGUMENT_LIST] = extractArgumentList(curr);
+		result = buildASTFunctions_DefFunctions(curr);
 	}
 
 
 	return result;
 }
 
+ASTNode* buildASTFunctions_DefFunctions(node** curr)
+{
+	Token* tok = (*curr)->data;
+	struct node* node = NULL;
+	ASTNode* result = createNewASTnode((*curr)->data); // Creating the def node
 
+	*curr = (*curr)->next;
+	result->children[FUNC_ID] = createNewASTnode((*curr)->data); // Making the condition in child 1 (0)
+
+	while((*curr)->data->type != TOKEN_LBRACK) // skeeping the arguments
+	{
+		*curr = (*curr)->next;
+	}
+	node = beracketEqualizer(*curr);
+
+	*curr = (*curr)->next; // Going into the code
+	result->children[CODE] = buildTree(curr); // Making the numeric tree there
+
+	*curr = node; // Getting the newline token after the close bracket
+
+
+
+	return result;
+}
 
 
 ASTNode* buildASTFunctions_functionCall(node** node)

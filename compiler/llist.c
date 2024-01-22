@@ -40,22 +40,23 @@ void token_llist_free(llist* list)
     Token* tok = curr->data; 
     while (curr != NULL)
     {
-        tok = curr->data;
-        if (((Token*)(curr->data))->type == TOKEN_NUM)
+        Token* tok = (Token*)curr->data;
+
+        if (tok->type == TOKEN_NUM)
         {
-            free((int*)(((Token*)(curr->data))->value));
+            free((int*)(tok->value));
         }
-        if (((Token*)(curr->data))->type == TOKEN_DECIMAL)
+        if (tok->type == TOKEN_DECIMAL)
         {
-            free((float*)(((Token*)(curr->data))->value));
+            free((float*)(tok->value));
         }
-        if ((((Token*)(curr->data))->type == TOKEN_VAR))
+        if (tok->type == TOKEN_VAR || tok->type == TOKEN_FUNCTION_CALL)
         {
-            free((char*)(((Token*)(curr->data))->value));
+            free((char*)(tok->value));
         }
-        if ((((Token*)(curr->data))->type == TOKEN_LETTER))
+        if (tok->type == TOKEN_LETTER)
         {
-            free((char*)(((Token*)(curr->data))->value));
+            free((char*)(tok->value));
         }
         
         free(curr->data);

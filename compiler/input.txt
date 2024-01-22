@@ -1,13 +1,9 @@
-
-
-ma(2, b(), 3, b())
-
-
-
 def b()
 {
+    printChar('a')
 }
 
 def ma(int a, int b, int c, int d)
 {
+    printChar('b')
 }
