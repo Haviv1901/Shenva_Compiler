@@ -165,6 +165,30 @@ ASTNode* parseFirst(struct node** curr)
 			if((*curr)->data->type == TOKEN_FUNCTION_CALL)
 			{
 				node = buildASTFunctions(curr);
+				(*curr) = (*curr)->next;
+				(*curr) = (*curr)->next;
+
+				int parenthesesEqualizer = 1;
+				Token* currentToken;
+				while (parenthesesEqualizer > 0)
+				{
+					currentToken = (*curr)->data;
+					if (currentToken->type == TOKEN_LPARN)
+					{
+						parenthesesEqualizer++;
+					}
+					else if (currentToken->type == TOKEN_RPARN)
+					{
+						parenthesesEqualizer--;
+					}
+					else if (currentToken->type == TOKEN_ENDL) // should not go in here, but just in case ig
+					{
+						break;
+					}
+
+					(*curr) = (*curr)->next;
+				}
+
 			}
 			else
 			{
@@ -176,9 +200,8 @@ ASTNode* parseFirst(struct node** curr)
 				(*curr) = (*curr)->next;
 				(*curr) = (*curr)->next;
 			}
-			tok = (*curr)->data;
+
 			(*curr) = (*curr)->next;
-			tok = (*curr)->data;
 
 			return node;
 		}
