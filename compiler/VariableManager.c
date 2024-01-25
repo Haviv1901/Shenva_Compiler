@@ -278,7 +278,7 @@ FuncNode* createFunctionList(llist* tokenList)
 				curr = curr->next;			
 				tok = curr->data;
 			}
-			hold = createNewFuncNode(id, paramNum, paramSize);// creating new function node
+			hold = createNewFuncNode(id, paramNum, paramSize, scopeCounter + 1);// creating new function node
 			if (funcListHead == NULL)
 			{
 				funcListHead = hold;
@@ -313,7 +313,15 @@ bool isFuncs(llist* tokenList)
 	return false;
 }
 
+int callGetFuncIndexByName(char* id)
+{
+	return getFuncIndexByName(funcListHead, id);
+}
 
+FuncNode* callGetFunction(char* id)
+{
+	return getFuncByName(funcListHead, id);
+}
 
 VariableList* createVariableListFromToken(llist* tokenList)
 {

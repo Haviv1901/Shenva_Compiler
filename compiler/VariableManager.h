@@ -55,6 +55,9 @@ FuncNode* createFunctionList(llist* tokenList);
 void callDeleteFuncList();
 int isParamNumValid(struct node* curr, int paramNum);
 bool isFunctionsInTheCode(llist* tokenList);
+int callGetFuncIndexByName(char* id);
+FuncNode* callGetFunction(char* id);
+
 // creates a variable list from a token list and run simple checks on the variable declarations
 
 

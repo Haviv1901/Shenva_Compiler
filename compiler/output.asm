@@ -80,104 +80,14 @@ get_char_func  ENDP
 
 
 
-main:
-    push ebp
-    mov ebp, esp
-	finit
-	sub esp, 2
-	fstcw word ptr[esp]
-	mov ax, [esp]
-	and ax, 0FCFFh         
-	or ax, 00C00h
-	mov [esp], ax
-	fldcw word ptr [esp]
-	add esp, 2
 
-
-
-
-call readInt
-push eax
-push 1
-push 1
-sub esp, 1
-push 0
-pop eax
-mov byte ptr [ebp - 13], al
-label_0:
-push [ebp - 8]
-fild dword ptr [esp]
-fstp dword ptr [esp]
+function_0 PROC
+push ebp
+mov ebp, esp
+push [ebp - -8]
+xchg ebp, esi
 push [ebp - 4]
-fild dword ptr [esp]
-fstp dword ptr [esp]
-pop ebx
-pop eax
-xor edx, edx
-cmp eax, ebx
-jg label_2
-mov edx, 1
-label_2:
-mov eax, edx
-push eax
-pop eax
-cmp eax, 0
-je label_1
-push 7
-push [ebp - 8]
-pop ebx
-pop eax
-push eax
-fild dword ptr[esp]
-mov dword ptr [esp], ebx
-fild dword ptr[esp]
-fprem
-fstp dword ptr[esp]
-sub esp, 4
-fstp dword ptr[esp]
-add esp, 4
-push 0
-fild dword ptr [esp]
-fstp dword ptr [esp]
-pop ebx
-pop eax
-xor edx, edx
-cmp eax, ebx
-jne label_5
-mov edx, 1
-label_5:
-mov eax, edx
-push eax
-pop eax
-cmp eax, 0
-je label_4
-push 1
-pop eax
-mov byte ptr [ebp - 13], al
-jmp label_3
-label_4:
-label_3:
-xor eax, eax
-mov al, byte ptr [ebp - 13]
-push eax
-pop eax
-cmp eax, 0
-je label_8
-push -1
-call print_number_signed
-push 0
-pop eax
-mov byte ptr [ebp - 13], al
-jmp label_7
-label_8:
-push [ebp - 8]
-call print_number_signed
-label_7:
-push 10
-pop eax
-call WriteChar
-push [ebp - 8]
-push 1
+xchg ebp, esi
 pop ebx
 pop eax
 push eax
@@ -187,10 +97,29 @@ fild dword ptr[esp]
 fadd
 fstp dword ptr[esp]
 call ConvertFloatToInt
-pop eax
-mov [ebp - 8], eax
-jmp label_0
-label_1:
+call print_number_signed
+xor eax, eax
+label_0:
+mov esp, ebp
+pop ebp
+retn 4
+function_0 ENDP
+main:
+push ebp
+mov ebp, esp
+mov esi, ebp
+finit
+sub esp, 2
+fstcw word ptr[esp]
+mov ax, [esp]
+and ax, 0FCFFh
+or ax, 00C00h
+mov[esp], ax
+fldcw word ptr[esp]
+add esp, 2
+push 3
+push 5
+call function_0
 
 mov esp, ebp
 pop ebp

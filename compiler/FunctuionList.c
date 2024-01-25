@@ -7,7 +7,7 @@ createNewFuncNode: this function will create a new function node
 input: the id, number of parameters and their size
 output: the new node
 */
-FuncNode* createNewFuncNode(char* id, int paramNum, int paramSize)
+FuncNode* createNewFuncNode(char* id, int paramNum, int paramSize, int scope)
 {
 	FuncNode* result = (FuncNode*)malloc(sizeof(FuncNode));
 	if (result == NULL)
@@ -15,6 +15,7 @@ FuncNode* createNewFuncNode(char* id, int paramNum, int paramSize)
 		return NULL;
 	}
 	result->id = id;
+	result->scope = scope;
 	result->paramNum = paramNum;
 	result->paramSize = paramSize;
 	result->next = NULL;
@@ -50,4 +51,25 @@ FuncNode* getFuncByName(FuncNode* head, char* id)
 	}
 	return NULL;
 }
+
+
+
+
+int getFuncIndexByName(FuncNode* head, char* id)
+{
+	FuncNode* curr = head;
+	int result = 0;
+	while (curr)
+	{
+		if (strcmp(curr->id, id) == 0)
+		{
+			return result;
+		}
+		curr = curr->next;
+		result++;
+	}
+	return -1;
+}
+
+
 

@@ -34,5 +34,8 @@ void writeJMPcondition(FILE* asmFile, enum TokenTypes type);
 void writeIfBranch(ASTNode* branch, FILE* asmFile, VariableList* varList, int endLabel);
 void writeLoopBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
+void writeDefs(ASTNode* tree, FILE* asmFile, VariableList* varList);
+int ScopeCountGetter(ASTNode* branch);
+
 
 #endif

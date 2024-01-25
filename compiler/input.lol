@@ -1,13 +1,7 @@
-int a = 4
-def a(int b)
+int b = 3
+
+def a(int a)
 {
-	return b + 3
-}
-
-
-
-def b(int b)
-{
-	return b + 3
+	printInt(a + b)
 }
 
