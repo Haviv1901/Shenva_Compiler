@@ -57,6 +57,8 @@ int isParamNumValid(struct node* curr, int paramNum);
 bool isFunctionsInTheCode(llist* tokenList);
 int callGetFuncIndexByName(char* id);
 FuncNode* callGetFunction(char* id);
+VariableList* getFuncFirstParameterNode(VariableList* varList, int funcScope);
+
 
 // creates a variable list from a token list and run simple checks on the variable declarations
 

@@ -370,7 +370,7 @@ void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varLis
 				fprintf(asmFile, "call ConvertFloatToInt\n");
 			}
 			fprintf(asmFile, "pop eax\n");
-			fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
+			fprintf(asmFile, "mov byte ptr [esp], al\n");
 		}
 		else
 		{
@@ -434,37 +434,41 @@ int writeLogicalBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 
 
 
-
+/*
+ScopeCountGetter: this function will get the number of scopes from a tree
+input: the branch to collect scopes
+output: all of the scopes including the current one
+*/
 int ScopeCountGetter(ASTNode* branch)
 {
 	int result = 1;
 	ASTNode* curr = branch, *holder = NULL;
-	while (curr)
+	while (curr)// while can still scan
 	{
 		if (curr->children[EXPRESSION]->token->type == TOKEN_IF)
 		{
-			result += ScopeCountGetter(curr->children[EXPRESSION]->children[CODE_BLOCK]);
-			holder = curr->children[EXPRESSION]->children[ELSE];
+			result += ScopeCountGetter(curr->children[EXPRESSION]->children[CODE_BLOCK]);// getting scopes
+			holder = curr->children[EXPRESSION]->children[ELSE];//checking for else
 			while (holder)
 			{
-				if (holder->children[LEAF] != NULL && holder->children[LEAF]->token == NULL)
+				if (holder->children[LEAF] != NULL && holder->children[LEAF]->token == NULL)//if a virgin else
 				{
-					result += ScopeCountGetter(holder->children[LEAF]);
+					result += ScopeCountGetter(holder->children[LEAF]);//get leaf
 					holder = NULL;
 				}
-				else if (holder->children[LEAF] != NULL && holder->children[LEAF]->token->type == TOKEN_IF)
+				else if (holder->children[LEAF] != NULL && holder->children[LEAF]->token->type == TOKEN_IF)// if else if
 				{
 					result += ScopeCountGetter(holder->children[LEAF]->children[CODE_BLOCK]);
-					holder = holder->children[LEAF]->children[ELSE];
+					holder = holder->children[LEAF]->children[ELSE];//going to next else
 				}
 				else
 				{
-					result++;
+					result++;// empty else
 					holder = NULL;
 				}
 			}
 		}
-		else if (curr->children[EXPRESSION]->token->type == TOKEN_WHILE)
+		else if (curr->children[EXPRESSION]->token->type == TOKEN_WHILE)// getting scopes from while and defs
 		{
 			result += ScopeCountGetter(curr->children[EXPRESSION]->children[CODE_BLOCK]);
 		}
@@ -573,6 +577,8 @@ output: non
 int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
 	Variable* var = NULL;
+	VariableList* firstParam = NULL;
+	int funcScope = 0;
 	bool isGlobalVar = false;
 	if (branch->token->type == TOKEN_NUM)
 	{
@@ -643,7 +649,12 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	}
 	if (branch->token->type == TOKEN_FUNCTION_CALL)
 	{
-		
+		funcScope = callGetFunction(branch->token->value)->scope;
+		firstParam = getFuncFirstParameterNode(varList, funcScope);
+		writeParams(branch->children[LEAF], firstParam, funcScope, asmFile, varList);
+		fprintf(asmFile, "call function_%d\n", callGetFuncIndexByName(branch->token->value));
+		fprintf(asmFile, "push eax\n");
+		return true;
 	}
 	// token is an operator:
 
@@ -657,6 +668,44 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 
 	return true;
 }
+
+
+void writeParams(ASTNode* paramBranch, VariableList* paramPtr, int funcScope, FILE* asmFile, VariableList* varlist)
+{
+	if (paramPtr == NULL || paramPtr->var->scope != funcScope)
+	{
+		return;
+	}
+	writeParams(paramBranch->children[NEXT], paramPtr->next, funcScope, asmFile, varlist);
+	bool isParamFloat = writeLogicalBranch(paramBranch->children[EXPRESSION], asmFile, varlist);
+	Variable* parameter = paramPtr->var;
+	if (isParamFloat)
+	{
+		if (parameter->Type != VAR_FLOAT)
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+		}
+	}
+	else
+	{
+		if (parameter->Type == VAR_FLOAT)
+		{
+			fprintf(asmFile, "fild dword ptr [esp]\n");
+			fprintf(asmFile, "fstp dword ptr [esp]\n");
+		}
+	}
+
+	if (parameter->Type == VAR_BOOL || parameter->Type == VAR_CHAR)
+	{
+		fprintf(asmFile, "pop eax\n");
+		fprintf(asmFile, "sub esp, 1\n");
+		fprintf(asmFile, "mov byte ptr [esp], al\n");
+	}
+	return;
+}
+
+
+
 
 int isInputToken(Token token)
 {

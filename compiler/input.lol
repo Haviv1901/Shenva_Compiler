@@ -1,7 +1,15 @@
 int b = 3
 
-def a(int a)
+def printCharFor(int numberOfTimesToPrintChar, char charToPrint)
 {
-	printInt(a + b)
+	for (numberOfTimesToPrintChar > 0, numberOfTimesToPrintChar -= 1)
+	{
+		printChar(charToPrint)
+	}
 }
+
+
+printCharFor(10, 'a')
+printCharFor(10, 'b')
+
 

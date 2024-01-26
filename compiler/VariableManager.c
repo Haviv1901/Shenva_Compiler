@@ -318,6 +318,32 @@ int callGetFuncIndexByName(char* id)
 	return getFuncIndexByName(funcListHead, id);
 }
 
+
+
+/*
+getFuncFirstParameterNode: this function will return a pointer to the first parameter in the varlist of a function scope 
+inpiut: the var list, and the scope of the function to look for
+output: the ptr to the first parameter in the list
+*/
+VariableList* getFuncFirstParameterNode(VariableList* varList, int funcScope)
+{
+	VariableList* curr = varList;
+	while (curr)
+	{
+		if (curr->var->scope == funcScope && curr->var->placeInMemory < 0)
+		{
+			return curr;
+		}
+
+
+		curr = curr->next;
+	}
+	return NULL;
+}
+
+
+
+
 FuncNode* callGetFunction(char* id)
 {
 	return getFuncByName(funcListHead, id);
