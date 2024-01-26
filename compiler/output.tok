@@ -1,31 +1,95 @@
-i
-v b
-=
-1 3
-9
-9
 D
-v printCharFor
+v isNumContainsSeven
 6
 i
-v numberOfTimesToPrintChar
-,
-c
-v charToPrint
+v num
 7
 9
 {
 9
-F
+w
 6
-v numberOfTimesToPrintChar
+v num
 G
 1 0
-,
-v numberOfTimesToPrintChar
+7
+9
+{
+9
+I
+6
+v num
+%
+1 10
+S
+1 7
+7
+9
+{
+9
+r
+1 1
+9
+}
+9
+v num
 =
-v numberOfTimesToPrintChar
-3
+v num
+5
+1 10
+9
+}
+9
+r
+1 0
+9
+}
+9
+9
+9
+9
+D
+v sevenBoom
+6
+i
+v num
+7
+9
+{
+9
+i
+v i
+=
+1 1
+9
+F
+6
+v i
+O
+v num
+,
+v i
+=
+v i
+2
+1 1
+7
+9
+{
+9
+I
+6
+v i
+%
+1 7
+S
+1 0
+o
+v isNumContainsSeven
+6
+v i
+7
+S
 1 1
 7
 9
@@ -33,7 +97,31 @@ v numberOfTimesToPrintChar
 9
 h
 6
-v charToPrint
+l 'B'
+,
+l 'O'
+,
+l 'O'
+,
+l 'M'
+7
+9
+}
+9
+E
+9
+{
+9
+8
+6
+v i
+7
+9
+}
+9
+h
+6
+l '\n'
 7
 9
 }
@@ -42,19 +130,28 @@ v charToPrint
 9
 9
 9
-v printCharFor
+9
+v sevenBoom
 6
-1 10
-,
-l 'a'
+j
+6
+7
 7
 9
-v printCharFor
+v sevenBoom
 6
-1 10
-,
-l 'b'
+j
+6
 7
+7
+9
+v sevenBoom
+6
+j
+6
+7
+7
+9
 9
 9
 9

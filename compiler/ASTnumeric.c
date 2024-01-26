@@ -132,9 +132,9 @@ ASTNode* parseSecond(struct node** curr)
 		}
 		else
 		{
-			node->children[1] = holder;
+			node->children[0] = holder;
 			(*curr) = (*curr)->next;
-			node->children[0] = parseFirst(curr);
+			node->children[1] = parseFirst(curr);
 			holder = node;
 		}
 	}

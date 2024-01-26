@@ -48,16 +48,20 @@ void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList)
 {
 	char* asmPath = NULL;
 	asmPath = (char*)calloc(strlen(fileName) + 5, sizeof(char));
+	int mainEndLabel = 0;
 
 	strcpy(asmPath, fileName);
 	strcat(asmPath, ".asm");
 	FILE* asmFile = openFile(asmPath, "w");
 
 	copyBoneFile(asmFile, FIRST); // copy first half of the basic functions and start of main
+	mainEndLabel = lableNum;
+	lableNum++;
 	writeDefs(tree, asmFile, varList);
 	fprintf(asmFile, "main:\npush ebp\nmov ebp, esp\nmov esi, ebp\nfinit\nsub esp, 2\nfstcw word ptr[esp]\nmov ax, [esp]\nand ax, 0FCFFh\nor ax, 00C00h\nmov[esp], ax\nfldcw word ptr[esp]\nadd esp, 2\n");
+	funcEndLabel = mainEndLabel;
 	writeBranch(tree, asmFile, varList); // write instructions from the ast
-
+	fprintf(asmFile, "label_%d:\n", mainEndLabel);
 	copyBoneFile(asmFile, SECOND); // copy the second half
 	free(asmPath);
 	fclose(asmFile);
@@ -86,6 +90,7 @@ void writeDefs(ASTNode* tree, FILE* asmFile, VariableList* varList)
 			fprintf(asmFile, "mov ebp, esp\n");
 			isInFunc = true;
 			currentScope = func->scope;
+			ScopeCounter = func->scope;
 			writeBranch(curr->children[EXPRESSION]->children[CODE_BLOCK], asmFile, varList);
 			isInFunc = false;
 			currentScope = 0;
@@ -156,9 +161,27 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 	{
 		writeConditionBranch(tree, asmFile, varList);
 	}
-	else if (currentToken == TOKEN_DEF)
+	else if (currentToken->type == TOKEN_DEF)
 	{
 		ScopeCounter += ScopeCountGetter(tree->children[CODE]);
+	}
+	else if (currentToken->type == TOKEN_RETURN)
+	{
+		if (tree->children[LEAF] != NULL)
+		{
+			isLastValFloat = writeLogicalBranch(tree->children[LEAF], asmFile, varList);
+			if (!isLastValFloat)
+			{
+				fprintf(asmFile, "fild dword ptr [esp]\n");
+				fprintf(asmFile, "fstp dword ptr [esp]\n");
+				fprintf(asmFile, "pop eax\n");
+			}
+		}
+		else
+		{
+			fprintf(asmFile, "mov eax, 0\n");
+		}
+		fprintf(asmFile, "jmp label_%d\n", funcEndLabel);
 	}
 	if (next != NULL)
 	{
@@ -672,7 +695,7 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 
 void writeParams(ASTNode* paramBranch, VariableList* paramPtr, int funcScope, FILE* asmFile, VariableList* varlist)
 {
-	if (paramPtr == NULL || paramPtr->var->scope != funcScope)
+	if (paramPtr == NULL || paramPtr->var->scope != funcScope || paramPtr->var->placeInMemory >= 0)
 	{
 		return;
 	}

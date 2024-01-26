@@ -1,15 +1,39 @@
-int b = 3
-
-def printCharFor(int numberOfTimesToPrintChar, char charToPrint)
+def isNumContainsSeven(int num)
 {
-	for (numberOfTimesToPrintChar > 0, numberOfTimesToPrintChar -= 1)
+	while(num > 0)
 	{
-		printChar(charToPrint)
+		if (num % 10 == 7)
+		{
+			return true
+		}
+		num /= 10
+	}
+	return false
+}
+
+
+
+def sevenBoom(int num)
+{
+	int i = 1
+	for (i <= num, i+= 1)
+	{
+		if (i % 7 == 0 or isNumContainsSeven(i) == 1)
+		{
+			printChar('B', 'O', 'O', 'M')
+		}
+		else
+		{
+			printInt(i)
+		}
+		printChar('\n')
 	}
 }
 
 
-printCharFor(10, 'a')
-printCharFor(10, 'b')
+
+sevenBoom(intInput())
+
+
 
 
