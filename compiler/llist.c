@@ -167,20 +167,35 @@ void llist_push(llist* list, void* data)
     }
 }
 
-void* llist_pop(llist* list)
+void llist_pop(llist* list)
 {
-    void* popped_data;
     struct node* head = *list;
+    if (head == NULL)
+    {
+        return;
+    }
+    if (head->next == NULL)
+    {
+        if (head->data->value != NULL)
+        {
+            free(head->data->value);
+        }
+        free(head->data);
+        free(head);
+        return;
+    }
 
-    if (list == NULL || head->data == NULL)
-        return NULL;
-
-    popped_data = head->data;
-    *list = head->next;
-
-    free(head);
-
-    return popped_data;
+    while (head->next->next)
+    {
+        head = head->next;
+    }
+    if (head->next->data->value != NULL)
+    {
+        free(head->next->data->value);
+    }
+    free(head->next->data);
+    free(head->next);
+    head->next = NULL;
 }
 
 void llist_print_reverse(llist* list, void (*print)(void*))
@@ -196,6 +211,20 @@ void llist_print_reverse(llist* list, void (*print)(void*))
 }
 
 
+Token* llist_get_last_tok(llist* list)
+{
+    struct node* curr = *list;
+    if (!curr)
+    {
+        return NULL;
+    }
+    while (curr->next != NULL)
+    {
+        curr = curr->next;
+    }
+    return curr->data;
+
+}
 
 
 void llist_print(llist* list, void (*print)(void*))

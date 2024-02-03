@@ -382,6 +382,33 @@ llist* extractToken(FILE* file)
 				}
 				break;
 
+			case TOKEN_REFERENCE:
+				if (llist_get_last_tok(tokenList)->type == TOKEN_DEREFERENCE)
+				{
+					llist_pop(tokenList);
+					free(token);
+					continue;
+				}
+				else
+				{
+					token->type = TOKEN_REFERENCE;
+					token->value = NULL;
+				}
+				break;
+			case TOKEN_DEREFERENCE:
+				if (llist_get_last_tok(tokenList)->type == TOKEN_REFERENCE)
+				{
+					llist_pop(tokenList);
+					free(token);
+					continue;
+				}
+				else
+				{
+					token->type = TOKEN_DEREFERENCE;
+					token->value = NULL;
+				}
+				break;
+
 			case TOKEN_COMMA: // ,
 				if (isDefLine || (!isPrintLine && !isDecLine)) 
 				{
@@ -608,6 +635,23 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_RETURN)
 	{
 		printf("return");
+	}
+	else if (token->type == TOKEN_REFERENCE)
+	{
+		printf("&");
+	}
+	else if (token->type == TOKEN_DEREFERENCE)
+	{
+		printf("^");
+	}
+	else if (token->type == TOKEN_LIND)
+	{
+		printf("[");
+
+	}
+	else if (token->type == TOKEN_RIND)
+	{
+		printf("]");
 	}
 	else
 	{
