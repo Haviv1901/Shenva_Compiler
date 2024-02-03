@@ -93,9 +93,19 @@ void set_output_file(FILE* file) {
 "if"	  { fprintf(outputFile, "I\n"); return IF;}
 "em"	  { fprintf(outputFile, "I\n"); return IF;}
 "else"	  { fprintf(outputFile, "E\n"); return ELSE;}
-"aheret"	  { fprintf(outputFile, "E\n"); return ELSE;}
+"aheret"  { fprintf(outputFile, "E\n"); return ELSE;}
+"while"	  { fprintf(outputFile, "w\n"); return WHILE;}
+"colOd"	  { fprintf(outputFile, "w\n"); return WHILE;}
+"for"	  { fprintf(outputFile, "F\n"); return FOR;}
+"avor"	  { fprintf(outputFile, "F\n"); return FOR;}
 "{"	  { fprintf(outputFile, "{\n"); return LBRACK;}
 "}"	  { fprintf(outputFile, "}\n"); return RBRACK;}
+"def" { fprintf(outputFile, "D\n"); return DEF;}
+"func" { fprintf(outputFile, "D\n"); return DEF;}
+"functzia" { fprintf(outputFile, "D\n"); return DEF;}
+"return" { fprintf(outputFile, "r\n"); return RETURN;}
+"hahzara" { fprintf(outputFile, "r\n"); return RETURN;}
+
 
 
 [a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); strcpy(lastIdentifier, yytext); return VAR; }

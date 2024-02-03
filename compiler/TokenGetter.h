@@ -9,7 +9,7 @@
 struct node;
 typedef struct node* llist;
 
-enum {NEW_LINE_CHARACTER = 10, DOT_CHARACTER = '.' };
+enum {NEW_LINE_CHARACTER = 10, DOT_CHARACTER = '.' , SPACE_CHARACTER = ' ', NOTHING_CHARACTER = 0 };
 
 enum TokenTypes {TOKEN_ERROR = '0', TOKEN_NUM = '1', TOKEN_DECIMAL = 'd', TOKEN_ADD = '2', TOKEN_SUB = '3',
 				 TOKEN_MUL = '4', TOKEN_DIV = '5', TOKEN_LPARN = '6', TOKEN_RPARN = '7', 
@@ -21,7 +21,8 @@ enum TokenTypes {TOKEN_ERROR = '0', TOKEN_NUM = '1', TOKEN_DECIMAL = 'd', TOKEN_
 				 TOKEN_INPUT_CHAR = 'L', TOKEN_EQUALS = 'S', TOKEN_NOT_EQUALS = 'U', TOKEN_GREATER = 'G', TOKEN_NOT_GREATER = 'H',
 				 TOKEN_LESSER = 'K', TOKEN_NOT_LESSER = 'M', TOKEN_GREATER_EQUALS = 'N', TOKEN_LESSER_EQUALS = 'O',
 				 TOKEN_NOT = '!', TOKEN_OR = 'o', TOKEN_AND = 'a', TOKEN_IF = 'I', TOKEN_ELSE = 'E', TOKEN_LBRACK = '{',
-				 TOKEN_RBRACK = '}'
+				 TOKEN_RBRACK = '}', TOKEN_WHILE = 'w', TOKEN_FOR = 'F', TOKEN_DEF = 'D', TOKEN_RETURN = 'r',
+				 TOKEN_FUNCTION_CALL = 'V'
 };
 
 #endif 
@@ -38,9 +39,10 @@ struct Token
 llist* extractToken(FILE* file);
 void printToken(Token* token);
 
-float extractNumber(char charFromfile, FILE* file);
-char* extractIdentifier(char charFromfile, FILE* file);
-void* extractLetter(char charFromfile, FILE* file);
+int extractNumber(FILE* file);
+bool checkForFunction(FILE* file);
+char* extractIdentifier(FILE* file);
+void* extractLetter(FILE* file);
 
 
 

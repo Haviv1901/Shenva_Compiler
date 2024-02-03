@@ -11,5 +11,7 @@
 #endif
 
 ASTNode* buildASTFunctions(struct node** curr);
+ASTNode* buildASTFunctions_functionCall(node** node);
+ASTNode* buildASTFunctions_DefFunctions(node** node);
 
 ASTNode* buildASTFunctions_print(struct node** curr);

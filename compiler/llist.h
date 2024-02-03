@@ -11,7 +11,7 @@
 #define LLIST_H
 #include "TokenGetter.h"
 struct node {
-    void* data; // TODO: check if possible to change to token
+    Token* data; 
     struct node* next;
 }typedef node;
 

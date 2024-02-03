@@ -15,7 +15,7 @@ FILE* errorFile;
 %token ADD SUB MUL DIV MOD
 %token LPAREN RPAREN
 %token EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS NOT OR AND
-%token IF ELSE LBRACK RBRACK
+%token IF ELSE LBRACK RBRACK WHILE FOR
 %token <str> ERROR
 %token PRINTINT PRINTCHAR PRINTFLOAT COMMA INTINPUT FLOATINPUT CHARINPUT
 %token TRUE FALSE
@@ -24,6 +24,7 @@ FILE* errorFile;
 %token INT CHAR FLOAT
 %token VAR
 %token ADDEQ SUBEQ MULEQ DIVEQ MODEQ
+%token DEF RETURN
 %left ADD SUB
 %left MUL DIV MOD
 %left EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS OR AND
@@ -32,8 +33,36 @@ FILE* errorFile;
 %%
 
 
-program : blocks
+program : lines
         ;
+		
+lines: line
+	| lines line
+	;
+		
+line : function
+	| block
+	 ;
+	 
+
+	
+	
+	
+function: DEF VAR LPAREN parameterList RPAREN empty_space LBRACK blocks RBRACK ENDL
+	|	DEF VAR LPAREN RPAREN empty_space LBRACK blocks RBRACK ENDL
+	;
+
+
+parameterList: INT VAR
+		| CHAR VAR
+		| BOOL VAR
+		| FLOAT VAR
+		| parameterList COMMA INT VAR
+		| parameterList COMMA CHAR VAR
+		| parameterList COMMA BOOL VAR
+		| parameterList COMMA FLOAT VAR
+		;
+
 
 blocks : block
         | blocks block
@@ -42,8 +71,12 @@ blocks : block
 block : statement
 		| condition
 		;
-		
+
 condition : IF LPAREN expression RPAREN empty_space LBRACK blocks RBRACK ENDL else_part
+		  |	WHILE LPAREN expression RPAREN empty_space LBRACK blocks RBRACK ENDL
+		  | FOR LPAREN expression COMMA expression RPAREN empty_space LBRACK blocks RBRACK ENDL
+ 		  | FOR LPAREN expression COMMA assignment RPAREN empty_space LBRACK blocks RBRACK ENDL
+
           ;
 
 else_part : ELSE empty_space LBRACK blocks RBRACK ENDL
@@ -58,12 +91,19 @@ empty_space : ENDL
 statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
 		  |  PRINTCHAR LPAREN expression_list RPAREN  ENDL { /* Handle print statement */ }
 		  |  PRINTFLOAT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
+		  | RETURN expression ENDL
+		  | RETURN ENDL
 		  | expression ENDL
           | declaration ENDL
           | assignment ENDL
 		  | ENDL
           | ERROR {fprintf(errorFile, "syntax error, unrecognized \"%s\" in the code (line %d)\n", $1, yylineno);}
           ;
+		  
+		  
+		  
+		  
+
 		
 declaration : INT decleration_list
             | CHAR decleration_list
@@ -125,6 +165,8 @@ numeric_expression : NUM
 		   | LETTER
 		   | DECIMAL
 		   | input LPAREN RPAREN
+		   | VAR LPAREN expression_list RPAREN
+		   | VAR LPAREN RPAREN
            | numeric_expression ADD numeric_expression { /* Handle addition here */ }
            | numeric_expression SUB numeric_expression { /* Handle subtraction here */ }
            | numeric_expression MUL numeric_expression { /* Handle multiplication here */ }
@@ -201,6 +243,11 @@ int yyerror(char *msg)
 			fprintf(errorFile, "letter");
 			i += 5;
 		}
+		else if (strncmp(msg + i, "FOR", 3) == 0)
+		{
+			fprintf(errorFile, "for");
+			i += 2;
+		}
 		else if (strncmp(msg + i, "ADDEQ", 5) == 0)
 		{
 			fprintf(errorFile, "\"+=\"");
@@ -220,6 +267,11 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "\"-=\"");
 			i += 9;
+		}
+		else if (strncmp(msg + i, "RETURN",6) == 0)
+		{
+			fprintf(errorFile, "return");
+			i += 5;
 		}
 		else if (strncmp(msg + i, "CHARINPUT", 9) == 0)
 		{
@@ -400,6 +452,11 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "bool");
 			i += 3;
+		}
+		else if (strncmp(msg + i, "WHILE", 5) == 0)
+		{
+			fprintf(errorFile, "while");
+			i += 4;
 		}
 		else
 		{

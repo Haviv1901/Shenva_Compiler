@@ -31,7 +31,12 @@ int getIEEE754(float val);
 int writeLogicalBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 int writeBooleanBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 void writeJMPcondition(FILE* asmFile, enum TokenTypes type);
+void writeIfBranch(ASTNode* branch, FILE* asmFile, VariableList* varList, int endLabel);
+void writeLoopBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
+void writeDefs(ASTNode* tree, FILE* asmFile, VariableList* varList);
+int ScopeCountGetter(ASTNode* branch);
+void writeParams(ASTNode* paramBranch, VariableList* paramPtr, int funcScope, FILE* asmFile, VariableList* varlist);
 
 
 

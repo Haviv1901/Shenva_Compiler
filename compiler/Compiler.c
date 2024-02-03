@@ -49,6 +49,7 @@ void Compile(char* inputFileName, char* outputFileName)
 	callDeleteScopeTree();
 	token_llist_free(tokenList);
 	deleteVariableList(varList);
+	callDeleteFuncList();
 
 }
 

@@ -1,6 +1,8 @@
 #pragma once
 #include "ASTnumeric.h"
 
+#include "ASTfunctions.h"
+
 
 /**
  * \brief function to build AST from numeric expressions
@@ -121,12 +123,20 @@ ASTNode* parseSecond(struct node** curr)
 	{
 
 		node = createNewASTnode((Token*)(*curr)->data);
-		node->children[0] = holder;
-		(*curr) = (*curr)->next;
-		node->children[1] = parseFirst(curr);
-		holder = node;
-
-
+		if (((Token*)(*curr)->data)->type == TOKEN_MODULO)
+		{
+			node->children[1] = holder;
+			(*curr) = (*curr)->next;
+			node->children[0] = parseFirst(curr);
+			holder = node;
+		}
+		else
+		{
+			node->children[0] = holder;
+			(*curr) = (*curr)->next;
+			node->children[1] = parseFirst(curr);
+			holder = node;
+		}
 	}
 	return node;
 }
@@ -134,6 +144,7 @@ ASTNode* parseSecond(struct node** curr)
 // Function to parse a factor.
 ASTNode* parseFirst(struct node** curr)
 {
+	Token* tok = NULL;
 	if ((*curr) != NULL && ((Token*)(*curr)->data)->type != TOKEN_ENDL)
 	{
 		if (((Token*)(*curr)->data)->type == TOKEN_LPARN)
@@ -149,10 +160,53 @@ ASTNode* parseFirst(struct node** curr)
 		}
 		else
 		{
-			// It's a number or var
-			ASTNode* node = createNewASTnode((Token*)(*curr)->data);
-			(*curr) = (*curr)->next;
+			// It's a number or var or a function call.
+			ASTNode* node;
+			if((*curr)->data->type == TOKEN_FUNCTION_CALL)
+			{
+				node = buildASTFunctions(curr);
+				(*curr) = (*curr)->next;
+				(*curr) = (*curr)->next;
+
+				int parenthesesEqualizer = 1;
+				Token* currentToken;
+				while (parenthesesEqualizer > 0)
+				{
+					currentToken = (*curr)->data;
+					if (currentToken->type == TOKEN_LPARN)
+					{
+						parenthesesEqualizer++;
+					}
+					else if (currentToken->type == TOKEN_RPARN)
+					{
+						parenthesesEqualizer--;
+					}
+					else if (currentToken->type == TOKEN_ENDL) // should not go in here, but just in case ig
+					{
+						break;
+					}
+
+					(*curr) = (*curr)->next;
+				}
+
+			}
+			else
+			{
+				node = createNewASTnode((*curr)->data);
+				tok = (*curr)->data;
+				if (tok->type == TOKEN_INPUT_INT || tok->type == TOKEN_INPUT_CHAR || tok->type == TOKEN_INPUT_FLOAT)
+				{
+					(*curr) = (*curr)->next;
+					(*curr) = (*curr)->next;
+				}
+				(*curr) = (*curr)->next;
+			}
+
+
+			
+
 			return node;
 		}
 	}
+	return NULL;
 }
