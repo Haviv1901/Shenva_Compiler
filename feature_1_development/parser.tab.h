@@ -90,7 +90,11 @@
      MODEQ = 306,
      DEF = 307,
      RETURN = 308,
-     LOWER_THAN_ELSE = 309
+     REFERENCE = 309,
+     DEREFERENCE = 310,
+     LIND = 311,
+     RIND = 312,
+     LOWER_THAN_ELSE = 313
    };
 #endif
 
@@ -109,7 +113,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 113 "parser.tab.h"
+#line 117 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

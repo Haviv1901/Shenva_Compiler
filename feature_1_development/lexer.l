@@ -105,6 +105,13 @@ void set_output_file(FILE* file) {
 "functzia" { fprintf(outputFile, "D\n"); return DEF;}
 "return" { fprintf(outputFile, "r\n"); return RETURN;}
 "hahzara" { fprintf(outputFile, "r\n"); return RETURN;}
+"&" { fprintf(outputFile, "&\n"); return REFERENCE;}
+"^" { fprintf(outputFile, "^\n"); return DEREFERENCE;}
+"[" { fprintf(outputFile, "[\n"); return LIND;}
+"]" { fprintf(outputFile, "]\n"); return RIND;}
+
+
+
 
 
 

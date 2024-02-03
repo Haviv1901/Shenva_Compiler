@@ -25,6 +25,7 @@ FILE* errorFile;
 %token VAR
 %token ADDEQ SUBEQ MULEQ DIVEQ MODEQ
 %token DEF RETURN
+%token REFERENCE DEREFERENCE LIND RIND
 %left ADD SUB
 %left MUL DIV MOD
 %left EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS OR AND
@@ -167,6 +168,9 @@ numeric_expression : NUM
 		   | input LPAREN RPAREN
 		   | VAR LPAREN expression_list RPAREN
 		   | VAR LPAREN RPAREN
+		   | memory_expression VAR
+		   | VAR index_expression
+		   | memory_expression VAR index_expression
            | numeric_expression ADD numeric_expression { /* Handle addition here */ }
            | numeric_expression SUB numeric_expression { /* Handle subtraction here */ }
            | numeric_expression MUL numeric_expression { /* Handle multiplication here */ }
@@ -176,6 +180,17 @@ numeric_expression : NUM
 		   | error 
            ;
 
+memory_expression: REFERENCE
+		| REFERENCE DEREFERENCE
+		| DEREFERENCE
+		| REFERENCE DEREFERENCE memory_expression
+		| DEREFERENCE memory_expression
+		;
+
+
+index_expression: LIND numeric_expression RIND
+	|	LIND numeric_expression RIND index_expression
+	;
 
 %%
 
