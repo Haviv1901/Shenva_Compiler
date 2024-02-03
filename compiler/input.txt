@@ -1,9 +1,9 @@
-
-int a 
-for(a < 3, a +=1)
+def b()
 {
-
-
-	
+    printChar('a')
 }
 
+def ma(int a, int b, int c, int d)
+{
+    printChar('b')
+}

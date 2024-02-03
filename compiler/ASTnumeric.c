@@ -1,6 +1,8 @@
 #pragma once
 #include "ASTnumeric.h"
 
+#include "ASTfunctions.h"
+
 
 /**
  * \brief function to build AST from numeric expressions
@@ -130,9 +132,9 @@ ASTNode* parseSecond(struct node** curr)
 		}
 		else
 		{
-			node->children[1] = holder;
+			node->children[0] = holder;
 			(*curr) = (*curr)->next;
-			node->children[0] = parseFirst(curr);
+			node->children[1] = parseFirst(curr);
 			holder = node;
 		}
 	}
@@ -158,19 +160,53 @@ ASTNode* parseFirst(struct node** curr)
 		}
 		else
 		{
-			// It's a number or var
-			ASTNode* node = createNewASTnode((Token*)(*curr)->data);
-			tok = (*curr)->data;
-			if (tok->type == TOKEN_INPUT_INT || tok->type == TOKEN_INPUT_CHAR || tok->type == TOKEN_INPUT_FLOAT)
+			// It's a number or var or a function call.
+			ASTNode* node;
+			if((*curr)->data->type == TOKEN_FUNCTION_CALL)
 			{
+				node = buildASTFunctions(curr);
 				(*curr) = (*curr)->next;
+				(*curr) = (*curr)->next;
+
+				int parenthesesEqualizer = 1;
+				Token* currentToken;
+				while (parenthesesEqualizer > 0)
+				{
+					currentToken = (*curr)->data;
+					if (currentToken->type == TOKEN_LPARN)
+					{
+						parenthesesEqualizer++;
+					}
+					else if (currentToken->type == TOKEN_RPARN)
+					{
+						parenthesesEqualizer--;
+					}
+					else if (currentToken->type == TOKEN_ENDL) // should not go in here, but just in case ig
+					{
+						break;
+					}
+
+					(*curr) = (*curr)->next;
+				}
+
+			}
+			else
+			{
+				node = createNewASTnode((*curr)->data);
+				tok = (*curr)->data;
+				if (tok->type == TOKEN_INPUT_INT || tok->type == TOKEN_INPUT_CHAR || tok->type == TOKEN_INPUT_FLOAT)
+				{
+					(*curr) = (*curr)->next;
+					(*curr) = (*curr)->next;
+				}
 				(*curr) = (*curr)->next;
 			}
-			tok = (*curr)->data;
-			(*curr) = (*curr)->next;
-			tok = (*curr)->data;
+
+
+			
 
 			return node;
 		}
 	}
+	return NULL;
 }

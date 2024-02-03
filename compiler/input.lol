@@ -1,27 +1,38 @@
-int a = intInput(), b = 1, c = 1
-bool is_boom = false
-
-for (b <= a, b += 1)
+def isNumContainsSeven(int num)
 {
-	if (b % 7 == 0)
+	while(num > 0)
 	{
-		is_boom = true
+		if (num % 10 == 7)
+		{
+			return true
+		}
+		num /= 10
 	}
-	
-	
-	if (is_boom)
-	{
-		printInt(-1)
-		is_boom = false
-	}
-	else
-	{
-		printInt(b)
-	}
-	printChar('\n')
+	return false
 }
 
 
+
+def sevenBoom(int num)
+{
+	int i = 1
+	for (i <= num, i+= 1)
+	{
+		if (i % 7 == 0 or isNumContainsSeven(i) == 1)
+		{
+			printChar('B', 'O', 'O', 'M')
+		}
+		else
+		{
+			printInt(i)
+		}
+		printChar('\n')
+	}
+}
+
+
+
+sevenBoom(intInput())
 
 
 

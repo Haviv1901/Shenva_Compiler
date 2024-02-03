@@ -11,7 +11,9 @@
 #include "ScopeTree.h"
 
 #include <stdbool.h>
-enum VarTypes {VAR_INT, VAR_STRING, VAR_BOOL, VAR_CHAR, VAR_FLOAT, VAR_DOUBLE }; // types of variables
+#include "FunctionList.h"
+enum VarTypes {VAR_INT, VAR_STRING, VAR_BOOL, VAR_CHAR, VAR_FLOAT, VAR_DOUBLE , VAR_ERROR = -1}; // types of variables
+enum ScopeTypes { GLOBAL = 0 }; // types of known scopes
 
 
 struct Variable
@@ -33,7 +35,7 @@ struct VariableList
 void deleteVariableList(VariableList* varList); // deletes allocated memory for the list
 
 int getSizeByType(enum VarTypes type); // returns the size of the type in bytes
-void createNewVariable(char* identifier, enum VarTypes type, VariableList** varList, int scope);
+void createNewVariable(char* identifier, enum VarTypes type, VariableList** varList, int varScope, bool isParameter, int parSize);
 int isVariableExistInScope(VariableList* varList, char* identifier, int varScope);
 int getVariableScope(VariableList* varList, char* identifier);
 bool callIsVariablExist(VariableList* varList, char* identifier, int currentScope);
@@ -49,6 +51,15 @@ void callDeleteScopeTree();
 VariableList* createVariableListFromToken(llist* tokenList);
 int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNode* currentScopeNode);
 bool isVars(llist* tokenList);
+FuncNode* createFunctionList(llist* tokenList);
+void callDeleteFuncList();
+int isParamNumValid(struct node* curr, int paramNum);
+bool isFunctionsInTheCode(llist* tokenList);
+int callGetFuncIndexByName(char* id);
+FuncNode* callGetFunction(char* id);
+VariableList* getFuncFirstParameterNode(VariableList* varList, int funcScope);
+
+
 // creates a variable list from a token list and run simple checks on the variable declarations
 
 

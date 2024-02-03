@@ -1,33 +1,76 @@
-i
-v a
-=
-j
+D
+v isNumContainsSeven
 6
+i
+v num
 7
-,
-v b
-=
-1 1
-,
-v c
-=
+9
+{
+9
+w
+6
+v num
+G
+1 0
+7
+9
+{
+9
+I
+6
+v num
+%
+1 10
+S
+1 7
+7
+9
+{
+9
+r
 1 1
 9
-b
-v is_boom
+}
+9
+v num
 =
+v num
+5
+1 10
+9
+}
+9
+r
 1 0
 9
+}
+9
+9
+9
+9
+D
+v sevenBoom
+6
+i
+v num
+7
+9
+{
+9
+i
+v i
+=
+1 1
 9
 F
 6
-v b
+v i
 O
-v a
+v num
 ,
-v b
+v i
 =
-v b
+v i
 2
 1 1
 7
@@ -36,38 +79,32 @@ v b
 9
 I
 6
-v b
+v i
 %
 1 7
 S
 1 0
+o
+v isNumContainsSeven
+6
+v i
 7
-9
-{
-9
-v is_boom
-=
+S
 1 1
-9
-}
-9
-9
-9
-I
-6
-v is_boom
 7
 9
 {
 9
-8
+h
 6
-1 -1
+l 'B'
+,
+l 'O'
+,
+l 'O'
+,
+l 'M'
 7
-9
-v is_boom
-=
-1 0
 9
 }
 9
@@ -77,7 +114,7 @@ E
 9
 8
 6
-v b
+v i
 7
 9
 }
@@ -89,8 +126,31 @@ l '\n'
 9
 }
 9
+}
 9
 9
+9
+9
+v sevenBoom
+6
+j
+6
+7
+7
+9
+v sevenBoom
+6
+j
+6
+7
+7
+9
+v sevenBoom
+6
+j
+6
+7
+7
 9
 9
 9

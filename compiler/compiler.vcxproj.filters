@@ -63,6 +63,9 @@
     <ClCompile Include="ASTconditions.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FunctuionList.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TokenGetter.h">
@@ -108,6 +111,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ASTconditions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

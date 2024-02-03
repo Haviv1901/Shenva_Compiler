@@ -115,7 +115,8 @@ void deleteAST(ASTNode* head)
 
 int isThreeChildNode(enum TokenTypes token)
 {
-	if (token == TOKEN_IF || token == TOKEN_FOR)
+	if (token == TOKEN_IF  ||
+		token == TOKEN_FOR )
 	{
 		return 1;
 	}
@@ -137,7 +138,8 @@ int isTwoChildNode(enum TokenTypes token)
 		token == TOKEN_AND || 
 		token == TOKEN_EQUALS || 
 		token == TOKEN_NOT_EQUALS || 
-		token == TOKEN_GREATER || 
+		token == TOKEN_GREATER ||
+		token == TOKEN_DEF ||
 		token == TOKEN_NOT_GREATER || 
 		token == TOKEN_LESSER || 
 		token == TOKEN_NOT_LESSER || 
@@ -160,8 +162,10 @@ int isOneChildNode(enum TokenTypes token)
 		token == TOKEN_PRINT_CHAR ||
 		token == TOKEN_PRINT_FLOAT ||
 		token == TOKEN_PRINT_INT ||
-		token == TOKEN_NOT || 
-		token == TOKEN_ELSE)
+		token == TOKEN_NOT ||
+		token == TOKEN_FUNCTION_CALL ||
+		token == TOKEN_ELSE ||
+		token == TOKEN_RETURN)
 	{
 		return 1;
 	}
@@ -218,6 +222,7 @@ int isExpressionToken(Token token)
 		token.type == TOKEN_SUB ||
 		token.type == TOKEN_MUL ||
 		token.type == TOKEN_DIV ||
+		token.type == TOKEN_FUNCTION_CALL ||
 		token.type == TOKEN_MODULO)
 	{
 		return 1;

@@ -1,0 +1,75 @@
+#include "FunctionList.h"
+
+
+
+/*
+createNewFuncNode: this function will create a new function node
+input: the id, number of parameters and their size
+output: the new node
+*/
+FuncNode* createNewFuncNode(char* id, int paramNum, int paramSize, int scope)
+{
+	FuncNode* result = (FuncNode*)malloc(sizeof(FuncNode));
+	if (result == NULL)
+	{
+		return NULL;
+	}
+	result->id = id;
+	result->scope = scope;
+	result->paramNum = paramNum;
+	result->paramSize = paramSize;
+	result->next = NULL;
+	return result;
+}
+
+/*
+deleteFuncList: this function will delete a list of functions
+input: the head of the list
+output: non
+*/
+void deleteFuncList(FuncNode* head)
+{
+	FuncNode* curr = head, * temp = NULL;
+	while (curr)
+	{
+		temp = curr;
+		curr = curr->next;
+		free(temp);
+	}
+}
+
+FuncNode* getFuncByName(FuncNode* head, char* id)
+{
+	FuncNode* curr = head;
+	while (curr)
+	{
+		if (strcmp(curr->id, id) == 0)
+		{
+			return curr;
+		}
+		curr = curr->next;
+	}
+	return NULL;
+}
+
+
+
+
+int getFuncIndexByName(FuncNode* head, char* id)
+{
+	FuncNode* curr = head;
+	int result = 0;
+	while (curr)
+	{
+		if (strcmp(curr->id, id) == 0)
+		{
+			return result;
+		}
+		curr = curr->next;
+		result++;
+	}
+	return -1;
+}
+
+
+
