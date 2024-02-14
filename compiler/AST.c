@@ -165,7 +165,9 @@ int isOneChildNode(enum TokenTypes token)
 		token == TOKEN_NOT ||
 		token == TOKEN_FUNCTION_CALL ||
 		token == TOKEN_ELSE ||
-		token == TOKEN_RETURN)
+		token == TOKEN_RETURN ||
+		token == TOKEN_REFERENCE ||
+		token == TOKEN_DEREFERENCE)
 	{
 		return 1;
 	}
@@ -223,7 +225,9 @@ int isExpressionToken(Token token)
 		token.type == TOKEN_MUL ||
 		token.type == TOKEN_DIV ||
 		token.type == TOKEN_FUNCTION_CALL ||
-		token.type == TOKEN_MODULO)
+		token.type == TOKEN_MODULO ||
+		token.type == TOKEN_REFERENCE || 
+		token.type == TOKEN_DEREFERENCE)
 	{
 		return 1;
 	}

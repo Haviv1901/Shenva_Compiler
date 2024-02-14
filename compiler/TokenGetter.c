@@ -408,6 +408,14 @@ llist* extractToken(FILE* file)
 					token->value = NULL;
 				}
 				break;
+			case TOKEN_LIND:
+				token->type = TOKEN_LIND;
+				token->value = NULL;
+				break;
+			case TOKEN_RIND:
+				token->type = TOKEN_RIND;
+				token->value = NULL;
+				break;
 
 			case TOKEN_COMMA: // ,
 				if (isDefLine || (!isPrintLine && !isDecLine)) 

@@ -1,4 +1,5 @@
-
 int a = 5
-&^a
+printInt(&a)
+
+
 

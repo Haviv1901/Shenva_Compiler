@@ -69,37 +69,44 @@ void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList)
 
 
 /*
-
-
-
+writeDefs: this function will write the functions
+input: the tree, the asmFile, and the var list
+output: non
 */
 void writeDefs(ASTNode* tree, FILE* asmFile, VariableList* varList)
 {
 	ASTNode* curr = tree, *def;
 	FuncNode* func = NULL;
-	while (curr != NULL)
+	while (curr != NULL)// going through the tree
 	{
-		if (curr->children[EXPRESSION]->token->type == TOKEN_DEF)
+		if (curr->children[EXPRESSION]->token->type == TOKEN_DEF)//if a function is found
 		{
 			def = curr->children[EXPRESSION];
-			func = callGetFunction(def->children[FUNC_ID]->token->value);
+			func = callGetFunction(def->children[FUNC_ID]->token->value);//getting the function
+			
 			funcEndLabel = lableNum;
-			lableNum++;
+			lableNum++;//picking lable
+
 			fprintf(asmFile, "function_%d PROC\n", callGetFuncIndexByName(def->children[FUNC_ID]->token->value));
 			fprintf(asmFile, "push ebp\n");
 			fprintf(asmFile, "mov ebp, esp\n");
-			isInFunc = true;
+
+			isInFunc = true;//setting is func to true
 			currentScope = func->scope;
 			ScopeCounter = func->scope;
-			writeBranch(curr->children[EXPRESSION]->children[CODE_BLOCK], asmFile, varList);
+
+			writeBranch(curr->children[EXPRESSION]->children[CODE_BLOCK], asmFile, varList);//writing function body
+
 			isInFunc = false;
 			currentScope = 0;
-			ScopeCounter = 0;
-			fprintf(asmFile, "xor eax, eax\n");
+			ScopeCounter = 0;//reseting scope current and counter
+
+			fprintf(asmFile, "xor eax, eax\n");//writing a function end
 			fprintf(asmFile, "label_%d:\n", funcEndLabel);
 			fprintf(asmFile, "mov esp, ebp\n");
 			fprintf(asmFile, "pop ebp\n");
 			fprintf(asmFile, "retn %d\n", func->paramSize);		
+
 			fprintf(asmFile, "function_%d ENDP\n", callGetFuncIndexByName(def->children[FUNC_ID]->token->value));
 		}
 		curr = curr->children[NEXT];
@@ -650,7 +657,7 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 
 		return false;
 	}
-	if (branch->token->type == TOKEN_INPUT_INT)
+	if (branch->token->type == TOKEN_INPUT_INT)//inputs
 	{
 		fprintf(asmFile, "call readInt\n");
 		fprintf(asmFile, "push eax\n");
@@ -679,7 +686,23 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 		fprintf(asmFile, "push eax\n");
 		return true;
 	}
+	if (branch->token->type == TOKEN_REFERENCE)
+	{
+		if (branch->children[LEAF]->token == TOKEN_DEREFERENCE)
+		{
+			return writeNumericBranch(branch->children[LEAF]->children[LEAF], asmFile, varList);
+		}
+		fprintf(asmFile, "mov eax, ebp\n");
+		fprintf(asmFile, "sub eax, %d\n", getVariableByScope(varList, (char*)(branch->children[LEAF]->token->value), currentScope)->placeInMemory);
+
+		fprintf(asmFile, "push eax\n");
+		return false;
+	}
+
 	// token is an operator:
+
+
+
 
 	bool isEAXdecimal = writeNumericBranch(branch->children[0], asmFile, varList);
 	bool isEBXdecimal = writeNumericBranch(branch->children[1], asmFile, varList);

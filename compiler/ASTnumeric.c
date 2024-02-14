@@ -190,6 +190,12 @@ ASTNode* parseFirst(struct node** curr)
 				}
 
 			}
+			else if ((*curr)->data->type == TOKEN_REFERENCE || (*curr)->data->type == TOKEN_DEREFERENCE)
+			{
+				node = createNewASTnode((*curr)->data);
+				(*curr) = (*curr)->next;
+				node->children[0] = parseFirst(curr);
+			}
 			else
 			{
 				node = createNewASTnode((*curr)->data);
@@ -200,6 +206,10 @@ ASTNode* parseFirst(struct node** curr)
 					(*curr) = (*curr)->next;
 				}
 				(*curr) = (*curr)->next;
+				if ((*curr)->data->type == TOKEN_LIND)
+				{
+					node = parseIndex(curr, node);
+				}
 			}
 
 
@@ -210,3 +220,38 @@ ASTNode* parseFirst(struct node** curr)
 	}
 	return NULL;
 }
+
+
+
+/*
+parsseIndex: this function will parse indexes
+input: the current token of the token list and the addition var
+output: the dereference Node, leading to the addition
+*/
+ASTNode* parseIndex(struct node** curr, ASTNode* var)
+{
+	ASTNode* holder = NULL, *res = NULL;
+
+	(*curr)->data->type = TOKEN_ADD;//changeing the [ to dereference
+	holder = createNewASTnode((*curr)->data);
+	
+	holder->children[0] = var;//seeting var
+	(*curr) = (*curr)->next;
+
+	holder->children[1] = parseLast(curr);//parsing the index input value
+	(*curr)->data->type = TOKEN_DEREFERENCE;
+	
+	res = createNewASTnode((*curr)->data);
+	res->children[0] = holder;//putting all under the dereference
+	(*curr) = (*curr)->next;
+	if ((*curr)->data->type == TOKEN_LIND)//if there is more than one [, for example: <varName>[<val>][<val>]
+	{
+		res = parseIndex(curr, res);//parse the next one
+	}
+	return res;
+}
+
+
+
+
+

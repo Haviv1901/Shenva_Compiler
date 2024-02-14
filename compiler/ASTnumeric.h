@@ -15,3 +15,4 @@ ASTNode* buildASTNumeric(struct node** curr);
 ASTNode* parseBooleanOps(struct node** curr);
 ASTNode* parseLogicalOps(struct node** curr);
 ASTNode* parseNotOp(struct node** curr);
+ASTNode* parseIndex(struct node** curr, ASTNode* var);
