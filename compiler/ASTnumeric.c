@@ -230,20 +230,39 @@ output: the dereference Node, leading to the addition
 */
 ASTNode* parseIndex(struct node** curr, ASTNode* var)
 {
-	ASTNode* holder = NULL, *res = NULL;
 
+	ASTNode* holder = NULL, *res = NULL, *multiplierHolder = NULL;
+	Token* indexMultiplyer = NULL, * mul = NULL;
 	(*curr)->data->type = TOKEN_ADD;//changeing the [ to dereference
 	holder = createNewASTnode((*curr)->data);
 	
 	holder->children[0] = var;//seeting var
 	(*curr) = (*curr)->next;
 
-	holder->children[1] = parseLast(curr);//parsing the index input value
+	indexMultiplyer = (Token*)malloc(sizeof(Token));
+	indexMultiplyer->type = TOKEN_NUM;
+	indexMultiplyer->value = (int*)malloc(sizeof(int));
+	*((int*)(indexMultiplyer->value)) = 4;
+
+	mul = (Token*)malloc(sizeof(Token));
+	mul->type = TOKEN_MUL;
+	mul->value = NULL;
+
+	multiplierHolder = createNewASTnode(mul);
+	multiplierHolder->children[0] = createNewASTnode(indexMultiplyer);
+	multiplierHolder->children[1] = parseLast(curr);
+
+
 	(*curr)->data->type = TOKEN_DEREFERENCE;
 	
+	holder->children[1] = multiplierHolder;//parsing the index input value
+
+
 	res = createNewASTnode((*curr)->data);
 	res->children[0] = holder;//putting all under the dereference
-	(*curr) = (*curr)->next;
+	llist_push(curr, mul);
+	llist_push(curr, indexMultiplyer);
+	(*curr) = (*curr)->next->next->next;
 	if ((*curr)->data->type == TOKEN_LIND)//if there is more than one [, for example: <varName>[<val>][<val>]
 	{
 		res = parseIndex(curr, res);//parse the next one

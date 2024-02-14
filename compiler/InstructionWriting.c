@@ -6,7 +6,7 @@
 
 
 #include "fileHelper.h"
-bool isLastValFloat = false, isInFunc = false;
+bool isLastValFloat = false, isInFunc = false, isLastValMem = false;
 unsigned long lableNum = 0;
 int currentScope = 0;
 int ScopeCounter = 0;
@@ -696,6 +696,25 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 		fprintf(asmFile, "sub eax, %d\n", getVariableByScope(varList, (char*)(branch->children[LEAF]->token->value), currentScope)->placeInMemory);
 
 		fprintf(asmFile, "push eax\n");
+		return false;
+	}
+	if (branch->token->type == TOKEN_DEREFERENCE)
+	{
+		if (branch->children[LEAF]->token == TOKEN_REFERENCE)
+		{
+			return writeNumericBranch(branch->children[LEAF]->children[LEAF], asmFile, varList);
+		}
+
+		if (writeNumericBranch(branch->children[LEAF], asmFile, varList))
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+		}
+		fprintf(asmFile, "pop eax\n");
+		fprintf(asmFile, "xchg eax, esp\n");
+		fprintf(asmFile, "mov ebx, dword ptr [esp]\n");
+		fprintf(asmFile, "xchg eax, esp\n");
+		fprintf(asmFile, "push ebx\n");
+		isLastValMem = true;
 		return false;
 	}
 

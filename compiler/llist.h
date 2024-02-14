@@ -32,7 +32,7 @@ int llist_add_inorder(void* data, llist* list,
     int (*comp)(void*, void*));
 
 /* llist_push: Add to head of list */
-void llist_push(llist* list, void* data);
+void llist_push(llist* list, Token* data);
 
 /* llist_pop: remove and return head of linked list */
 void llist_pop(llist* list);

@@ -143,7 +143,7 @@ void llist_append(llist* list, void* data)
 }
 
 
-void llist_push(llist* list, void* data)
+void llist_push(llist* list, Token* data)
 {
     struct node* head;
     struct node* new_node;
@@ -154,17 +154,16 @@ void llist_push(llist* list, void* data)
 
     head = *list;
 
-    // Head is empty node
-    if (head->data == NULL)
-        head->data = data;
-
-    // Head is not empty, add new node to front
-    else {
-        new_node = malloc(sizeof(struct node));
-        new_node->data = data;
-        new_node->next = head;
-        *list = new_node;
+    new_node = malloc(sizeof(struct node));
+    new_node->data = data;
+    new_node->next = NULL;
+    if (head->next)
+    {
+        new_node->next = head->next;
     }
+    head->next = new_node;
+
+
 }
 
 void llist_pop(llist* list)

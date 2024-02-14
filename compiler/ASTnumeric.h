@@ -6,7 +6,7 @@
 #define ASTNUMERIC_H
 #endif
 
-
+#include <stdlib.h>
 
 ASTNode* parseLast(struct node** curr);
 ASTNode* parseSecond(struct node** curr);
