@@ -123,13 +123,27 @@ expression_list : expression
                ;
 			   
 			   
-assignment : VAR ASSIGN expression
-			| VAR ADDEQ expression
-			| VAR SUBEQ expression
-			| VAR MULEQ expression
-			| VAR DIVEQ expression
-			| VAR MODEQ expression
-           ;
+assignment : VAR equaling expression
+		   | pointer_assign equaling expression
+		   ;
+		   
+pointer_assign: memory_expression VAR
+			| VAR index_expression
+			| memory_expression VAR index_expression
+			;
+
+
+
+
+
+equaling: ASSIGN
+	| ADDEQ
+	| SUBEQ
+	| MULEQ
+	| DIVEQ
+	| MODEQ
+	;
+
 
 input : INTINPUT 
 	  | FLOATINPUT 
@@ -186,7 +200,7 @@ memory_expression: REFERENCE
 		| REFERENCE DEREFERENCE memory_expression
 		| DEREFERENCE memory_expression
 		;
-
+		
 
 index_expression: LIND numeric_expression RIND
 	|	LIND numeric_expression RIND index_expression

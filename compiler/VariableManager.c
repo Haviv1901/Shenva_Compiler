@@ -518,6 +518,12 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 			return 1;
 
 		}
+		else if (currentToken == TOKEN_REFERENCE && curr->next->next->data->type == TOKEN_ASSIGN)
+		{
+			printf("Semantic error: invalid lvalue: &%s\n", (char*)curr->next->data->value);
+			deleteVariableList(varListHead);
+			return 0;
+		}
 		curr = curr->next;
 	}
 

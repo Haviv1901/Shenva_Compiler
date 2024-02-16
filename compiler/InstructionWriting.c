@@ -6,7 +6,7 @@
 
 
 #include "fileHelper.h"
-bool isLastValFloat = false, isInFunc = false, isLastValMem = false;
+bool isLastValFloat = false, isInFunc = false, isLastValMem = false, isAssignToAdress = false;
 unsigned long lableNum = 0;
 int currentScope = 0;
 int ScopeCounter = 0;
@@ -317,6 +317,27 @@ output: non
 void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList) 
 {
 	writeBranch(branch->children[1], asmFile, varList);
+	if (branch->children[0]->token->type != TOKEN_VAR)
+	{
+		if (isLastValFloat)
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+		}
+		isAssignToAdress = true;
+		writeBranch(branch->children[0], asmFile, varList);
+		isAssignToAdress = false;
+		if (isLastValFloat)
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
+		}
+		fprintf(asmFile, "pop ebx\n");
+		fprintf(asmFile, "pop eax\n");
+		fprintf(asmFile, "xchg ebx, esp\n");
+		fprintf(asmFile, "mov dword ptr [esp], eax\n");
+		fprintf(asmFile, "xchg ebx, esp\n");
+		return;
+	}
+
 	if (getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->Type == VAR_CHAR || getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->Type == VAR_BOOL)
 	{
 		if (isLastValFloat)
@@ -688,10 +709,11 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	}
 	if (branch->token->type == TOKEN_REFERENCE)
 	{
-		if (branch->children[LEAF]->token == TOKEN_DEREFERENCE)
+		if (branch->children[LEAF]->token->type == TOKEN_DEREFERENCE)
 		{
 			return writeNumericBranch(branch->children[LEAF]->children[LEAF], asmFile, varList);
 		}
+
 		fprintf(asmFile, "mov eax, ebp\n");
 		fprintf(asmFile, "sub eax, %d\n", getVariableByScope(varList, (char*)(branch->children[LEAF]->token->value), currentScope)->placeInMemory);
 
@@ -700,9 +722,15 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 	}
 	if (branch->token->type == TOKEN_DEREFERENCE)
 	{
-		if (branch->children[LEAF]->token == TOKEN_REFERENCE)
+		if (branch->children[LEAF]->token->type == TOKEN_REFERENCE)
 		{
 			return writeNumericBranch(branch->children[LEAF]->children[LEAF], asmFile, varList);
+		}
+		 
+		if (isAssignToAdress == true)
+		{
+			isAssignToAdress = false;
+			return writeNumericBranch(branch->children[LEAF], asmFile, varList);
 		}
 
 		if (writeNumericBranch(branch->children[LEAF], asmFile, varList))

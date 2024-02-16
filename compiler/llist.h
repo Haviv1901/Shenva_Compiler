@@ -31,6 +31,8 @@ Token* llist_get_last_tok(llist* list);
 int llist_add_inorder(void* data, llist* list,
     int (*comp)(void*, void*));
 
+Token* is_assign_line(struct node** curr);
+
 /* llist_push: Add to head of list */
 void llist_push(llist* list, Token* data);
 

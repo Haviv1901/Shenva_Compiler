@@ -26,8 +26,7 @@ ASTNode* buildTree(struct node** FirstNode)
 
 
 
-	if (isExpressionToken(*firstToken) || // numeric value, or a variable 
-		(firstToken->type == TOKEN_VAR && ((Token*)currentNode->next->data)->type != TOKEN_ASSIGN))
+	if ((isExpressionToken(*firstToken) || firstToken->type == TOKEN_VAR) && is_assign_line(FirstNode) == NULL)
 	{
 
 		currentToken = ((Token*)currentNode->data);
@@ -126,7 +125,7 @@ ASTNode* buildTree(struct node** FirstNode)
 		
 		result->children[NEXT] = buildTree(FirstNode);
 	}
-	else if (firstToken->type == TOKEN_VAR) // if variable id
+	else if (is_assign_line(FirstNode)) // if variable id
 	{
 
 		result->children[EXPRESSION] = buildASTVariables(FirstNode);

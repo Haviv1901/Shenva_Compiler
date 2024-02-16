@@ -225,6 +225,25 @@ Token* llist_get_last_tok(llist* list)
 
 }
 
+Token* is_assign_line(struct node** curr)
+{
+    struct node* node = *curr;
+    while (node != NULL)
+    {
+        if (node->data->type == TOKEN_ASSIGN)
+        {
+            return node->data;
+        }
+        if (node->data->type == TOKEN_ENDL)
+        {
+            return NULL;
+        }
+
+        node = node->next;
+    }
+    return NULL;
+}
+
 
 void llist_print(llist* list, void (*print)(void*))
 {

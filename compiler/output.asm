@@ -94,16 +94,20 @@ or ax, 00C00h
 mov[esp], ax
 fldcw word ptr[esp]
 add esp, 2
+push 0
 push 8
-mov eax, ebp
-sub eax, 4
-push eax
 mov eax, ebp
 sub eax, 8
 push eax
-push [ebp - 12]
+mov eax, ebp
+sub eax, 12
+push eax
+push [ebp - 8]
+call print_number_signed
+push 7
+push [ebp - 16]
 push 4
-push 1
+push 0
 pop ebx
 pop eax
 push eax
@@ -126,6 +130,31 @@ xchg eax, esp
 mov ebx, dword ptr [esp]
 xchg eax, esp
 push ebx
+push 4
+push 1
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov dword ptr [esp], eax
+xchg ebx, esp
+push [ebp - 4]
 call print_number_signed
 label_0:
 
