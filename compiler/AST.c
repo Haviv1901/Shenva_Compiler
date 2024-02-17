@@ -198,7 +198,25 @@ int isPrintToken(Token token)
 	return 0;
 }
 
+// checks if a token is a variable type.
 int isVariableToken(Token token)
+{
+	return isNormalVariableToken(token) || isPointerVariableToken(token);
+}
+
+int isPointerVariableToken(Token token)
+{
+	if (token.type == TOKEN_FLOAT_POINTER ||
+		token.type == TOKEN_BOOL_POINTER ||
+		token.type == TOKEN_CHAR_POINTER ||
+		token.type == TOKEN_INT_POINTER)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+int isNormalVariableToken(Token token)
 {
 	if (token.type == TOKEN_INT ||
 		token.type == TOKEN_CHAR ||
@@ -209,6 +227,7 @@ int isVariableToken(Token token)
 	}
 	return 0;
 }
+
 
 int isExpressionToken(Token token)
 {

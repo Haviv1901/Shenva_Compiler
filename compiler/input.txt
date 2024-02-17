@@ -1,9 +1,5 @@
-def b()
-{
-    printChar('a')
-}
+pInt b
+pChar d
+pFloat g
+pBool sd
 
-def ma(int a, int b, int c, int d)
-{
-    printChar('b')
-}

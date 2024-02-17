@@ -39,6 +39,47 @@ void copyBoneFile(FILE* asmFile, bool boneFileNumber)
 	fclose(boneFile);
 }
 
+
+// function will open the main in the asm file.
+void writeMain(char* asmFile)
+{
+	fprintf(asmFile, "main:\n"
+	"push ebp\n"
+    "mov ebp, esp\n"
+    "mov esi, ebp\n"
+    "finit\n"
+    "sub esp, 2\n"
+    "fstcw word ptr[esp]\n"
+    "mov ax, [esp]\n"
+    "and ax, 0FCFFh\n"
+    "or ax, 00C00h\n"
+    "mov[esp], ax\n"
+    "fldcw word ptr[esp]\n"
+    "add esp, 2\n");
+}
+
+
+void startWriting(ASTNode* tree, const char* fileName, VariableList* varList, char* asmFile)
+{
+	int mainEndLabel = 0;
+
+	// copy first half of the basic functions and start of main
+	copyBoneFile(asmFile, FIRST); 
+	mainEndLabel = lableNum;
+	lableNum++;
+
+	// write fuinctions
+	writeDefs(tree, asmFile, varList);
+	// open main function
+	writeMain(asmFile);
+	funcEndLabel = mainEndLabel;
+	// write instructions from the ast
+	writeBranch(tree, asmFile, varList);
+	fprintf(asmFile, "label_%d:\n", mainEndLabel);
+	// close the main function and the asm program
+	copyBoneFile(asmFile, SECOND); 
+}
+
 /**
  * \brief function will convert the AST to assembly code
  * \param tree AST
@@ -48,24 +89,18 @@ void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList)
 {
 	char* asmPath = NULL;
 	asmPath = (char*)calloc(strlen(fileName) + 5, sizeof(char));
-	int mainEndLabel = 0;
+
 
 	strcpy(asmPath, fileName);
 	strcat(asmPath, ".asm");
 	FILE* asmFile = openFile(asmPath, "w");
 
-	copyBoneFile(asmFile, FIRST); // copy first half of the basic functions and start of main
-	mainEndLabel = lableNum;
-	lableNum++;
-	writeDefs(tree, asmFile, varList);
-	fprintf(asmFile, "main:\npush ebp\nmov ebp, esp\nmov esi, ebp\nfinit\nsub esp, 2\nfstcw word ptr[esp]\nmov ax, [esp]\nand ax, 0FCFFh\nor ax, 00C00h\nmov[esp], ax\nfldcw word ptr[esp]\nadd esp, 2\n");
-	funcEndLabel = mainEndLabel;
-	writeBranch(tree, asmFile, varList); // write instructions from the ast
-	fprintf(asmFile, "label_%d:\n", mainEndLabel);
-	copyBoneFile(asmFile, SECOND); // copy the second half
+	startWriting(tree, fileName, varList, asmPath);
+
 	free(asmPath);
 	fclose(asmFile);
 }
+
 
 
 /*

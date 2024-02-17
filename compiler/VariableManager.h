@@ -12,7 +12,11 @@
 
 #include <stdbool.h>
 #include "FunctionList.h"
-enum VarTypes {VAR_INT, VAR_STRING, VAR_BOOL, VAR_CHAR, VAR_FLOAT, VAR_DOUBLE , VAR_ERROR = -1}; // types of variables
+enum VarTypes
+{
+	VAR_INT, VAR_BOOL, VAR_CHAR, VAR_FLOAT,
+	VAR_INT_POINTER, VAR_BOOL_POINTER, VAR_CHAR_POINTER, VAR_FLOAT_POINTER, VAR_ERROR = -1
+}; // types of variables
 enum ScopeTypes { GLOBAL = 0 }; // types of known scopes
 
 
@@ -58,11 +62,6 @@ bool isFunctionsInTheCode(llist* tokenList);
 int callGetFuncIndexByName(char* id);
 FuncNode* callGetFunction(char* id);
 VariableList* getFuncFirstParameterNode(VariableList* varList, int funcScope);
-
-
-// creates a variable list from a token list and run simple checks on the variable declarations
-
-
 
 
 

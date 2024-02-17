@@ -59,7 +59,7 @@ ASTNode* buildTree(struct node** FirstNode)
 		result->children[EXPRESSION]->children[LEAF] = buildASTNumeric(FirstNode);// only son: the numeric expresion
 		result->children[NEXT] = buildTree(FirstNode);
 	}
-	else if (isPrintToken(*firstToken)) // if printToken  , in the future we will add function support
+	else if (isPrintToken(*firstToken)) // if printToken 
 	{
 		
 		int parenthesesEqualizer = 0;
@@ -106,7 +106,7 @@ ASTNode* buildTree(struct node** FirstNode)
 			result->children[NEXT] = buildTree(FirstNode);
 		}
 	}
-	else if (isConditionOrLoopToken(*firstToken))
+	else if (isConditionOrLoopToken(*firstToken)) // if / else / while / for
 	{
 		int parenthesesEqualizer = 0;
 
@@ -125,7 +125,7 @@ ASTNode* buildTree(struct node** FirstNode)
 		
 		result->children[NEXT] = buildTree(FirstNode);
 	}
-	else if (is_assign_line(FirstNode)) // if variable id
+	else if (is_assign_line(FirstNode)) // assign
 	{
 
 		result->children[EXPRESSION] = buildASTVariables(FirstNode);

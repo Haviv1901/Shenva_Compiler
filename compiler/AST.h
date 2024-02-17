@@ -37,6 +37,8 @@ int isThreeChildNode(enum TokenTypes token);
 
 int isPrintToken(Token token);
 int isVariableToken(Token token);
+int isPointerVariableToken(Token token);
+int isNormalVariableToken(Token token);
 int isExpressionToken(Token token);
 int isConditionOrLoopToken(Token token);
 int isBooleanExpressionToken(enum TokenTypes token);

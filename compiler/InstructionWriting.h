@@ -37,7 +37,8 @@ void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 void writeDefs(ASTNode* tree, FILE* asmFile, VariableList* varList);
 int ScopeCountGetter(ASTNode* branch);
 void writeParams(ASTNode* paramBranch, VariableList* paramPtr, int funcScope, FILE* asmFile, VariableList* varlist);
-
+void startWriting(ASTNode* tree, const char* fileName, VariableList* varList, char* asmFile);
+void writeMain(char* asmFile);
 
 
 #endif

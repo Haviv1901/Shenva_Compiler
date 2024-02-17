@@ -225,7 +225,13 @@ Token* llist_get_last_tok(llist* list)
 
 }
 
-Token* is_assign_line(struct node** curr)
+
+/**
+ * \brief checks if there is an assign token before theres an endl token.
+ * \param curr 
+ * \return 
+ */
+ Token* is_assign_line(struct node** curr)
 {
     struct node* node = *curr;
     while (node != NULL)

@@ -346,6 +346,11 @@ llist* extractToken(FILE* file)
 			case TOKEN_INT: // int var
 			case TOKEN_BOOL: // bool var
 			case TOKEN_FLOAT: // float var
+			case TOKEN_CHAR: // char var
+			case TOKEN_FLOAT_POINTER: // pFloat
+			case TOKEN_INT_POINTER: // pInt
+			case TOKEN_CHAR_POINTER: // pChar
+			case TOKEN_BOOL_POINTER: // pBool
 				token->type = charFromfile;
 				token->value = NULL;
 				lastVoidType = charFromfile;
@@ -380,14 +385,6 @@ llist* extractToken(FILE* file)
 				}
 				token->value = extractIdentifier(file);
 				break;
-
-			case TOKEN_CHAR: // char variable type
-				token->type = TOKEN_CHAR;
-				token->value = NULL;
-				lastVoidType = TOKEN_CHAR;
-				isDecLine = true;
-				break;
-
 			case TOKEN_LETTER: // single character. ex: 'a'
 				token->type = TOKEN_LETTER;
 				token->value = extractLetter(file);
@@ -668,6 +665,22 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_RIND)
 	{
 		printf("]");
+	}
+	else if (token->type == TOKEN_FLOAT_POINTER)
+	{
+		printf("pFloat");
+	}
+	else if (token->type == TOKEN_INT_POINTER)
+	{
+		printf("pInt");
+	}
+	else if (token->type == TOKEN_CHAR_POINTER)
+	{
+		printf("pChar");
+	}
+	else if (token->type == TOKEN_BOOL_POINTER)
+	{
+		printf("pBool");
 	}
 	else
 	{

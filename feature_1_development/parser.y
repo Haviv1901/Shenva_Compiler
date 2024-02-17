@@ -21,7 +21,7 @@ FILE* errorFile;
 %token TRUE FALSE
 %token ENDL
 %token ASSIGN
-%token INT CHAR FLOAT
+%token INT CHAR FLOAT PINT PCHAR PFLOAT  PBOOL
 %token VAR
 %token ADDEQ SUBEQ MULEQ DIVEQ MODEQ
 %token DEF RETURN
@@ -58,6 +58,14 @@ parameterList: INT VAR
 		| CHAR VAR
 		| BOOL VAR
 		| FLOAT VAR
+		| PINT VAR
+		| PCHAR VAR
+		| PFLOAT VAR
+		| PBOOL VAR
+		| parameterList COMMA PINT VAR
+		| parameterList COMMA PCHAR VAR
+		| parameterList COMMA PFLOAT VAR
+		| parameterList COMMA PBOOL VAR
 		| parameterList COMMA INT VAR
 		| parameterList COMMA CHAR VAR
 		| parameterList COMMA BOOL VAR
@@ -110,6 +118,10 @@ declaration : INT decleration_list
             | CHAR decleration_list
 			| FLOAT decleration_list
 			| BOOL decleration_list
+			| PINT decleration_list
+			| PCHAR decleration_list
+			| PFLOAT decleration_list
+			| PBOOL decleration_list
             ;
 
 decleration_list : VAR
@@ -262,7 +274,7 @@ int yyerror(char *msg)
 			fprintf(errorFile, "char");
 			i += 3;
 		}
-				else if (strncmp(msg + i, "FLOAT", 5) == 0)
+		else if (strncmp(msg + i, "FLOAT", 5) == 0)
 		{
 			fprintf(errorFile, "float");
 			i += 4;
@@ -361,6 +373,26 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "int");
 			i += 2;
+		}
+		else if (strncmp(msg + i, "PINT", 4) == 0)
+		{
+			fprintf(errorFile, "pInt");
+			i += 3;
+		}
+		else if (strncmp(msg + i, "PFLOAT", 6) == 0)
+		{
+			fprintf(errorFile, "pFloat");
+			i += 4;
+		}
+		else if (strncmp(msg + i, "PCHAR", 5) == 0)
+		{
+			fprintf(errorFile, "pChar");
+			i += 4;
+		}
+		else if (strncmp(msg + i, "PBOOL", 5) == 0)
+		{
+			fprintf(errorFile, "pBool");
+			i += 4;
 		}
 		else if (strncmp(msg + i, "VAR", 3) == 0)
 		{

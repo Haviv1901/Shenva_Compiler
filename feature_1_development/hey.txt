@@ -1,4 +1,5 @@
-
-&a += 2
-
+pInt b
+pChar d
+pFloat g
+pBool meteg
 
