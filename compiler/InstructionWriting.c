@@ -22,14 +22,6 @@ void copyBoneFile(FILE* asmFile, bool boneFileNumber)
 	FILE* boneFile = openFile(boneFileNumber ? SECOND_BONE_FILE : FIRST_BONE_FILE, "r");
 	// Open FIRST_BONE_FILE for reading
 
-	if (boneFile == NULL)
-	{
-		printf("Error opening file %s\n", boneFileNumber ? SECOND_BONE_FILE : FIRST_BONE_FILE);
-		return;
-	}
-	printf("Successfully opened file %s\n", boneFileNumber ? SECOND_BONE_FILE : FIRST_BONE_FILE);
-
-
 	char buffer[1024];
 	while (fgets(buffer, sizeof(buffer), boneFile) != NULL)
 	{
@@ -59,7 +51,7 @@ void writeMain(char* asmFile)
 }
 
 
-void startWriting(ASTNode* tree, const char* fileName, VariableList* varList, char* asmFile)
+void startWriting(ASTNode* tree, const char* fileName, VariableList* varList, FILE* asmFile)
 {
 	int mainEndLabel = 0;
 
@@ -94,10 +86,11 @@ void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList)
 	strcpy(asmPath, fileName);
 	strcat(asmPath, ".asm");
 	FILE* asmFile = openFile(asmPath, "w");
-
-	startWriting(tree, fileName, varList, asmPath);
-
 	free(asmPath);
+
+	startWriting(tree, fileName, varList, asmFile);
+
+	
 	fclose(asmFile);
 }
 
@@ -335,7 +328,7 @@ void writeIfBranch(ASTNode* branch, FILE* asmFile, VariableList* varList, int en
 		}
 		else// if else if
 		{
-			writeConditionBranch(elseBranch->children[0], asmFile, varList, endLabel);
+			writeConditionBranch(elseBranch->children[0], asmFile, varList);
 		}
 	}
 }

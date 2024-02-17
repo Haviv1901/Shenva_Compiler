@@ -81,6 +81,18 @@ get_char_func  ENDP
 
 
 
+function_0 PROC
+push ebp
+mov ebp, esp
+push 119
+pop eax
+call WriteChar
+xor eax, eax
+label_1:
+mov esp, ebp
+pop ebp
+retn 4
+function_0 ENDP
 main:
 push ebp
 mov ebp, esp
@@ -94,22 +106,10 @@ or ax, 00C00h
 mov[esp], ax
 fldcw word ptr[esp]
 add esp, 2
-push 0
-push 8
-mov eax, ebp
-sub eax, 8
+push 5
+call function_0
 push eax
-push [ebp - 8]
-call print_number_signed
-push 7
-push [ebp - 12]
-pop ebx
 pop eax
-xchg ebx, esp
-mov dword ptr [esp], eax
-xchg ebx, esp
-push [ebp - 8]
-call print_number_signed
 label_0:
 
 mov esp, ebp

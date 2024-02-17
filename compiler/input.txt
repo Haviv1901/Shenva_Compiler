@@ -1,5 +1,11 @@
-pInt b
-pChar d
-pFloat g
-pBool sd
+
+def hey(int a)
+{
+
+    printChar('w')
+
+}
+
+
+hey(5)
 
