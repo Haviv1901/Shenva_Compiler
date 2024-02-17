@@ -223,6 +223,33 @@ bool checkForFunction(FILE* file)
 }
 
 
+void handleRefrenceToken(Token* token, llist* tokenList)
+{
+
+	if (llist_get_last_tok(tokenList)->type == TOKEN_DEREFERENCE)
+	{
+		llist_pop(tokenList);
+		free(token);
+		return;
+	}
+	token->type = TOKEN_REFERENCE;
+	token->value = NULL;
+}
+
+
+void handleDerefrenceToken(Token* token, llist* tokenList)
+{
+	if (llist_get_last_tok(tokenList)->type == TOKEN_REFERENCE)
+	{
+		llist_pop(tokenList);
+		free(token);
+		return;
+	}
+	token->type = TOKEN_DEREFERENCE;
+}
+
+
+
 /*
  * extracting tokens from a file.
  * file: FILE*, an opened file
@@ -251,7 +278,7 @@ llist* extractToken(FILE* file)
 				break;
 		}
 
-		if(charFromfile == EOF)
+		if(charFromfile == EOF || charFromfile == ' ')
 		{
 			isEOF = true;
 			continue; // last token before eof is always \n
@@ -296,10 +323,10 @@ llist* extractToken(FILE* file)
 				token->type = TOKEN_INPUT_FLOAT;
 				lastVoidType = TOKEN_INPUT_FLOAT;
 				token->value = NULL;
-				charFromfile = fgetc(file); // skip the space
-				charFromfile = fgetc(file); // skip the space
-				charFromfile = fgetc(file); // skip the space
-				charFromfile = fgetc(file); // skip the space
+				//charFromfile = fgetc(file); // skip the space -> useless ?
+				//charFromfile = fgetc(file); // skip the space
+				//charFromfile = fgetc(file); // skip the space
+				//charFromfile = fgetc(file); // skip the space
 				break;
 
 			case TOKEN_INPUT_INT: // intInput
@@ -382,37 +409,18 @@ llist* extractToken(FILE* file)
 				}
 				break;
 
-			case TOKEN_REFERENCE:
-				if (llist_get_last_tok(tokenList)->type == TOKEN_DEREFERENCE)
-				{
-					llist_pop(tokenList);
-					free(token);
-					continue;
-				}
-				else
-				{
-					token->type = TOKEN_REFERENCE;
-					token->value = NULL;
-				}
+			case TOKEN_REFERENCE: // &
+				handleRefrenceToken(token, tokenList);
 				break;
-			case TOKEN_DEREFERENCE:
-				if (llist_get_last_tok(tokenList)->type == TOKEN_REFERENCE)
-				{
-					llist_pop(tokenList);
-					free(token);
-					continue;
-				}
-				else
-				{
-					token->type = TOKEN_DEREFERENCE;
-					token->value = NULL;
-				}
+			case TOKEN_DEREFERENCE: // ^
+				handleDerefrenceToken(token, tokenList);
+
 				break;
-			case TOKEN_LIND:
+			case TOKEN_LIND: // [
 				token->type = TOKEN_LIND;
 				token->value = NULL;
 				break;
-			case TOKEN_RIND:
+			case TOKEN_RIND: // ]
 				token->type = TOKEN_RIND;
 				token->value = NULL;
 				break;

@@ -44,5 +44,9 @@ bool checkForFunction(FILE* file);
 char* extractIdentifier(FILE* file);
 void* extractLetter(FILE* file);
 
+void handleRefrenceToken(Token* token, llist* tokenList);
+void handleDerefrenceToken(Token* token, llist* tokenList);
+
+
 
 
