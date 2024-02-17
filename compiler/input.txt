@@ -1,11 +1,3 @@
-
-def hey(int a)
-{
-
-    printChar('w')
-
-}
-
-
-hey(5)
+int a
+pInt b = &a
 

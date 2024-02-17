@@ -242,7 +242,16 @@ ASTNode* parseIndex(struct node** curr, ASTNode* var)
 	indexMultiplyer = (Token*)malloc(sizeof(Token));
 	indexMultiplyer->type = TOKEN_NUM;
 	indexMultiplyer->value = (int*)malloc(sizeof(int));
-	*((int*)(indexMultiplyer->value)) = 4;
+
+	if(var->token->type == TOKEN_CHAR_POINTER || var->token->type == TOKEN_BOOL_POINTER)
+	{
+		*((int*)(indexMultiplyer->value)) = 1;
+	}
+	else
+	{
+		*((int*)(indexMultiplyer->value)) = 4;
+	}
+
 
 	mul = (Token*)malloc(sizeof(Token));
 	mul->type = TOKEN_MUL;

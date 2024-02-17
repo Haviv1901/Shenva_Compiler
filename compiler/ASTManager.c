@@ -93,7 +93,7 @@ ASTNode* buildTree(struct node** FirstNode)
 		result->children[EXPRESSION] = buildASTFunctions(FirstNode);  
 		result->children[NEXT] = buildTree(&currentNode);
 	}
-	else if (isVariableToken(*firstToken)) // if variable decleration ie: int , char , float
+	else if (isVarDeclerationToken(*firstToken)) // if variable decleration ie: int , char , float
 	{
 		result->children[EXPRESSION] = buildASTVariables(FirstNode);
 		if(result->children[EXPRESSION]->children[1] == NULL)

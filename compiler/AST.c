@@ -143,7 +143,11 @@ int isTwoChildNode(enum TokenTypes token)
 		token == TOKEN_NOT_GREATER || 
 		token == TOKEN_LESSER || 
 		token == TOKEN_NOT_LESSER || 
-		token == TOKEN_GREATER_EQUALS || 
+		token == TOKEN_GREATER_EQUALS ||
+		token == TOKEN_FLOAT_POINTER ||
+		token == TOKEN_BOOL_POINTER ||
+		token == TOKEN_CHAR_POINTER ||
+		token == TOKEN_INT_POINTER ||
 		token == TOKEN_LESSER_EQUALS ||
 		token == TOKEN_BOOL ||
 		token == TOKEN_WHILE)
@@ -199,7 +203,7 @@ int isPrintToken(Token token)
 }
 
 // checks if a token is a variable type.
-int isVariableToken(Token token)
+int isVarDeclerationToken(Token token)
 {
 	return isNormalVariableToken(token) || isPointerVariableToken(token);
 }
