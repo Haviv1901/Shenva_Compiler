@@ -40,5 +40,10 @@ void writeParams(ASTNode* paramBranch, VariableList* paramPtr, int funcScope, FI
 void startWriting(ASTNode* tree, const char* fileName, VariableList* varList, FILE* asmFile);
 void writeMain(char* asmFile);
 
+bool isDereferencedPTRpointsToFloat(ASTNode* branch, VariableList* varList);
+bool isDereferencedPTRpointsToBoolOrChar(ASTNode* branch, VariableList* varList);
+
+
+
 
 #endif

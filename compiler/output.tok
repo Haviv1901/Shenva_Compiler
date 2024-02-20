@@ -1,10 +1,39 @@
-i
-v a
+c
+v ch
+=
+l 'a'
+,
+v c
+=
+l 'd'
 9
-Q
-v b
+T
+v pi
 =
 &
-v a
+v c
+,
+v o
+9
+Q
+v pg
+=
+&
+v pi
+9
+9
+v o
+=
+^
+v pg
+9
+h
+6
+v o
+[
+1 1
+]
+7
+9
 9
 9

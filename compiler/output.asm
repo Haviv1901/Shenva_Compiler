@@ -81,18 +81,6 @@ get_char_func  ENDP
 
 
 
-function_0 PROC
-push ebp
-mov ebp, esp
-push 119
-pop eax
-call WriteChar
-xor eax, eax
-label_1:
-mov esp, ebp
-pop ebp
-retn 4
-function_0 ENDP
 main:
 push ebp
 mov ebp, esp
@@ -106,10 +94,57 @@ or ax, 00C00h
 mov[esp], ax
 fldcw word ptr[esp]
 add esp, 2
-push 5
-call function_0
-push eax
+sub esp, 1
+push 97
 pop eax
+mov byte ptr [esp], al
+sub esp, 1
+push 100
+pop eax
+mov byte ptr [esp], al
+mov eax, ebp
+sub eax, 2
+push eax
+push 0
+mov eax, ebp
+sub eax, 6
+push eax
+push [ebp - 14]
+pop eax
+xchg eax, esp
+mov ebx, dword ptr [esp]
+xchg eax, esp
+push ebx
+pop eax
+mov [ebp - 10], eax
+push [ebp - 10]
+push 4
+push 1
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop eax
+xchg eax, esp
+xor ebx, ebx
+mov bl, byte ptr [esp]
+xchg eax, esp
+push ebx
+pop eax
+call WriteChar
 label_0:
 
 mov esp, ebp

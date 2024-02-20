@@ -6,7 +6,7 @@
 
 
 #include "fileHelper.h"
-bool isLastValFloat = false, isInFunc = false, isLastValMem = false, isAssignToAdress = false;
+bool isLastValFloat = false, isInFunc = false, isAssignToAdress = false;
 unsigned long lableNum = 0;
 int currentScope = 0;
 int ScopeCounter = 0;
@@ -184,7 +184,9 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 	}
 	else if (currentToken->type == TOKEN_INT ||
 		currentToken->type == TOKEN_CHAR ||
-		currentToken->type == TOKEN_FLOAT || currentToken->type == TOKEN_BOOL)// checking for decleration branch
+		currentToken->type == TOKEN_FLOAT || currentToken->type == TOKEN_BOOL || currentToken->type == TOKEN_INT_POINTER
+		|| currentToken->type == TOKEN_CHAR_POINTER || currentToken->type == TOKEN_FLOAT_POINTER ||
+		currentToken->type == TOKEN_BOOL_POINTER)// checking for decleration branch
 	{
 		writeDeclerationBranch(tree, asmFile, varList);
 	}
@@ -361,7 +363,14 @@ void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 		fprintf(asmFile, "pop ebx\n");
 		fprintf(asmFile, "pop eax\n");
 		fprintf(asmFile, "xchg ebx, esp\n");
-		fprintf(asmFile, "mov dword ptr [esp], eax\n");
+		if (isDereferencedPTRpointsToBoolOrChar(branch, varList))
+		{
+			fprintf(asmFile, "mov byte ptr [esp], al\n");
+		}
+		else
+		{
+			fprintf(asmFile, "mov dword ptr [esp], eax\n");
+		}
 		fprintf(asmFile, "xchg ebx, esp\n");
 		return;
 	}
@@ -376,21 +385,21 @@ void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 		fprintf(asmFile, "mov byte ptr [ebp - %d], al\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
 		
 	}
-	else if (getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->Type == VAR_INT)
-	{
-		if (isLastValFloat)
-		{
-			fprintf(asmFile, "call ConvertFloatToInt\n");
-		}
-		fprintf(asmFile, "pop eax\n");
-		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
-	}
 	else if (getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->Type == VAR_FLOAT)
 	{
 		if (!isLastValFloat)
 		{
 			fprintf(asmFile, "fild dword ptr [esp]\n");
 			fprintf(asmFile, "fstp dword ptr [esp]\n");
+		}
+		fprintf(asmFile, "pop eax\n");
+		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
+	}
+	else// must be int or pointer
+	{
+		if (isLastValFloat)
+		{
+			fprintf(asmFile, "call ConvertFloatToInt\n");
 		}
 		fprintf(asmFile, "pop eax\n");
 		fprintf(asmFile, "mov [ebp - %d], eax\n", getVariableByScope(varList, (char*)(branch->children[0]->token->value), currentScope)->placeInMemory);
@@ -405,7 +414,7 @@ output: non
 */
 void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 {
-	if (branch->token->type == TOKEN_INT)
+	if (branch->token->type == TOKEN_INT || branch->token->type == TOKEN_INT_POINTER || branch->token->type == TOKEN_FLOAT_POINTER || branch->token->type == TOKEN_CHAR_POINTER || branch->token->type == TOKEN_BOOL_POINTER)
 	{
 		if (branch->children[1] != NULL)
 		{
@@ -765,13 +774,21 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 		{
 			fprintf(asmFile, "call ConvertFloatToInt\n");
 		}
+
 		fprintf(asmFile, "pop eax\n");
 		fprintf(asmFile, "xchg eax, esp\n");
-		fprintf(asmFile, "mov ebx, dword ptr [esp]\n");
+		if (isDereferencedPTRpointsToBoolOrChar(branch, varList))
+		{
+			fprintf(asmFile, "xor ebx, ebx\n");
+			fprintf(asmFile, "mov bl, byte ptr [esp]\n");
+		}
+		else
+		{
+			fprintf(asmFile, "mov ebx, dword ptr [esp]\n");
+		}
 		fprintf(asmFile, "xchg eax, esp\n");
 		fprintf(asmFile, "push ebx\n");
-		isLastValMem = true;
-		return false;
+		return isDereferencedPTRpointsToFloat(branch, varList);
 	}
 
 	// token is an operator:
@@ -789,6 +806,40 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 
 	return true;
 }
+
+
+
+
+/*
+isDereferencedPTRpointsToFloat: this function will return true if the bottom var in a dereference chain is a float ptr
+input: the branch and varList
+ouput: a bool
+*/
+bool isDereferencedPTRpointsToFloat(ASTNode* branch, VariableList* varList)
+{
+	while (branch->token->type != TOKEN_VAR)//going to the bottom var
+	{
+		branch = branch->children[LEAF];
+	}
+	return getVariableByScope(varList, (char*)(branch->token->value), currentScope)->Type == VAR_FLOAT_POINTER;
+}
+
+
+/*
+isDereferencedPTRpointsToboolOrChar: this function will return true if the bottom var in a dereference chain is a bool or char ptr
+input: the branch and varList
+ouput: a bool
+*/
+bool isDereferencedPTRpointsToBoolOrChar(ASTNode* branch, VariableList* varList)
+{
+	while (branch->token->type != TOKEN_VAR)//going to the bottom var
+	{
+		branch = branch->children[LEAF];
+	}
+	return (getVariableByScope(varList, (char*)(branch->token->value), currentScope)->Type == VAR_BOOL_POINTER) || (getVariableByScope(varList, (char*)(branch->token->value), currentScope)->Type == VAR_CHAR_POINTER);
+}
+
+
 
 
 void writeParams(ASTNode* paramBranch, VariableList* paramPtr, int funcScope, FILE* asmFile, VariableList* varlist)
