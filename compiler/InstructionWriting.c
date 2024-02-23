@@ -408,6 +408,38 @@ void writeAssignBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 }
 
 /*
+writeArrayInitWithSize: this function will init an array with 0 by size
+input: the size and the decleration type token and also the asm file
+output: non
+*/
+void writeArrayInitWithSize(int size, Token* decTok, FILE* asmFile)
+{
+	if (decTok->type == TOKEN_INT_POINTER || decTok->type == TOKEN_FLOAT_POINTER)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			fprintf(asmFile, "push 0\n");
+		}
+	}
+	else
+	{
+		while (size >= 4)
+		{
+			fprintf(asmFile, "push 0\n");
+			size -= 4;
+		}
+
+		while (size > 0)
+		{
+			fprintf(asmFile, "sub esp, 1\n");
+			fprintf(asmFile, "mov byte ptr [esp], 0\n");
+			size--;
+		}
+	}
+	fprintf(asmFile, "push esp\n");
+}
+
+/*
 writeDeclerationBranch: this function will write a decleration branch into the asm file
 input: the decleration branch, and the asm file
 output: non
@@ -418,10 +450,18 @@ void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varLis
 	{
 		if (branch->children[1] != NULL)
 		{
-			writeBranch(branch->children[1], asmFile, varList);
-			if (isLastValFloat)
+
+			if (branch->children[1]->token->type == TOKEN_LIST_SIZE_DECLERATION)
 			{
-				fprintf(asmFile, "call ConvertFloatToInt\n");
+				writeArrayInitWithSize(*(int*)(branch->children[1]->children[0]->token->value), branch->token, asmFile);
+			}
+			else
+			{
+				writeBranch(branch->children[1], asmFile, varList);
+				if (isLastValFloat)
+				{
+					fprintf(asmFile, "call ConvertFloatToInt\n");
+				}
 			}
 		}
 		else
@@ -764,11 +804,20 @@ int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 			return writeNumericBranch(branch->children[LEAF]->children[LEAF], asmFile, varList);
 		}
 		 
+		if (branch->children[LEAF]->token->type == TOKEN_ADD)//index situation
+		{
+			if (getVariableByScope(varList, branch->children[LEAF]->children[LEAF]->token->value, currentScope)->Type == VAR_BOOL_POINTER || getVariableByScope(varList, branch->children[LEAF]->children[LEAF]->token->value, currentScope)->Type == VAR_CHAR_POINTER)
+			{
+				*(int*)(branch->children[LEAF]->children[ONE_CHILD_NODE]->children[LEAF]->token->value) = 1;
+			}
+		}
+
 		if (isAssignToAdress == true)
 		{
 			isAssignToAdress = false;
 			return writeNumericBranch(branch->children[LEAF], asmFile, varList);
 		}
+
 
 		if (writeNumericBranch(branch->children[LEAF], asmFile, varList))
 		{

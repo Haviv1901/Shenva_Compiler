@@ -628,6 +628,13 @@ bool isListSizeValid(enum TokenTypes decTok, Token* sizeTok)
 	return true;
 }
 
+
+bool isVarPointingToOneByte(char* identifier)
+{
+}
+
+
+
 /*
 getSizeOfScope: this function will count the size of a given scope
 input: the list of vars and the scope

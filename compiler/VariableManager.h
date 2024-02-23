@@ -63,6 +63,7 @@ int callGetFuncIndexByName(char* id);
 FuncNode* callGetFunction(char* id);
 VariableList* getFuncFirstParameterNode(VariableList* varList, int funcScope);
 
+
 bool isListSizeValid(enum TokenTypes decTok, Token* sizeTok);
 
 

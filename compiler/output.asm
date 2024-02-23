@@ -81,6 +81,103 @@ get_char_func  ENDP
 
 
 
+function_0 PROC
+push ebp
+mov ebp, esp
+push 0
+label_2:
+push [ebp - -8]
+push 1
+push [ebp - 4]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop eax
+xchg eax, esp
+xor ebx, ebx
+mov bl, byte ptr [esp]
+xchg eax, esp
+push ebx
+fild dword ptr [esp]
+fstp dword ptr [esp]
+push 0
+fild dword ptr [esp]
+fstp dword ptr [esp]
+pop ebx
+pop eax
+xor edx, edx
+cmp eax, ebx
+je label_4
+mov edx, 1
+label_4:
+mov eax, edx
+push eax
+pop eax
+cmp eax, 0
+je label_3
+push [ebp - -8]
+push 1
+push [ebp - 4]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop eax
+xchg eax, esp
+xor ebx, ebx
+mov bl, byte ptr [esp]
+xchg eax, esp
+push ebx
+pop eax
+call WriteChar
+push [ebp - 4]
+push 1
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop eax
+mov [ebp - 4], eax
+jmp label_2
+label_3:
+xor eax, eax
+label_1:
+mov esp, ebp
+pop ebp
+retn 4
+function_0 ENDP
 main:
 push ebp
 mov ebp, esp
@@ -94,7 +191,327 @@ or ax, 00C00h
 mov[esp], ax
 fldcw word ptr[esp]
 add esp, 2
-push 30
+push 0
+push 0
+push 0
+sub esp, 1
+mov byte ptr [esp], 0
+push esp
+push 104
+push [ebp - 17]
+push 1
+push 0
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov byte ptr [esp], al
+xchg ebx, esp
+push 101
+push [ebp - 17]
+push 1
+push 1
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov byte ptr [esp], al
+xchg ebx, esp
+push 108
+push [ebp - 17]
+push 1
+push 2
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov byte ptr [esp], al
+xchg ebx, esp
+push 108
+push [ebp - 17]
+push 1
+push 3
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov byte ptr [esp], al
+xchg ebx, esp
+push 111
+push [ebp - 17]
+push 1
+push 4
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov byte ptr [esp], al
+xchg ebx, esp
+push 32
+push [ebp - 17]
+push 1
+push 5
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov byte ptr [esp], al
+xchg ebx, esp
+push 119
+push [ebp - 17]
+push 1
+push 6
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov byte ptr [esp], al
+xchg ebx, esp
+push 111
+push [ebp - 17]
+push 1
+push 7
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov byte ptr [esp], al
+xchg ebx, esp
+push 114
+push [ebp - 17]
+push 1
+push 8
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov byte ptr [esp], al
+xchg ebx, esp
+push 108
+push [ebp - 17]
+push 1
+push 9
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov byte ptr [esp], al
+xchg ebx, esp
+push 100
+push [ebp - 17]
+push 1
+push 10
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov byte ptr [esp], al
+xchg ebx, esp
+push 33
+push [ebp - 17]
+push 1
+push 11
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fild dword ptr[esp]
+fmul
+fstp dword ptr[esp]
+pop ebx
+pop eax
+push eax
+fild dword ptr[esp]
+mov dword ptr [esp], ebx
+fld dword ptr[esp]
+fadd
+fstp dword ptr[esp]
+call ConvertFloatToInt
+pop ebx
+pop eax
+xchg ebx, esp
+mov byte ptr [esp], al
+xchg ebx, esp
+push [ebp - 17]
+call function_0
+push eax
 pop eax
 label_0:
 

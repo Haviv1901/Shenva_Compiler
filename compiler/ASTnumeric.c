@@ -251,8 +251,6 @@ ASTNode* parseIndex(struct node** curr, ASTNode* var)
 	{
 		*((int*)(indexMultiplyer->value)) = 4;
 	}
-
-
 	mul = (Token*)malloc(sizeof(Token));
 	mul->type = TOKEN_MUL;
 	mul->value = NULL;
