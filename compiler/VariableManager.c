@@ -424,6 +424,15 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 				deleteVariableList(varListHead);
 				return 0;
 			}
+			
+			curr = curr->next->next;
+			if (curr->data->type == TOKEN_LIND && !isListSizeValid(currentToken, curr->next->data))//if its a list decleration, and its invalid
+			{
+				printf("Semantic error: list size must be bigger than 0 in decleration of %s\n", identifier);
+				deleteVariableList(varListHead);
+				return 0;
+			}
+
 			createNewVariable(identifier, getVarByTokenType(currentToken), &varListHead, currentScope, false, 0);//adding var
 		}
 		// checks that all variables used exists already.
@@ -595,6 +604,29 @@ int isParamNumValid(struct node* curr, int paramNum)
 
 
 
+/*
+isListSizeValid: this function will check if the size of the list is valid. if its not, it will return false. if it is
+it will add to the reformattedstackPointer the correct amount
+input: the decleration token, and the size token
+output: a bool 
+*/
+bool isListSizeValid(enum TokenTypes decTok, Token* sizeTok)
+{
+	if (*(int*)(sizeTok->value) <= 0)// if size is invalid
+	{
+		return false;
+	}
+
+	if (decTok == TOKEN_INT_POINTER || decTok == TOKEN_FLOAT_POINTER)
+	{
+		reformattedStackPointer += (*(int*)(sizeTok->value)) * 4;//adding the correct amount
+	}
+	else if ((decTok == TOKEN_CHAR_POINTER || decTok == TOKEN_BOOL_POINTER))
+	{
+		reformattedStackPointer += (*(int*)(sizeTok->value));
+	}
+	return true;
+}
 
 /*
 getSizeOfScope: this function will count the size of a given scope

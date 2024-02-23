@@ -171,7 +171,8 @@ int isOneChildNode(enum TokenTypes token)
 		token == TOKEN_ELSE ||
 		token == TOKEN_RETURN ||
 		token == TOKEN_REFERENCE ||
-		token == TOKEN_DEREFERENCE)
+		token == TOKEN_DEREFERENCE ||
+		token == TOKEN_LIST_SIZE_DECLERATION)
 	{
 		return 1;
 	}

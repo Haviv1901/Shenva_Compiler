@@ -118,11 +118,19 @@ declaration : INT decleration_list
             | CHAR decleration_list
 			| FLOAT decleration_list
 			| BOOL decleration_list
-			| PINT decleration_list
-			| PCHAR decleration_list
-			| PFLOAT decleration_list
-			| PBOOL decleration_list
+			| PINT decleration_list_mem
+			| PCHAR decleration_list_mem
+			| PFLOAT decleration_list_mem
+			| PBOOL decleration_list_mem
             ;
+			
+decleration_list_mem : VAR
+                 | VAR ASSIGN expression
+				 | VAR ASSIGN LIND NUM RIND
+                 | decleration_list COMMA VAR
+                 | decleration_list COMMA VAR ASSIGN expression
+				 | decleration_list COMMA VAR ASSIGN LIND NUM RIND
+                 ;
 
 decleration_list : VAR
                  | VAR ASSIGN expression 

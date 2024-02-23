@@ -1,8 +1,4 @@
-char ch = 'a', c = 'd'
-pChar pi = &c, o
-pInt pg = &pi
+pInt b = [10]
 
-o = ^pg
-printChar(o[1])
 
 

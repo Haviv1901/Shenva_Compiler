@@ -1,5 +1,6 @@
-pInt b
-pChar d
-pFloat g
-pBool meteg
+pInt b = [30]
+
+
+b[21]
+
 

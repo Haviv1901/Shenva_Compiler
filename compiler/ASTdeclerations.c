@@ -48,6 +48,23 @@ ASTNode* buildASTVariablesAssign(node** curr)
 
 }
 
+/*
+buildASTListDeclerationBranch: this function will build the right side of the decleration in a pointer-list decleration
+input: the current token, and the type of the decleration
+output: the right side branch
+*/
+ASTNode* buildASTListDeclerationBranch(struct node** curr, Token* decTypeTok)
+{
+	ASTNode* result = NULL;
+	(*curr)->data->type = TOKEN_LIST_SIZE_DECLERATION;//using a token list size decleration, to be more efficient
+	result = createNewASTnode((*curr)->data);
+	(*curr) = (*curr)->next;
+	result->children[LEAF] = createNewASTnode((*curr)->data);// we know its only ont
+	(*curr) = (*curr)->next->next;
+	return result;
+}
+
+
 
 ASTNode* buildASTDeclerationsNumeric(struct node** curr)
 {
@@ -61,7 +78,14 @@ ASTNode* buildASTDeclerationsNumeric(struct node** curr)
 		// currentNode->next->next is the assign token, if exist
 	{
 		(*curr) = (*curr)->next->next->next;
-		result->children[1] = buildASTNumeric(curr); // currentNode->next->next->next is the number assigned to the variable
+		if ((*curr)->data->type == TOKEN_LIND)
+		{
+			result->children[1] = buildASTListDeclerationBranch(curr, currentToken); // currentNode->next->next->next is the left index of the list
+		}
+		else
+		{
+			result->children[1] = buildASTNumeric(curr); // currentNode->next->next->next is the number assigned to the variable
+		}
 	}
 	else
 	{
