@@ -439,6 +439,38 @@ void writeArrayInitWithSize(int size, Token* decTok, FILE* asmFile)
 	fprintf(asmFile, "push esp\n");
 }
 
+
+
+/*
+writeArrayInitWithVals: this function will write a NULL value list as a decleration
+input: the branch of the null list, and the pointer type token. also the asmFile and varlist
+input: non
+*/
+void writeArrayInitWithVals(ASTNode* branch, Token* decTok, FILE* asmFile, VariableList* varList)
+{
+	if (branch == NULL)
+	{
+		return;
+	}
+	writeArrayInitWithVals(branch->children[LEAF], decTok, asmFile, varList);// writing from the end.
+	writeBranch(branch->children[ONE_CHILD_NODE], asmFile, varList);
+
+	if (decTok->type != TOKEN_FLOAT_POINTER && isLastValFloat)// if a conversion is needed.
+	{
+		fprintf(asmFile, "call ConvertFloatToInt\n");
+	}
+
+	if (decTok->type == TOKEN_CHAR_POINTER || decTok->type == TOKEN_BOOL_POINTER)
+	{
+		fprintf(asmFile, "pop eax\n");
+		fprintf(asmFile, "sub esp, 1\n");
+		fprintf(asmFile, "mov byte ptr[esp], al\n");
+	}
+	return;
+}
+
+
+
 /*
 writeDeclerationBranch: this function will write a decleration branch into the asm file
 input: the decleration branch, and the asm file
@@ -450,8 +482,13 @@ void writeDeclerationBranch(ASTNode* branch, FILE* asmFile, VariableList* varLis
 	{
 		if (branch->children[1] != NULL)
 		{
+			if (branch->children[1]->token == NULL)
+			{
+				writeArrayInitWithVals(branch->children[1], branch->token, asmFile, varList);
+				fprintf(asmFile, "push esp\n");
 
-			if (branch->children[1]->token->type == TOKEN_LIST_SIZE_DECLERATION)
+			}
+			else if (branch->children[1]->token->type == TOKEN_LIST_SIZE_DECLERATION)
 			{
 				writeArrayInitWithSize(*(int*)(branch->children[1]->children[0]->token->value), branch->token, asmFile);
 			}

@@ -117,8 +117,7 @@ void set_output_file(FILE* file) {
 "^" { fprintf(outputFile, "^\n"); return DEREFERENCE;}
 "[" { fprintf(outputFile, "[\n"); return LIND;}
 "]" { fprintf(outputFile, "]\n"); return RIND;}
-
-
+"|" { fprintf(outputFile, "|\n"); return LIST;}
 
 
 

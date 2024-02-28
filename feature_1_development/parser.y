@@ -20,7 +20,7 @@ FILE* errorFile;
 %token PRINTINT PRINTCHAR PRINTFLOAT COMMA INTINPUT FLOATINPUT CHARINPUT
 %token TRUE FALSE
 %token ENDL
-%token ASSIGN
+%token ASSIGN LIST
 %token INT CHAR FLOAT PINT PCHAR PFLOAT  PBOOL
 %token VAR
 %token ADDEQ SUBEQ MULEQ DIVEQ MODEQ
@@ -124,12 +124,15 @@ declaration : INT decleration_list
 			| PBOOL decleration_list_mem
             ;
 			
+			
 decleration_list_mem : VAR
                  | VAR ASSIGN expression
 				 | VAR ASSIGN LIND NUM RIND
-                 | decleration_list COMMA VAR
-                 | decleration_list COMMA VAR ASSIGN expression
-				 | decleration_list COMMA VAR ASSIGN LIND NUM RIND
+				 | VAR ASSIGN LIST expression_list LIST
+                 | decleration_list_mem COMMA VAR
+                 | decleration_list_mem COMMA VAR ASSIGN expression
+				 | decleration_list_mem COMMA VAR ASSIGN LIND NUM RIND
+				 | decleration_list_mem VAR ASSIGN LIST expression_list LIST
                  ;
 
 decleration_list : VAR
@@ -500,6 +503,11 @@ int yyerror(char *msg)
 		else if (strncmp(msg + i, "TRUE", 4) == 0)
 		{
 			fprintf(errorFile, "True");
+			i += 3;
+		}
+		else if (strncmp(msg + i, "LIST", 4) == 0)
+		{
+			fprintf(errorFile, "|");
 			i += 3;
 		}
 		else if (strncmp(msg + i, "FALSE", 5) == 0)

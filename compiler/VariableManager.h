@@ -63,7 +63,7 @@ int callGetFuncIndexByName(char* id);
 FuncNode* callGetFunction(char* id);
 VariableList* getFuncFirstParameterNode(VariableList* varList, int funcScope);
 
-
+void addElementToStackPtr(enum TokenTypes decTok);
 bool isListSizeValid(enum TokenTypes decTok, Token* sizeTok);
 
 

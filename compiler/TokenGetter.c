@@ -422,6 +422,11 @@ llist* extractToken(FILE* file)
 				token->value = NULL;
 				break;
 
+			case TOKEN_LIST:// |
+				token->type = TOKEN_LIST;
+				token->value = NULL;
+				isDecLine = !isDecLine;
+				break;
 			case TOKEN_COMMA: // ,
 				if (isDefLine || (!isPrintLine && !isDecLine)) 
 				{
@@ -595,7 +600,7 @@ void printToken(Token* token)
 	}
 	else if (token->type == TOKEN_LETTER)
 	{
-		printf("%c", *((char*)(token->value)));
+		printf("\'%c\'", *((char*)(token->value)));
 	}
 	else if (token->type == TOKEN_IF)
 	{
@@ -681,6 +686,10 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_BOOL_POINTER)
 	{
 		printf("pBool");
+	}
+	else if (token->type == TOKEN_LIST)
+	{
+		printf("|");
 	}
 	else
 	{

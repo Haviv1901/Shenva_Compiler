@@ -375,6 +375,19 @@ void callDeleteScopeTree()
 
 
 
+void addElementToStackPtr(enum TokenTypes decTok)
+{
+	if (decTok == TOKEN_INT_POINTER || decTok == TOKEN_FLOAT_POINTER)
+	{
+		reformattedStackPointer +=  4;//adding the correct amount
+	}
+	else if ((decTok == TOKEN_CHAR_POINTER || decTok == TOKEN_BOOL_POINTER))
+	{
+		reformattedStackPointer += 1;
+	}
+}
+
+
 /*
 createVariableListFromScope: this function will produce the var list from the tokens
 input; the token list. 
@@ -395,7 +408,7 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 		currentScopeNode = addChild(currentScopeNode, currentScope);
 	}
 	
-
+	
 	int holderForPlacceInMemory;
 	int outerBracketBalance = 1;
 
@@ -431,6 +444,19 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 				printf("Semantic error: list size must be bigger than 0 in decleration of %s\n", identifier);
 				deleteVariableList(varListHead);
 				return 0;
+			}
+			else if (curr->data->type == TOKEN_LIST)
+			{
+				curr = curr->next;
+				addElementToStackPtr(currentToken);
+				while (curr->data->type != TOKEN_LIST)
+				{
+					if (curr->data->type == TOKEN_COMMA)
+					{
+						addElementToStackPtr(currentToken);
+					}
+					curr = curr->next;				
+				}
 			}
 
 			createNewVariable(identifier, getVarByTokenType(currentToken), &varListHead, currentScope, false, 0);//adding var

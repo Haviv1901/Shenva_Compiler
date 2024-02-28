@@ -22,7 +22,8 @@ void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList)
 
 void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList);
 int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
-void writeArrayInitWithSize(int size, Token* decTok);
+void writeArrayInitWithSize(int size, Token* decTok, FILE* asmFile);
+void writeArrayInitWithVals(ASTNode* branch, Token* decTok, FILE* asmFile, VariableList* varList);
 void writeNumericInstruction(Token* operand, FILE* asmFile, bool isEAXdecimal, bool isEBXdecimal);
 void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 int isInputToken(Token token);

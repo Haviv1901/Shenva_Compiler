@@ -82,6 +82,10 @@ ASTNode* buildASTDeclerationsNumeric(struct node** curr)
 		{
 			result->children[1] = buildASTListDeclerationBranch(curr, currentToken); // currentNode->next->next->next is the left index of the list
 		}
+		else if ((*curr)->data->type == TOKEN_LIST)
+		{
+			result->children[1] = buildASTPreMadeListDec(curr);
+		}
 		else
 		{
 			result->children[1] = buildASTNumeric(curr); // currentNode->next->next->next is the number assigned to the variable
@@ -95,3 +99,37 @@ ASTNode* buildASTDeclerationsNumeric(struct node** curr)
 
 	return result;
 }
+
+
+/*
+buildASTPreMadeListDec: this function will make a NULL list of the values in the list
+input: the token list
+output: the branch to the first NULL in the NULL list
+*/
+ASTNode* buildASTPreMadeListDec(struct node** curr)
+{
+	ASTNode* result = createNewASTnode(NULL);
+	ASTNode* currentNode = result;
+	(*curr) = (*curr)->next;
+	while ((*curr)->data->type != TOKEN_LIST)//looking for the end
+	{
+		currentNode->children[ONE_CHILD_NODE] = buildASTNumeric(curr);
+		currentNode->children[LEAF] = NULL;
+		if ((*curr)->data->type == TOKEN_COMMA)// if there is another expression
+		{
+			currentNode->children[LEAF] = createNewASTnode(NULL);
+			currentNode = currentNode->children[LEAF];
+			(*curr) = (*curr)->next;
+		}
+	}
+	(*curr) = (*curr)->next;// going to the next one
+
+	return result;
+
+}
+
+
+
+
+
+
