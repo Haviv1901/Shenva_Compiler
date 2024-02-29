@@ -165,6 +165,7 @@ int isOneChildNode(enum TokenTypes token)
 		token == TOKEN_RPARN ||
 		token == TOKEN_PRINT_CHAR ||
 		token == TOKEN_PRINT_FLOAT ||
+		token == TOKEN_PRINT_STRING ||
 		token == TOKEN_PRINT_INT ||
 		token == TOKEN_NOT ||
 		token == TOKEN_FUNCTION_CALL ||
@@ -196,7 +197,8 @@ int isPrintToken(Token token)
 {
 	if (token.type == TOKEN_PRINT_INT ||
 		token.type == TOKEN_PRINT_CHAR ||
-		token.type == TOKEN_PRINT_FLOAT)
+		token.type == TOKEN_PRINT_FLOAT ||
+		token.type == TOKEN_PRINT_STRING)
 	{
 		return 1;
 	}

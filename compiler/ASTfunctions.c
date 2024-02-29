@@ -120,8 +120,14 @@ ASTNode* buildASTFunctions_print(struct node** curr)
 		currentNode = (*curr)->next; // current node = first token inside the parenthesis
 	}
 	currentToken = currentNode->data;
-	return buildASTNumeric(&currentNode); // currently only possible to have numeric expression inside the print function
-
+	if (currentToken->type != TOKEN_LIST)
+	{
+		return buildASTNumeric(&currentNode); // a numeric value for the print
+	}
+	else
+	{
+		return buildASTPreMadeListDec(&currentNode);
+	}
 }
 
 

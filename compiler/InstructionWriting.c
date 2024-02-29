@@ -460,7 +460,7 @@ void writeArrayInitWithVals(ASTNode* branch, Token* decTok, FILE* asmFile, Varia
 		fprintf(asmFile, "call ConvertFloatToInt\n");
 	}
 
-	if (decTok->type == TOKEN_CHAR_POINTER || decTok->type == TOKEN_BOOL_POINTER)
+	if (decTok->type == TOKEN_CHAR_POINTER || decTok->type == TOKEN_BOOL_POINTER || decTok->type == TOKEN_PRINT_STRING)
 	{
 		fprintf(asmFile, "pop eax\n");
 		fprintf(asmFile, "sub esp, 1\n");
@@ -1078,6 +1078,30 @@ void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 		fprintf(asmFile, "fstp dword ptr [esp]\n");
 		fprintf(asmFile, "pop eax\n");
 
+	}
+	else if (branch->token->type == TOKEN_PRINT_STRING)
+	{
+		if (branch->children[LEAF]->token != NULL)
+		{
+			writeBranch(branch->children[0], asmFile, varList);
+			if (isLastValFloat)
+			{
+				fprintf(asmFile, "call ConvertFloatToInt\n");
+			}
+			fprintf(asmFile, "pop edx\n");
+			fprintf(asmFile, "call writeString\n");
+		}
+		else
+		{
+			fprintf(asmFile, "push ebp\n");
+			fprintf(asmFile, "mov ebp, esp\n");
+			writeArrayInitWithVals(branch->children[LEAF], branch->token, asmFile, varList);
+			fprintf(asmFile, "mov edx, esp\n");
+			fprintf(asmFile, "call writeString\n");
+			fprintf(asmFile, "mov esp, ebp\n");
+			fprintf(asmFile, "pop ebp\n");
+
+		}
 	}
 	return;
 }

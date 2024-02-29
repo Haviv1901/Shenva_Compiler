@@ -81,6 +81,79 @@ get_char_func  ENDP
 
 
 
+function_0 PROC
+push ebp
+mov ebp, esp
+push ebp
+mov ebp, esp
+push 0
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 10
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 33
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 100
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 108
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 114
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 111
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 119
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 32
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 111
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 108
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 108
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 101
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 104
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+mov edx, esp
+call writeString
+mov esp, ebp
+pop ebp
+mov eax, 0
+jmp label_1
+xor eax, eax
+label_1:
+mov esp, ebp
+pop ebp
+retn 0
+function_0 ENDP
 main:
 push ebp
 mov ebp, esp
@@ -94,307 +167,9 @@ or ax, 00C00h
 mov[esp], ax
 fldcw word ptr[esp]
 add esp, 2
-push 0
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 111
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 98
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 32
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 100
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 100
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 97
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 97
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 97
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 97
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 97
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 97
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 97
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 98
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 32
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 97
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 32
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 110
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 101
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 101
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 98
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 32
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 101
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 118
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 32
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 100
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 110
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 97
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 32
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 44
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 121
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 111
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 98
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 32
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 104
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 115
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 119
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 101
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 106
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 32
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 101
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 108
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 116
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 116
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 108
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 32
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 97
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 32
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 109
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 105
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 32
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 111
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 108
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 108
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 101
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 104
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push esp
-push [ebp - 72]
-push 1
-push 0
-pop ebx
-pop eax
+call function_0
 push eax
-fild dword ptr[esp]
-mov dword ptr [esp], ebx
-fild dword ptr[esp]
-fmul
-fstp dword ptr[esp]
-pop ebx
 pop eax
-push eax
-fild dword ptr[esp]
-mov dword ptr [esp], ebx
-fld dword ptr[esp]
-fadd
-fstp dword ptr[esp]
-call ConvertFloatToInt
-pop eax
-xchg eax, esp
-xor ebx, ebx
-mov bl, byte ptr [esp]
-xchg eax, esp
-push ebx
-pop eax
-call WriteChar
 label_0:
 
 mov esp, ebp
