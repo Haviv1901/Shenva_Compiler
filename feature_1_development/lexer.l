@@ -58,6 +58,7 @@ void tokenizeStr(const char* str)
 "printChar"   { fprintf(outputFile, "h\n"); return PRINTCHAR;}
 "hadpasaShelTzaf" { fprintf(outputFile, "n\n"); return PRINTFLOAT;}
 "printFloat"   { fprintf(outputFile, "n\n"); return PRINTFLOAT;}
+"printString"	{fprintf(outputFile, "x\n"); return PRINTSTRING;}
 "veod"    { fprintf(outputFile, "2\n"); return ADD;}
 "+"       { fprintf(outputFile, "2\n"); return ADD;}
 "pahot"   { fprintf(outputFile, "3\n"); return SUB;}

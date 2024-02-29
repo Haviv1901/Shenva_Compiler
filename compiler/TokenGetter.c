@@ -313,6 +313,7 @@ llist* extractToken(FILE* file)
 			case TOKEN_PRINT_INT: // printInt
 			case TOKEN_PRINT_CHAR: // printChar
 			case TOKEN_PRINT_FLOAT: // printFloat
+			case TOKEN_PRINT_STRING:
 				token->type = charFromfile;
 				lastVoidType = charFromfile;
 				token->value = NULL;
@@ -420,12 +421,17 @@ llist* extractToken(FILE* file)
 			case TOKEN_RIND: // ]
 				token->type = TOKEN_RIND;
 				token->value = NULL;
-				break;
-
 			case TOKEN_LIST:// |
 				token->type = TOKEN_LIST;
 				token->value = NULL;
-				isDecLine = !isDecLine;
+				if (lastVoidType == TOKEN_PRINT_STRING)
+				{
+					isPrintLine = !isPrintLine;
+				}
+				else if (lastVoidType == TOKEN_INT_POINTER || lastVoidType == TOKEN_CHAR_POINTER || lastVoidType == TOKEN_FLOAT_POINTER || lastVoidType == TOKEN_BOOL_POINTER)
+				{
+					isDecLine = !isDecLine;
+				}
 				break;
 			case TOKEN_COMMA: // ,
 				if (isDefLine || (!isPrintLine && !isDecLine)) 
@@ -529,6 +535,10 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_PRINT_FLOAT)
 	{
 		printf("printFloat");
+	}
+	else if (token->type == TOKEN_PRINT_STRING)
+	{
+		printf("printString");
 	}
 	else if (token->type == TOKEN_ENDL)
 	{

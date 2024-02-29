@@ -17,7 +17,7 @@ FILE* errorFile;
 %token EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS NOT OR AND
 %token IF ELSE LBRACK RBRACK WHILE FOR
 %token <str> ERROR
-%token PRINTINT PRINTCHAR PRINTFLOAT COMMA INTINPUT FLOATINPUT CHARINPUT
+%token PRINTINT PRINTCHAR PRINTFLOAT COMMA INTINPUT FLOATINPUT CHARINPUT PRINTSTRING
 %token TRUE FALSE
 %token ENDL
 %token ASSIGN LIST
@@ -97,9 +97,10 @@ empty_space : ENDL
             | empty_space ENDL
             ;
 		
-statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
-		  |  PRINTCHAR LPAREN expression_list RPAREN  ENDL { /* Handle print statement */ }
-		  |  PRINTFLOAT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
+statement : PRINTINT LPAREN expression_list RPAREN ENDL {}
+		  |  PRINTCHAR LPAREN expression_list RPAREN  ENDL {}
+		  |  PRINTFLOAT LPAREN expression_list RPAREN ENDL {}
+		  | PRINTSTRING LPAREN str_list RPAREN ENDL {}
 		  | RETURN expression ENDL
 		  | RETURN ENDL
 		  | expression ENDL
@@ -111,7 +112,11 @@ statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statem
 		  
 		  
 		  
-		  
+str_list: STRING
+	| expression
+	| str_list COMMA STRING
+	| str_list COMMA expression
+	;
 
 		
 declaration : INT decleration_list
@@ -536,6 +541,16 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "while");
 			i += 4;
+		}
+		else if (strncmp(msg + i, "STRING", 6) == 0)
+		{
+			fprintf(errorFile, "string");
+			i += 5;
+		}
+		else if (strncmp(msg + i, "PRINTSTRING", 11) == 0)
+		{
+			fprintf(errorFile, "printString");
+			i += 10;
 		}
 		else
 		{
