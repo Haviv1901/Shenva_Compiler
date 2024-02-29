@@ -426,7 +426,7 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 	{
 		enum TokenTypes currentToken = ((curr->data))->type;
 
-		// checks that all variables created arn't already exist.
+		// checks that all variables created arn't already exists.
 		if (isVarDeclerationToken(*curr->data)) 
 		{
 			curr = curr->next;

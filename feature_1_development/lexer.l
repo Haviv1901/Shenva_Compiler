@@ -14,6 +14,31 @@ void set_output_file(FILE* file) {
     outputFile = file;
 }
 
+void tokenizeStr(const char* str)
+{
+	int i = 0;
+	fprintf(outputFile, "|\n");
+	for (i = 1; i < strlen(str); i++)
+	{
+		if (str[i] == '\"')
+		{
+			fprintf(outputFile, "1 0\n");
+			fprintf(outputFile, "|\n");
+		}
+		else if (str[i] == '\\')
+		{
+			i++;
+			fprintf(outputFile, "l \'\\%c\'\n", str[i]);
+			fprintf(outputFile, ",\n");
+		}
+		else
+		{
+			fprintf(outputFile, "l \'%c\'\n", str[i]);
+			fprintf(outputFile, ",\n");
+		}
+	}
+}
+
 %}
 %option noyywrap
 
@@ -124,6 +149,8 @@ void set_output_file(FILE* file) {
 
 [a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); strcpy(lastIdentifier, yytext); return VAR; }
 '([^\\'\n"\r\b\t\f]|\\[\\'n"tbrf])'   {fprintf(outputFile, "l %s\n", yytext); return LETTER; }
+\".*\"   {tokenizeStr(yytext); return STRING; }
+
 [-]?[0-9]+   { fprintf(outputFile, "1 %s\n", yytext); return NUM;}
 [-]?[0-9]+\.[0-9]+		{ fprintf(outputFile, "d %s\n", yytext); return DECIMAL;}
 [ \t]     ; // Ignore whitespace and newline characters

@@ -11,7 +11,7 @@ FILE* errorFile;
     int num;
     char *str;  // Add a string field
 }
-%token NUM LETTER DECIMAL BOOL
+%token NUM LETTER DECIMAL BOOL STRING
 %token ADD SUB MUL DIV MOD
 %token LPAREN RPAREN
 %token EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS NOT OR AND
@@ -129,10 +129,12 @@ decleration_list_mem : VAR
                  | VAR ASSIGN expression
 				 | VAR ASSIGN LIND NUM RIND
 				 | VAR ASSIGN LIST expression_list LIST
+				 | VAR ASSIGN STRING
                  | decleration_list_mem COMMA VAR
                  | decleration_list_mem COMMA VAR ASSIGN expression
 				 | decleration_list_mem COMMA VAR ASSIGN LIND NUM RIND
 				 | decleration_list_mem VAR ASSIGN LIST expression_list LIST
+				 | decleration_list_mem VAR ASSIGN STRING
                  ;
 
 decleration_list : VAR
