@@ -150,7 +150,7 @@ void tokenizeStr(const char* str)
 
 [a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); strcpy(lastIdentifier, yytext); return VAR; }
 '([^\\'\n"\r\b\t\f]|\\[\\'n"tbrf])'   {fprintf(outputFile, "l %s\n", yytext); return LETTER; }
-\".*\"   {tokenizeStr(yytext); return STRING; }
+\"([^\\'\n"\r\b\t\f]|\\[\\'n"tbrf])*\"   {tokenizeStr(yytext); return STRING; }
 
 [-]?[0-9]+   { fprintf(outputFile, "1 %s\n", yytext); return NUM;}
 [-]?[0-9]+\.[0-9]+		{ fprintf(outputFile, "d %s\n", yytext); return DECIMAL;}

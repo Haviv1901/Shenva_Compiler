@@ -81,40 +81,22 @@ get_char_func  ENDP
 
 
 
-function_0 PROC
+main:
 push ebp
 mov ebp, esp
+mov esi, ebp
+finit
+sub esp, 2
+fstcw word ptr[esp]
+mov ax, [esp]
+and ax, 0FCFFh
+or ax, 00C00h
+mov[esp], ax
+fldcw word ptr[esp]
+add esp, 2
 push ebp
 mov ebp, esp
 push 0
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 10
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 33
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 100
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 108
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 114
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 111
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 119
 pop eax
 sub esp, 1
 mov byte ptr[esp], al
@@ -146,30 +128,40 @@ mov edx, esp
 call writeString
 mov esp, ebp
 pop ebp
-mov eax, 0
-jmp label_1
-xor eax, eax
-label_1:
-mov esp, ebp
-pop ebp
-retn 0
-function_0 ENDP
-main:
 push ebp
 mov ebp, esp
-mov esi, ebp
-finit
-sub esp, 2
-fstcw word ptr[esp]
-mov ax, [esp]
-and ax, 0FCFFh
-or ax, 00C00h
-mov[esp], ax
-fldcw word ptr[esp]
-add esp, 2
-call function_0
-push eax
+push 0
 pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 33
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 100
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 108
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 114
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 111
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+push 119
+pop eax
+sub esp, 1
+mov byte ptr[esp], al
+mov edx, esp
+call writeString
+mov esp, ebp
+pop ebp
 label_0:
 
 mov esp, ebp
