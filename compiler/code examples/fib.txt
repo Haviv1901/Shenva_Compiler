@@ -1,0 +1,54 @@
+
+
+def fibonacci (int n)
+{
+    int a = 0
+    int b = 1
+    int temp = 0
+    int num2 = 0
+
+    if (n == 0)
+    {
+        return a
+    }
+    else if (n == 1)
+    {
+        return b
+    }
+    else
+    {
+        num2 = 2
+        for (num2 <= n, num2+=1) 
+        {
+            temp = a + b
+            a = b
+            b = temp
+        }
+        return b
+    }
+}
+
+def main() 
+{
+    int n = 0
+    int num = 0
+    
+    printString("Enter the number of terms: ")
+    n = intInput()
+    
+    printString("Fibonacci Series: \n")
+    for (num < n, num+=1) 
+    {
+        printInt(fibonacci(num))
+        printChar('\n')
+    }
+    printChar('\n')
+    
+    return 0
+}
+
+
+
+main()
+
+
