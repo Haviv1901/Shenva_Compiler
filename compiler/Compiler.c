@@ -1,6 +1,7 @@
 #include "Compiler.h"
 #include <stdlib.h>
 #include "fileHelper.h"
+#include "flags.h"
 #include "lexer.h"
 
 
@@ -29,7 +30,9 @@ void Compile(char* inputFileName, char* outputFileName)
 	llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME); // extract tokens to c memory
 	llist hold = *tokenList;
 
-	llist_print(tokenList, tokenPrint); // print for debugging
+	printTokenList(tokenList); // print tokens if needed
+	
+
 	VariableList* varList = createVariableList(tokenList);
 
 	if(isVars(tokenList) && varList == NULL) // checking if there is any undefined variable error.
@@ -38,7 +41,7 @@ void Compile(char* inputFileName, char* outputFileName)
 		return;
 	}
 
-	printVariaballsWithScope(varList);
+	printVariaballsList(varList);
 
 	ASTNode* tree = buildTree(tokenList); // build AST 
 
@@ -51,6 +54,26 @@ void Compile(char* inputFileName, char* outputFileName)
 	deleteVariableList(varList);
 	callDeleteFuncList();
 
+}
+
+void printVariaballsList(VariableList* varList)
+{
+	if(userFlags.printVariableList)
+	{
+		printf("\nVariables List:\n");
+		printVariaballsWithScope(varList);
+		printf("\n\n");
+	}
+}
+
+void printTokenList(llist* tokenList)
+{
+	if(userFlags.printTokenList)
+	{
+		printf("\nToken List:\n");
+		llist_print(tokenList, tokenPrint);
+		printf("\n\n");
+	}
 }
 
 

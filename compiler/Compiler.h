@@ -39,5 +39,9 @@ llist* extractTokensFromLexResult(char* fileName);
 /* creates a variable list from token list */
 VariableList* createVariableList(llist* tokenList);
 
+void printTokenList(llist* tokenList);
+
+void printVariaballsList(VariableList* varList);
+
 
 

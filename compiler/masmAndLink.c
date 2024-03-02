@@ -58,12 +58,6 @@ void runMasmAndLink(char* outputName)
 		fprintf(runFile, "del output.tok\n");
 	}
 
-	
-	if (userFlags.runExecutable)
-	{
-		fprintf(runFile, outputNameNoExtension);
-		fprintf(runFile, "\n");
-	}
 
 	// remove bat file
 	fprintf(runFile, "del %s\n", BAT_FILE_NAME);
