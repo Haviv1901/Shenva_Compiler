@@ -147,11 +147,13 @@
     <ClCompile Include="ASTnumeric.c" />
     <ClCompile Include="Compiler.c" />
     <ClCompile Include="fileHelper.c" />
+    <ClCompile Include="flags.c" />
     <ClCompile Include="FunctuionList.c" />
     <ClCompile Include="InstructionWriting.c" />
     <ClCompile Include="lexer.c" />
     <ClCompile Include="llist.c" />
     <ClCompile Include="masmAndLink.c" />
+    <ClCompile Include="Menu.c" />
     <ClCompile Include="prog.c" />
     <ClCompile Include="ScopeTree.c" />
     <ClCompile Include="TokenGetter.c" />
@@ -166,11 +168,13 @@
     <ClInclude Include="ASTnumeric.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="fileHelper.h" />
+    <ClInclude Include="Flags.h" />
     <ClInclude Include="FunctionList.h" />
     <ClInclude Include="masmAndLink.h" />
     <ClInclude Include="InstructionWriting.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="llist.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="ScopeTree.h" />
     <ClInclude Include="TokenGetter.h" />
     <ClInclude Include="VariableManager.h" />

@@ -15,3 +15,5 @@ long fileSize(const char* filename);
 
 /* close file */
 void closeFile(FILE* file);
+
+void printFile(const char* filename);

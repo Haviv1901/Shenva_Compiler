@@ -1,0 +1,7 @@
+
+Welcome to Shenva compiler!
+Please read the README.txt
+
+--- Credits ---
+Noam Shirazi
+Aviv Ross

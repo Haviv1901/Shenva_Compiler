@@ -1,4 +1,5 @@
 #include "Compiler.h"
+#include "Menu.h"
 #include <stdio.h>
 #include <crtdbg.h>
 #define _CRTDBG_MAP_ALLOC
@@ -19,17 +20,18 @@ void printRedText(const char* text) {
 
 int main(int argc, char* argv[])
 {
-    // Check if there are enough command line arguments
-    if (argc < 3)
+
+
+    bool compile = handleCommandLineArguments(argc, argv);
+
+
+
+    if (compile)
     {
-        fprintf(stderr, "Usage: %s <input_file> <output_file>\n", argv[0]);
-        return 1; // Exit with an error code
+        Compile(argv[1], argv[2]);
     }
 
-    // Pass the input and output file names to the Compile function
-
-
-    Compile(argv[1], argv[2]);
+    
 
     if (_CrtDumpMemoryLeaks() == 0)
     {

@@ -1,0 +1,23 @@
+--- Usage ---
+   shenva [Input file] [outputfile] -[flags]
+   shenva [Input file] [outputfile] (this will turn off all flags)
+  (Recommended .lol for input file and .exe for output)
+
+--- Flags ---
+Show logs -l
+Run after compilation -r
+Don't show Ascii art -c
+Don't delete assembly file -a
+Don't delete object file -o
+Don't delete token file -t
+Don't delete token's error file -e
+Show token list -p
+Show Variables -s
+
+Turn on all keep files flags -F
+Turn on all print flags -P
+Turn on all above flags -X
+
+--- example ---
+shenva input.lol output.exe -rP
+Compile file "input.lol" into "output.exe", run on finish and print

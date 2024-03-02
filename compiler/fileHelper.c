@@ -50,6 +50,24 @@ void closeFile(FILE* file)
 	}
 }
 
+void printFile(const char* filename)
+{
+	FILE* file = fopen(filename, "r");
+	if (file == NULL) 
+	{
+		return;
+	}
+
+	char buffer[1024]; // Buffer to read lines from file
+
+	while (fgets(buffer, sizeof(buffer), file) != NULL)
+	{
+		printf("%s", buffer);
+	}
+
+	fclose(file);
+}
+
 
 
 

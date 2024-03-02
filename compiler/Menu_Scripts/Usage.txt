@@ -1,0 +1,5 @@
+--- Usage ---
+shenva -h | for help
+shenva [Input file] [outputfile] -[flags] | for compilations
+shenva [Input file] [outputfile] | for compilations with no flags
+(Recommended .lol for input file and .exe for output)
