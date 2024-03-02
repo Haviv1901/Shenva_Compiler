@@ -190,6 +190,12 @@ ASTNode* parseFirst(struct node** curr)
 				}
 
 			}
+			else if ((*curr)->data->type == TOKEN_REFERENCE || (*curr)->data->type == TOKEN_DEREFERENCE)
+			{
+				node = createNewASTnode((*curr)->data);
+				(*curr) = (*curr)->next;
+				node->children[0] = parseFirst(curr);
+			}
 			else
 			{
 				node = createNewASTnode((*curr)->data);
@@ -200,6 +206,10 @@ ASTNode* parseFirst(struct node** curr)
 					(*curr) = (*curr)->next;
 				}
 				(*curr) = (*curr)->next;
+				if ((*curr)->data->type == TOKEN_LIND)
+				{
+					node = parseIndex(curr, node);
+				}
 			}
 
 
@@ -210,3 +220,64 @@ ASTNode* parseFirst(struct node** curr)
 	}
 	return NULL;
 }
+
+
+
+/*
+parsseIndex: this function will parse indexes
+input: the current token of the token list and the addition var
+output: the dereference Node, leading to the addition
+*/
+ASTNode* parseIndex(struct node** curr, ASTNode* var)
+{
+
+	ASTNode* holder = NULL, *res = NULL, *multiplierHolder = NULL;
+	Token* indexMultiplyer = NULL, * mul = NULL;
+	(*curr)->data->type = TOKEN_ADD;//changeing the [ to dereference
+	holder = createNewASTnode((*curr)->data);
+	
+	holder->children[0] = var;//seeting var
+	(*curr) = (*curr)->next;
+
+	indexMultiplyer = (Token*)malloc(sizeof(Token));
+	indexMultiplyer->type = TOKEN_NUM;
+	indexMultiplyer->value = (int*)malloc(sizeof(int));
+	
+	if(var->token->type == TOKEN_CHAR_POINTER || var->token->type == TOKEN_BOOL_POINTER)
+	{
+		*((int*)(indexMultiplyer->value)) = 1;
+	}
+	else
+	{
+		*((int*)(indexMultiplyer->value)) = 4;
+	}
+	mul = (Token*)malloc(sizeof(Token));
+	mul->type = TOKEN_MUL;
+	mul->value = NULL;
+
+	multiplierHolder = createNewASTnode(mul);
+	multiplierHolder->children[0] = createNewASTnode(indexMultiplyer);
+	multiplierHolder->children[1] = parseLast(curr);
+
+
+	(*curr)->data->type = TOKEN_DEREFERENCE;
+	
+	holder->children[1] = multiplierHolder;//parsing the index input value
+
+
+	res = createNewASTnode((*curr)->data);
+	res->children[0] = holder;//putting all under the dereference
+	llist_push(curr, mul);
+	llist_push(curr, indexMultiplyer);
+	(*curr) = (*curr)->next->next->next;
+	if ((*curr)->data->type == TOKEN_LIND)//if there is more than one [, for example: <varName>[<val>][<val>]
+	{
+		res = parseIndex(curr, res);//parse the next one
+	}
+	return res;
+}
+
+
+
+
+

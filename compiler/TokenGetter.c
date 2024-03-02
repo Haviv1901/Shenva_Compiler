@@ -223,6 +223,33 @@ bool checkForFunction(FILE* file)
 }
 
 
+void handleRefrenceToken(Token* token, llist* tokenList)
+{
+
+	if (llist_get_last_tok(tokenList)->type == TOKEN_DEREFERENCE)
+	{
+		llist_pop(tokenList);
+		free(token);
+		return;
+	}
+	token->type = TOKEN_REFERENCE;
+	token->value = NULL;
+}
+
+
+void handleDerefrenceToken(Token* token, llist* tokenList)
+{
+	if (llist_get_last_tok(tokenList)->type == TOKEN_REFERENCE)
+	{
+		llist_pop(tokenList);
+		free(token);
+		return;
+	}
+	token->type = TOKEN_DEREFERENCE;
+}
+
+
+
 /*
  * extracting tokens from a file.
  * file: FILE*, an opened file
@@ -251,7 +278,7 @@ llist* extractToken(FILE* file)
 				break;
 		}
 
-		if(charFromfile == EOF)
+		if(charFromfile == EOF || charFromfile == ' ')
 		{
 			isEOF = true;
 			continue; // last token before eof is always \n
@@ -286,6 +313,7 @@ llist* extractToken(FILE* file)
 			case TOKEN_PRINT_INT: // printInt
 			case TOKEN_PRINT_CHAR: // printChar
 			case TOKEN_PRINT_FLOAT: // printFloat
+			case TOKEN_PRINT_STRING:
 				token->type = charFromfile;
 				lastVoidType = charFromfile;
 				token->value = NULL;
@@ -296,10 +324,10 @@ llist* extractToken(FILE* file)
 				token->type = TOKEN_INPUT_FLOAT;
 				lastVoidType = TOKEN_INPUT_FLOAT;
 				token->value = NULL;
-				charFromfile = fgetc(file); // skip the space
-				charFromfile = fgetc(file); // skip the space
-				charFromfile = fgetc(file); // skip the space
-				charFromfile = fgetc(file); // skip the space
+				//charFromfile = fgetc(file); // skip the space -> useless ?
+				//charFromfile = fgetc(file); // skip the space
+				//charFromfile = fgetc(file); // skip the space
+				//charFromfile = fgetc(file); // skip the space
 				break;
 
 			case TOKEN_INPUT_INT: // intInput
@@ -319,6 +347,11 @@ llist* extractToken(FILE* file)
 			case TOKEN_INT: // int var
 			case TOKEN_BOOL: // bool var
 			case TOKEN_FLOAT: // float var
+			case TOKEN_CHAR: // char var
+			case TOKEN_FLOAT_POINTER: // pFloat
+			case TOKEN_INT_POINTER: // pInt
+			case TOKEN_CHAR_POINTER: // pChar
+			case TOKEN_BOOL_POINTER: // pBool
 				token->type = charFromfile;
 				token->value = NULL;
 				lastVoidType = charFromfile;
@@ -353,14 +386,6 @@ llist* extractToken(FILE* file)
 				}
 				token->value = extractIdentifier(file);
 				break;
-
-			case TOKEN_CHAR: // char variable type
-				token->type = TOKEN_CHAR;
-				token->value = NULL;
-				lastVoidType = TOKEN_CHAR;
-				isDecLine = true;
-				break;
-
 			case TOKEN_LETTER: // single character. ex: 'a'
 				token->type = TOKEN_LETTER;
 				token->value = extractLetter(file);
@@ -382,6 +407,32 @@ llist* extractToken(FILE* file)
 				}
 				break;
 
+			case TOKEN_REFERENCE: // &
+				handleRefrenceToken(token, tokenList);
+				break;
+			case TOKEN_DEREFERENCE: // ^
+				handleDerefrenceToken(token, tokenList);
+
+				break;
+			case TOKEN_LIND: // [
+				token->type = TOKEN_LIND;
+				token->value = NULL;
+				break;
+			case TOKEN_RIND: // ]
+				token->type = TOKEN_RIND;
+				token->value = NULL;
+			case TOKEN_LIST:// |
+				token->type = TOKEN_LIST;
+				token->value = NULL;
+				if (lastVoidType == TOKEN_PRINT_STRING)
+				{
+					isPrintLine = !isPrintLine;
+				}
+				else if (lastVoidType == TOKEN_INT_POINTER || lastVoidType == TOKEN_CHAR_POINTER || lastVoidType == TOKEN_FLOAT_POINTER || lastVoidType == TOKEN_BOOL_POINTER)
+				{
+					isDecLine = !isDecLine;
+				}
+				break;
 			case TOKEN_COMMA: // ,
 				if (isDefLine || (!isPrintLine && !isDecLine)) 
 				{
@@ -485,6 +536,10 @@ void printToken(Token* token)
 	{
 		printf("printFloat");
 	}
+	else if (token->type == TOKEN_PRINT_STRING)
+	{
+		printf("printString");
+	}
 	else if (token->type == TOKEN_ENDL)
 	{
 		printf("endl\n");
@@ -555,7 +610,7 @@ void printToken(Token* token)
 	}
 	else if (token->type == TOKEN_LETTER)
 	{
-		printf("%c", *((char*)(token->value)));
+		printf("\'%c\'", *((char*)(token->value)));
 	}
 	else if (token->type == TOKEN_IF)
 	{
@@ -608,6 +663,43 @@ void printToken(Token* token)
 	else if (token->type == TOKEN_RETURN)
 	{
 		printf("return");
+	}
+	else if (token->type == TOKEN_REFERENCE)
+	{
+		printf("&");
+	}
+	else if (token->type == TOKEN_DEREFERENCE)
+	{
+		printf("^");
+	}
+	else if (token->type == TOKEN_LIND)
+	{
+		printf("[");
+
+	}
+	else if (token->type == TOKEN_RIND)
+	{
+		printf("]");
+	}
+	else if (token->type == TOKEN_FLOAT_POINTER)
+	{
+		printf("pFloat");
+	}
+	else if (token->type == TOKEN_INT_POINTER)
+	{
+		printf("pInt");
+	}
+	else if (token->type == TOKEN_CHAR_POINTER)
+	{
+		printf("pChar");
+	}
+	else if (token->type == TOKEN_BOOL_POINTER)
+	{
+		printf("pBool");
+	}
+	else if (token->type == TOKEN_LIST)
+	{
+		printf("|");
 	}
 	else
 	{

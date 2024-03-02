@@ -15,11 +15,11 @@ ASTNode* buildASTVariables(struct node** curr)
 	Token* currentToken = (*curr)->data;
 	ASTNode* result = NULL;
 
-	if(currentToken->type == TOKEN_INT || currentToken->type == TOKEN_CHAR || currentToken->type == TOKEN_FLOAT || currentToken->type == TOKEN_BOOL)
+	if(isVarDeclerationToken(*currentToken))
 	{
 		result = buildASTDeclerationsNumeric(curr);
 	}
-	else if (currentToken->type == TOKEN_VAR)
+	else
 	{
 		result = buildASTVariablesAssign(curr);
 	}
@@ -35,18 +35,35 @@ ASTNode* buildASTVariablesAssign(node** curr)
 	struct node* currentNode = (*curr);
 	Token* currentToken = currentNode->data;
 
-	ASTNode* result = createNewASTnode(currentNode->next->data); // TOKEN_ASSIGN token node
+	ASTNode* result = createNewASTnode(is_assign_line(curr)); // TOKEN_ASSIGN token node
 
-	result->children[0] = createNewASTnode(currentNode->data); // ID token node
+	result->children[0] = parseLast(curr); // ID token node
 
 	// skip current twice
-	(*curr) = (*curr)->next->next;
+	(*curr) = (*curr)->next;
 	result->children[1] = buildASTNumeric(curr); // currentNode->next->next is the number assigned to the variable
 
 	return result;
 
 
 }
+
+/*
+buildASTListDeclerationBranch: this function will build the right side of the decleration in a pointer-list decleration
+input: the current token, and the type of the decleration
+output: the right side branch
+*/
+ASTNode* buildASTListDeclerationBranch(struct node** curr, Token* decTypeTok)
+{
+	ASTNode* result = NULL;
+	(*curr)->data->type = TOKEN_LIST_SIZE_DECLERATION;//using a token list size decleration, to be more efficient
+	result = createNewASTnode((*curr)->data);
+	(*curr) = (*curr)->next;
+	result->children[LEAF] = createNewASTnode((*curr)->data);// we know its only ont
+	(*curr) = (*curr)->next->next;
+	return result;
+}
+
 
 
 ASTNode* buildASTDeclerationsNumeric(struct node** curr)
@@ -55,13 +72,24 @@ ASTNode* buildASTDeclerationsNumeric(struct node** curr)
 	Token* currentToken = currentNode->data;
 
 	ASTNode* result = createNewASTnode(currentToken); // INT token node
-	result->children[0] = createNewASTnode(((Token*)currentNode->next->data)); // ID token node
+	result->children[0] = createNewASTnode((currentNode->next->data)); // ID token node
 
 	if(currentNode->next->next != NULL && ((Token*)(currentNode->next->next->data))->type == TOKEN_ASSIGN)
 		// currentNode->next->next is the assign token, if exist
 	{
 		(*curr) = (*curr)->next->next->next;
-		result->children[1] = buildASTNumeric(curr); // currentNode->next->next->next is the number assigned to the variable
+		if ((*curr)->data->type == TOKEN_LIND)
+		{
+			result->children[1] = buildASTListDeclerationBranch(curr, currentToken); // currentNode->next->next->next is the left index of the list
+		}
+		else if ((*curr)->data->type == TOKEN_LIST)
+		{
+			result->children[1] = buildASTPreMadeListDec(curr);
+		}
+		else
+		{
+			result->children[1] = buildASTNumeric(curr); // currentNode->next->next->next is the number assigned to the variable
+		}
 	}
 	else
 	{
@@ -71,3 +99,37 @@ ASTNode* buildASTDeclerationsNumeric(struct node** curr)
 
 	return result;
 }
+
+
+/*
+buildASTPreMadeListDec: this function will make a NULL list of the values in the list
+input: the token list
+output: the branch to the first NULL in the NULL list
+*/
+ASTNode* buildASTPreMadeListDec(struct node** curr)
+{
+	ASTNode* result = createNewASTnode(NULL);
+	ASTNode* currentNode = result;
+	(*curr) = (*curr)->next;
+	while ((*curr)->data->type != TOKEN_LIST)//looking for the end
+	{
+		currentNode->children[ONE_CHILD_NODE] = buildASTNumeric(curr);
+		currentNode->children[LEAF] = NULL;
+		if ((*curr)->data->type == TOKEN_COMMA)// if there is another expression
+		{
+			currentNode->children[LEAF] = createNewASTnode(NULL);
+			currentNode = currentNode->children[LEAF];
+			(*curr) = (*curr)->next;
+		}
+	}
+	(*curr) = (*curr)->next;// going to the next one
+
+	return result;
+
+}
+
+
+
+
+
+

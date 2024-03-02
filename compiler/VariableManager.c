@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "AST.h"
+
 int reformattedStackPointer = 0; // new stack pointer that works with variables in size of less then 4 bytes
 ScopeTreeNode* scopeTreeHead = NULL;
 VariableList* varListHead = NULL;
@@ -18,18 +20,17 @@ int getSizeByType(enum VarTypes type)
 {
 	switch (type) // in bytes
 	{
+	case VAR_INT_POINTER:
+	case VAR_CHAR_POINTER:
+	case VAR_FLOAT_POINTER:
+	case VAR_BOOL_POINTER:
 	case VAR_INT:
-		return 4;
-	case VAR_STRING:
+	case VAR_FLOAT:
 		return 4;
 	case VAR_BOOL:
 		return 1;
 	case VAR_CHAR:
 		return 1;
-	case VAR_FLOAT:
-		return 4;
-	case VAR_DOUBLE:
-		return 8;
 	default:
 		return 0;
 	}
@@ -178,29 +179,26 @@ bool callIsVariablExist(VariableList* varList, char* identifier, int currentScop
 
 enum VarTypes getVarByTokenType(enum TokenTypes currentToken)
 {
-	if (currentToken == TOKEN_INT)
+	switch (currentToken)
 	{
-		return VAR_INT;
-	}
-	else if (currentToken == TOKEN_CHAR)
-	{
-		return VAR_CHAR;
-	}
-	else if (currentToken == TOKEN_FLOAT)
-	{
-		return VAR_FLOAT;
-	}
-	else if (currentToken == TOKEN_STRING)
-	{
-		return VAR_STRING;
-	}
-	else if (currentToken == TOKEN_BOOL)
-	{
-		return VAR_BOOL;
-	}
-	else
-	{
-		return VAR_ERROR;
+		case TOKEN_INT:
+			return VAR_INT;
+		case TOKEN_CHAR:
+			return VAR_CHAR;
+		case TOKEN_FLOAT:
+			return VAR_FLOAT;
+		case TOKEN_BOOL:
+			return VAR_BOOL;
+		case TOKEN_INT_POINTER:
+			return VAR_INT_POINTER;
+		case TOKEN_CHAR_POINTER:
+			return VAR_CHAR_POINTER;
+		case TOKEN_FLOAT_POINTER:
+			return VAR_FLOAT_POINTER;
+		case TOKEN_BOOL_POINTER:
+			return VAR_BOOL_POINTER;
+		default:
+			return VAR_ERROR;
 	}
 }
 
@@ -351,14 +349,15 @@ FuncNode* callGetFunction(char* id)
 
 VariableList* createVariableListFromToken(llist* tokenList)
 {
-	if (createFunctionList(tokenList) == NULL && isFuncs(tokenList))
+	if (createFunctionList(tokenList) == NULL && isFuncs(tokenList)) // load functions from the code
 	{
 		printf("Semantic  analysis failed.\n");
 		callDeleteFuncList();
 		deleteVariableList(varListHead);
 		return NULL;
 	}
-	if(createVariableListFromScope(tokenList, -1 , scopeTreeHead) == 0)
+
+	if(createVariableListFromScope(tokenList, -1 , scopeTreeHead) == 0) // load variables from the code
 	{
 		printf("Semantic  analysis failed.\n");
 		deleteScopeTree(scopeTreeHead);
@@ -374,6 +373,19 @@ void callDeleteScopeTree()
 	deleteScopeTree(scopeTreeHead);
 }
 
+
+
+void addElementToStackPtr(enum TokenTypes decTok)
+{
+	if (decTok == TOKEN_INT_POINTER || decTok == TOKEN_FLOAT_POINTER)
+	{
+		reformattedStackPointer +=  4;//adding the correct amount
+	}
+	else if ((decTok == TOKEN_CHAR_POINTER || decTok == TOKEN_BOOL_POINTER))
+	{
+		reformattedStackPointer += 1;
+	}
+}
 
 
 /*
@@ -396,7 +408,7 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 		currentScopeNode = addChild(currentScopeNode, currentScope);
 	}
 	
-
+	
 	int holderForPlacceInMemory;
 	int outerBracketBalance = 1;
 
@@ -412,9 +424,10 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 	bool isNextScopeFunc = false;
 	while (curr != NULL) // going through the token list
 	{
-		enum TokenTypes currentToken = ((Token*)(curr->data))->type;
-		if (currentToken == TOKEN_INT || currentToken == TOKEN_CHAR || currentToken == TOKEN_FLOAT || currentToken == TOKEN_BOOL)
-			// if its a decleration token
+		enum TokenTypes currentToken = ((curr->data))->type;
+
+		// checks that all variables created arn't already exists.
+		if (isVarDeclerationToken(*curr->data)) 
 		{
 			curr = curr->next;
 			identifier = (char*)(((Token*)(curr->data))->value);//getting identifier
@@ -424,8 +437,31 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 				deleteVariableList(varListHead);
 				return 0;
 			}
+			
+			curr = curr->next->next;
+			if (curr->data->type == TOKEN_LIND && !isListSizeValid(currentToken, curr->next->data))//if its a list decleration, and its invalid
+			{
+				printf("Semantic error: list size must be bigger than 0 in decleration of %s\n", identifier);
+				deleteVariableList(varListHead);
+				return 0;
+			}
+			else if (curr->data->type == TOKEN_LIST)
+			{
+				curr = curr->next;
+				addElementToStackPtr(currentToken);
+				while (curr->data->type != TOKEN_LIST)
+				{
+					if (curr->data->type == TOKEN_COMMA)
+					{
+						addElementToStackPtr(currentToken);
+					}
+					curr = curr->next;				
+				}
+			}
+
 			createNewVariable(identifier, getVarByTokenType(currentToken), &varListHead, currentScope, false, 0);//adding var
 		}
+		// checks that all variables used exists already.
 		else if (currentToken == TOKEN_VAR)//if its a variable
 		{
 			identifier = (char*)(((Token*)(curr->data))->value);
@@ -436,6 +472,7 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 				return 0;
 			}
 		}
+		// checks that all functions call are made to functions that exists and with enough parameters.
 		else if (currentToken == TOKEN_FUNCTION_CALL)
 		{
 			identifier = (char*)(((Token*)(curr->data))->value);
@@ -518,6 +555,12 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 			return 1;
 
 		}
+		else if (currentToken == TOKEN_REFERENCE && curr->next->next->data->type == TOKEN_ASSIGN)
+		{
+			printf("Semantic error: invalid lvalue: &%s\n", (char*)curr->next->data->value);
+			deleteVariableList(varListHead);
+			return 0;
+		}
 		curr = curr->next;
 	}
 
@@ -587,6 +630,36 @@ int isParamNumValid(struct node* curr, int paramNum)
 
 
 
+/*
+isListSizeValid: this function will check if the size of the list is valid. if its not, it will return false. if it is
+it will add to the reformattedstackPointer the correct amount
+input: the decleration token, and the size token
+output: a bool 
+*/
+bool isListSizeValid(enum TokenTypes decTok, Token* sizeTok)
+{
+	if (*(int*)(sizeTok->value) <= 0)// if size is invalid
+	{
+		return false;
+	}
+
+	if (decTok == TOKEN_INT_POINTER || decTok == TOKEN_FLOAT_POINTER)
+	{
+		reformattedStackPointer += (*(int*)(sizeTok->value)) * 4;//adding the correct amount
+	}
+	else if ((decTok == TOKEN_CHAR_POINTER || decTok == TOKEN_BOOL_POINTER))
+	{
+		reformattedStackPointer += (*(int*)(sizeTok->value));
+	}
+	return true;
+}
+
+
+bool isVarPointingToOneByte(char* identifier)
+{
+}
+
+
 
 /*
 getSizeOfScope: this function will count the size of a given scope
@@ -636,7 +709,7 @@ isVars: this function will check if there are Variables in the token list
 input:the token list
 output: true or false
 */
-bool isVars(llist* tokenList) // what for ?
+bool isVars(llist* tokenList)
 {
 	struct node* curr = *tokenList;
 	enum varTypes type;
