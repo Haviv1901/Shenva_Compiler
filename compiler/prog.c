@@ -2,6 +2,8 @@
 #include "Menu.h"
 #include <stdio.h>
 #include <crtdbg.h>
+
+#include "flags.h"
 #define _CRTDBG_MAP_ALLOC
 
 void printGreenText(const char* text)
@@ -32,15 +34,20 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    Compile(argv[1], argv[2]);
+    isCompilationSucceed = Compile(argv[1], argv[2]);
+
+    if(userFlags.dontPrintAscii)
+    {
+        return 0;
+    }
 
     if (isCompilationSucceed)
     {
-        printFile("Menu_Scripts/ascii_success");
+        printFile("Menu_Scripts/ascii_success.txt");
     }
     else
     {
-        printFile("Menu_Scripts/ascii_failure");
+        printFile("Menu_Scripts/ascii_failure.txt");
     }
 
     return 0; // Exit successfully

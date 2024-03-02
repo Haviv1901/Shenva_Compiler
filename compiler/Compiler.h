@@ -28,7 +28,7 @@ typedef struct node* llist;
 #endif
 
 /* main function, compile a txt file into a .exe file */
-void Compile(char* inputFileName, char* outputFileName);
+int Compile(char* inputFileName, char* outputFileName);
 
 /* activate lexer on input code */
 int activateLexer(char* inputFileName);

@@ -19,12 +19,12 @@ void printVariaballsWithScope(VariableList* curr)
 
 
 /* main function, compile a txt file into a .exe file */
-void Compile(char* inputFileName, char* outputFileName)
+int Compile(char* inputFileName, char* outputFileName)
 {
 	printf("Starting compilation...\n");
 	if (!activateLexer(inputFileName)) // lex inpput file
 	{
-		return;
+		return 0;
 	}
 
 	llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME); // extract tokens to c memory
@@ -38,7 +38,7 @@ void Compile(char* inputFileName, char* outputFileName)
 	if(isVars(tokenList) && varList == NULL) // checking if there is any undefined variable error.
 	{
 		token_llist_free(tokenList);
-		return;
+		return 0;
 	}
 
 	printVariaballsList(varList);
@@ -53,7 +53,7 @@ void Compile(char* inputFileName, char* outputFileName)
 	token_llist_free(tokenList);
 	deleteVariableList(varList);
 	callDeleteFuncList();
-
+	return 1;
 }
 
 void printVariaballsList(VariableList* varList)
