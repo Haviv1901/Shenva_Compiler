@@ -1,3 +1,4 @@
-int a
+
+int a = 0
 pInt b = &a
 

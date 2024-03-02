@@ -4,14 +4,16 @@
 #include <crtdbg.h>
 #define _CRTDBG_MAP_ALLOC
 
-void printGreenText(const char* text) {
+void printGreenText(const char* text)
+{
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN); // Set text color to green
     printf("%s", text);
     SetConsoleTextAttribute(hConsole, FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_GREEN); // Reset text color
 }
 
-void printRedText(const char* text) {
+void printRedText(const char* text)
+{
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, FOREGROUND_RED); // Set text color to red
     printf("%s", text);
@@ -20,63 +22,25 @@ void printRedText(const char* text) {
 
 int main(int argc, char* argv[])
 {
-
-
+    bool isCompilationSucceed = false;
     bool compile = handleCommandLineArguments(argc, argv);
 
 
 
-    if (compile)
+    if (!compile)
     {
-        Compile(argv[1], argv[2]);
+        return 0;
     }
 
-    
+    Compile(argv[1], argv[2]);
 
-    if (_CrtDumpMemoryLeaks() == 0)
+    if (isCompilationSucceed)
     {
-        printGreenText(" ________   ________          ___       _______   ________  ___  __    ________              \n");
-        printGreenText("|\\   ___  \\|\\   __  \\        |\\  \\     |\\  ___ \\ |\\   __  \\|\\  \\|\\  \\ |\\   ____\\             \n");
-        printGreenText("\\ \\  \\\\ \\  \\ \\  \\|\\  \\       \\ \\  \\    \\ \\   __/|\\ \\  \\|\\  \\ \\  \\/  /|\\ \\  \\___|_            \n");
-        printGreenText(" \\ \\  \\\\ \\  \\ \\  \\\\\\  \\       \\ \\  \\    \\ \\  \\_|/_\\ \\   __  \\ \\   ___  \\ \\_____  \\           \n");
-        printGreenText("  \\ \\  \\\\ \\  \\ \\  \\\\\\  \\       \\ \\  \\____\\ \\  \\_|\ \\\\ \\  \\ \\  \\ \\  \\\\ \\  \\|____|\\  \\          \n");
-        printGreenText("   \\ \\__\\\\ \\__\\ \\_______\\       \\ \\_______\\ \\_______\\\\ \\__\\ \\__\\ \\__\\\\ \\__\\____\\_\\  \\         \n");
-        printGreenText("    \\|__| \\|__|\\|_______|        \\|_______|\\|_______| \\|__|\\|__|\\|__| \\|__|\\_________\\        \n");
-        printGreenText("                                                                                   \\|_________|        \n");
-        printGreenText("                                                                                             \n");
-        printGreenText(" ___       _______  _________  ________           ________  ________          ___  ___       \n");
-        printGreenText("|\\  \\     |\\  ___ \\|\\___   ___\\\\   ____\\         |\\   ____\\|\\   __  \\        |\\  \\|\\  \\      \n");
-        printGreenText("\\ \\  \\    \\ \\   __/\\|___ \\  \\_\\ \\  \\___|_        \\ \\  \\___|\\ \\  \\|\\  \\       \\ \\  \\ \\  \\     \n");
-        printGreenText(" \\ \\  \\    \\ \\  \\_|/__  \\ \\  \\ \\ \\_____  \\        \\ \\  \\  __\\ \\  \\\\\\  \\       \\ \\  \\ \\  \\    \n");
-        printGreenText("  \\ \\  \\____\\ \\  \\_|\ \\  \\ \\  \\ \\|____|\\  \\        \\ \\  \\|\\  \\ \\  \\\\\\  \\       \\ \\__\\ \\__\\   \n");
-        printGreenText("   \\ \\_______\\ \\_______\\  \\ \\__\\  ____\\_\\  \\        \\ \\_______\\ \\_______\\       \\|__|\\|__|   \n");
-        printGreenText("    \\|_______|\\|_______|   \\|__| |\\_________\\        \\|_______|\\|_______|           ___  ___ \n");
-        printGreenText("                                 \\|_________|                                      |\\__\\|\\__\\\n");
-        printGreenText("                                                                                   \\|__|\\|__|\n");
-        printGreenText("                                                                                             \n");
-
+        printFile("Menu_Scripts/ascii_success");
     }
     else
     {
-        printRedText("  ___    ___ _______   ________           ___       _______   ________  ___  __    ________      \n");
-        printRedText(" |\\  \\  /  /|\\  ___ \\ |\\   ____\\         |\\  \\     |\\  ___ \\ |\\   __  \\|\\  \\|\\  \\ |\\   ____\\     \n");
-        printRedText(" \\ \\  \\/  / | \\   __/|\\ \\  \\___|_        \\ \\  \\    \\ \\   __/|\\ \\  \\|\\  \\ \\  \\/  /|\\ \\  \\___|_    \n");
-        printRedText("  \\ \\    / / \\ \\  \\_|/_\\ \\_____  \\        \\ \\  \\    \\ \\  \\_|/_\\ \\   __  \\ \\   ___  \\ \\_____  \\   \n");
-        printRedText("   \\/  /  /   \\ \\  \\_|\ \|____|\\  \\        \\ \\  \\____\\ \\  \\_|\ \|\\ \\  \\ \\  \\ \\  \\\\ \\  \\|____|\\  \\  \n");
-        printRedText(" __/  / /      \\ \\_______\\____\\_\\  \\        \\ \\_______\\ \\_______\\ \\__\\ \\__\\ \\__\\\\ \\__\\____\\_\\  \\ \n");
-        printRedText("|\\___/ /        \\|_______|\_________\\        \\|_______|\\|_______|\\|__|\\|__|\\|__| \\|__|\\_________\\\n");
-        printRedText("\\|___|/                  \\|_________|                                                \\|_________|\n");
-        printRedText("                                                                                                 \n");
-        printRedText("                                                                                                 \n");
-        printRedText("  ________  ________  ________  ___  ___  ________  ________          ________                    \n");
-        printRedText(" |\\   __  \\|\\   __  \\|\\   __  \\|\\  \\|\\  \\|\\   __  \\|\\   __  \\        |\\   ___ \\  ___              \n");
-        printRedText(" \\ \\  \\|\\ /\\ \\  \\|\\  \\ \\  \\|\\  \\ \\  \\\\\\  \\ \\  \\|\\  \\ \\  \\|\\  \\       \\ \\  \\_|\ \\|\\__\\             \n");
-        printRedText("  \\ \\   __  \\ \\  \\\\\\  \\ \\  \\\\\\  \\ \\   __  \\ \\  \\\\\\  \\ \\  \\\\\\  \\       \\ \\  \\ \\ \\|__|             \n");
-        printRedText("   \\ \\  \\|\\  \\ \\  \\\\\\  \\ \\  \\\\\\  \\ \\  \\ \\  \\ \\  \\\\\\  \\ \\  \\\\\\  \\       \\ \\  \\_\\ \\  ___           \n");
-        printRedText("    \\ \\_______\\ \\_______\\ \\_______\\ \\__\\ \\__\\ \\_______\\ \\_______\\       \\ \\_______\\|\\__\\          \n");
-        printRedText("     \\|_______|\\|_______|\\|_______|\\|__|\\|__|\\|_______|\\|_______|        \\|_______|\\|__|          \n");
-        printRedText("                                                                                                 \n");
-        printRedText("                                                                                                 \n");
+        printFile("Menu_Scripts/ascii_failure");
     }
 
     return 0; // Exit successfully

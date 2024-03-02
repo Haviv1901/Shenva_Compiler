@@ -94,74 +94,10 @@ or ax, 00C00h
 mov[esp], ax
 fldcw word ptr[esp]
 add esp, 2
-push ebp
-mov ebp, esp
 push 0
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 32
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 111
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 108
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 108
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 101
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 104
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-mov edx, esp
-call writeString
-mov esp, ebp
-pop ebp
-push ebp
-mov ebp, esp
-push 0
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 33
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 100
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 108
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 114
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 111
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-push 119
-pop eax
-sub esp, 1
-mov byte ptr[esp], al
-mov edx, esp
-call writeString
-mov esp, ebp
-pop ebp
+mov eax, ebp
+sub eax, 4
+push eax
 label_0:
 
 mov esp, ebp

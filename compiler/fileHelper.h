@@ -17,3 +17,5 @@ long fileSize(const char* filename);
 void closeFile(FILE* file);
 
 void printFile(const char* filename);
+
+char* clearExeExtension(const char* filename);

@@ -20,7 +20,7 @@ void printVariaballsWithScope(VariableList* curr)
 /* main function, compile a txt file into a .exe file */
 void Compile(char* inputFileName, char* outputFileName)
 {
-
+	printf("Starting compilation...\n");
 	if (!activateLexer(inputFileName)) // lex inpput file
 	{
 		return;

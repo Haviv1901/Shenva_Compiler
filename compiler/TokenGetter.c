@@ -5,9 +5,6 @@
 #include <string.h>
 
 
-#ifndef LOGMANAGER_H
-#include "logManager.h"
-#endif
 
 
 float extractDecimal(FILE* file)

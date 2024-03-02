@@ -125,7 +125,7 @@
     <ClInclude Include="Menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Flags.h">
+    <ClInclude Include="flags.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

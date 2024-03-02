@@ -8,6 +8,6 @@
 #include <Windows.h>
 #include <stdbool.h>
 
-void runMasmAndLink(const char* outputName);
+void runMasmAndLink(char* outputName);
 
 #endif 

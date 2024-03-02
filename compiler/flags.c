@@ -1,14 +1,23 @@
 #include "flags.h"
-#include "string.h"
+#include <string.h>
 
-
-static flags userFlags;
+flags userFlags = {
+	.printLogs = false,
+	.runExecutable = false,
+	.dontPrintAscii = false,
+	.keepAsmFile = false,
+	.keepObjectFile = false,
+	.keepTokenFile = false,
+	.keepTokensErrorFile = false,
+	.printTokenList = false,
+	.printVariableList = false
+};
 
 void parseFlags(char* flagsString)
 {
-	for (int i = 0; i < strlen(flagsString); i++)
+	for (int i = 0; i < strlen(flagsString); i++) 
 	{
-
+		parseCharToFlag(flagsString[i]);
 	}
 }
 
@@ -20,48 +29,49 @@ void parseCharToFlag(char toParse)
 		userFlags.runExecutable = 1;
 		break;
 	case 'l':
-		userFlags.showLogs = 1;
+		userFlags.printLogs = 1;
 		break;
 	case 'c':
-		userFlags.showAscii = 1;
+		userFlags.dontPrintAscii = 1;
 		break;
 	case 'a':
-		userFlags.showAsm = 1;
+		userFlags.keepAsmFile = 1;
 		break;
 	case 'o':
-		userFlags.ShowObj = 1;
+		userFlags.keepObjectFile = 1;
 		break;
 	case 't':
-		userFlags.showTokens = 1;
+		userFlags.keepTokenFile = 1;
 		break;
 	case 'e':
-		userFlags.showTokensError = 1;
+		userFlags.keepTokensErrorFile = 1;
 		break;
 	case 'p':
-		userFlags.showTokenList = 1;
+		userFlags.printTokenList = 1;
 		break;
 	case 's':
-		userFlags.showVariables = 1;
+		userFlags.printVariableList = 1;
 		break;
 	case 'F':
-		userFlags.showTokensError = 1;
-		userFlags.ShowObj = 1;
-		userFlags.showAsm = 1;
+		userFlags.keepTokensErrorFile = 1;
+		userFlags.keepObjectFile = 1;
+		userFlags.keepAsmFile = 1;
 		break;
 	case 'P':
-		userFlags.showVariables = 1;
-		userFlags.showTokenList = 1;
-		userFlags.showAscii = 1;
-		userFlags.showLogs = 1;
+		userFlags.printVariableList = 1;
+		userFlags.printTokenList = 1;
+		userFlags.dontPrintAscii = 1;
+		userFlags.printLogs = 1;
 		break;
 	case 'X':
-		userFlags.showVariables = 1;
-		userFlags.showTokenList = 1;
-		userFlags.showAscii = 1;
-		userFlags.showLogs = 1;
-		userFlags.showTokensError = 1;
-		userFlags.ShowObj = 1;
-		userFlags.showAsm = 1;
+		userFlags.printVariableList = 1;
+		userFlags.printTokenList = 1;
+		userFlags.dontPrintAscii = 1;
+		userFlags.printLogs = 1;
+		userFlags.keepTokenFile = 1;
+		userFlags.keepTokensErrorFile = 1;
+		userFlags.keepObjectFile = 1;
+		userFlags.keepAsmFile = 1;
 		userFlags.runExecutable = 1;
 
 	default:

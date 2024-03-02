@@ -51,7 +51,7 @@ void writeMain(char* asmFile)
 }
 
 
-void startWriting(ASTNode* tree, const char* fileName, VariableList* varList, FILE* asmFile)
+void startWriting(ASTNode* tree, VariableList* varList, FILE* asmFile)
 {
 	int mainEndLabel = 0;
 
@@ -82,16 +82,18 @@ void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList)
 	char* asmPath = NULL;
 	asmPath = (char*)calloc(strlen(fileName) + 5, sizeof(char));
 
+	char* fileNameWithNoExtention = clearExeExtension(fileName);
 
-	strcpy(asmPath, fileName);
+	strcpy(asmPath, fileNameWithNoExtention);
 	strcat(asmPath, ".asm");
 	FILE* asmFile = openFile(asmPath, "w");
 	free(asmPath);
 
-	startWriting(tree, fileName, varList, asmFile);
+	startWriting(tree, varList, asmFile);
 
 	
 	fclose(asmFile);
+	free(fileNameWithNoExtention);
 }
 
 

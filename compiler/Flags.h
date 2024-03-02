@@ -1,22 +1,26 @@
 #pragma once
 #include <stdbool.h>
 
+#ifndef FLAG_H
+#define FLAG_H
 
-struct flags
-{
+#include <stdbool.h>
 
-	bool showLogs;
-	bool runExecutable;
-	bool showAscii;
-	bool showAsm;
-	bool ShowObj;
-	bool showTokens;
-	bool showTokensError;
-	bool showTokenList;
-	bool showVariables;
-}typedef flags;
+typedef struct {
+    bool printLogs;
+    bool runExecutable;
+    bool dontPrintAscii;
+    bool keepAsmFile;
+    bool keepObjectFile;
+    bool keepTokenFile;
+    bool keepTokensErrorFile;
+    bool printTokenList;
+    bool printVariableList;
+} flags;
 
+extern flags userFlags;
 
-
-void parseFlags(char* flags);
+void parseFlags(char* flagsString);
 void parseCharToFlag(char toParse);
+
+#endif /* FLAG_H */

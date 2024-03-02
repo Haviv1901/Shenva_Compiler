@@ -21,3 +21,4 @@ Turn on all above flags -X
 --- example ---
 shenva input.lol output.exe -rP
 Compile file "input.lol" into "output.exe", run on finish and print
+

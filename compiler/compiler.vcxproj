@@ -168,7 +168,7 @@
     <ClInclude Include="ASTnumeric.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="fileHelper.h" />
-    <ClInclude Include="Flags.h" />
+    <ClInclude Include="flags.h" />
     <ClInclude Include="FunctionList.h" />
     <ClInclude Include="masmAndLink.h" />
     <ClInclude Include="InstructionWriting.h" />
