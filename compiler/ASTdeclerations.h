@@ -22,7 +22,8 @@ ASTNode* buildASTDeclerationsNumeric(struct node** curr);
 
 ASTNode* buildASTVariablesAssign(node** node);
 
+ASTNode* buildASTListDeclerationBranch(struct node** curr, Token* decTypeTok);
 
-
+ASTNode* buildASTPreMadeListDec(struct node** curr);
 
 #endif

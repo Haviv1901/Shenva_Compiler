@@ -22,7 +22,9 @@ enum TokenTypes {TOKEN_ERROR = '0', TOKEN_NUM = '1', TOKEN_DECIMAL = 'd', TOKEN_
 				 TOKEN_LESSER = 'K', TOKEN_NOT_LESSER = 'M', TOKEN_GREATER_EQUALS = 'N', TOKEN_LESSER_EQUALS = 'O',
 				 TOKEN_NOT = '!', TOKEN_OR = 'o', TOKEN_AND = 'a', TOKEN_IF = 'I', TOKEN_ELSE = 'E', TOKEN_LBRACK = '{',
 				 TOKEN_RBRACK = '}', TOKEN_WHILE = 'w', TOKEN_FOR = 'F', TOKEN_DEF = 'D', TOKEN_RETURN = 'r',
-				 TOKEN_FUNCTION_CALL = 'V'
+				 TOKEN_FUNCTION_CALL = 'V', TOKEN_REFERENCE = '&', TOKEN_DEREFERENCE = '^', TOKEN_LIND = '[', TOKEN_RIND = ']',
+				 TOKEN_INT_POINTER = 'Q', TOKEN_FLOAT_POINTER = 'X', TOKEN_BOOL_POINTER = 'W', TOKEN_CHAR_POINTER = 'T', TOKEN_LIST_SIZE_DECLERATION = '@',
+				 TOKEN_LIST = '|', TOKEN_PRINT_STRING = 'x'
 };
 
 #endif 
@@ -43,6 +45,10 @@ int extractNumber(FILE* file);
 bool checkForFunction(FILE* file);
 char* extractIdentifier(FILE* file);
 void* extractLetter(FILE* file);
+
+void handleRefrenceToken(Token* token, llist* tokenList);
+void handleDerefrenceToken(Token* token, llist* tokenList);
+
 
 
 

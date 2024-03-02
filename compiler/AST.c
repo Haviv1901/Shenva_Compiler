@@ -143,7 +143,11 @@ int isTwoChildNode(enum TokenTypes token)
 		token == TOKEN_NOT_GREATER || 
 		token == TOKEN_LESSER || 
 		token == TOKEN_NOT_LESSER || 
-		token == TOKEN_GREATER_EQUALS || 
+		token == TOKEN_GREATER_EQUALS ||
+		token == TOKEN_FLOAT_POINTER ||
+		token == TOKEN_BOOL_POINTER ||
+		token == TOKEN_CHAR_POINTER ||
+		token == TOKEN_INT_POINTER ||
 		token == TOKEN_LESSER_EQUALS ||
 		token == TOKEN_BOOL ||
 		token == TOKEN_WHILE)
@@ -161,11 +165,15 @@ int isOneChildNode(enum TokenTypes token)
 		token == TOKEN_RPARN ||
 		token == TOKEN_PRINT_CHAR ||
 		token == TOKEN_PRINT_FLOAT ||
+		token == TOKEN_PRINT_STRING ||
 		token == TOKEN_PRINT_INT ||
 		token == TOKEN_NOT ||
 		token == TOKEN_FUNCTION_CALL ||
 		token == TOKEN_ELSE ||
-		token == TOKEN_RETURN)
+		token == TOKEN_RETURN ||
+		token == TOKEN_REFERENCE ||
+		token == TOKEN_DEREFERENCE ||
+		token == TOKEN_LIST_SIZE_DECLERATION)
 	{
 		return 1;
 	}
@@ -189,14 +197,33 @@ int isPrintToken(Token token)
 {
 	if (token.type == TOKEN_PRINT_INT ||
 		token.type == TOKEN_PRINT_CHAR ||
-		token.type == TOKEN_PRINT_FLOAT)
+		token.type == TOKEN_PRINT_FLOAT ||
+		token.type == TOKEN_PRINT_STRING)
 	{
 		return 1;
 	}
 	return 0;
 }
 
-int isVariableToken(Token token)
+// checks if a token is a variable type.
+int isVarDeclerationToken(Token token)
+{
+	return isNormalVariableToken(token) || isPointerVariableToken(token);
+}
+
+int isPointerVariableToken(Token token)
+{
+	if (token.type == TOKEN_FLOAT_POINTER ||
+		token.type == TOKEN_BOOL_POINTER ||
+		token.type == TOKEN_CHAR_POINTER ||
+		token.type == TOKEN_INT_POINTER)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+int isNormalVariableToken(Token token)
 {
 	if (token.type == TOKEN_INT ||
 		token.type == TOKEN_CHAR ||
@@ -207,6 +234,7 @@ int isVariableToken(Token token)
 	}
 	return 0;
 }
+
 
 int isExpressionToken(Token token)
 {
@@ -223,7 +251,9 @@ int isExpressionToken(Token token)
 		token.type == TOKEN_MUL ||
 		token.type == TOKEN_DIV ||
 		token.type == TOKEN_FUNCTION_CALL ||
-		token.type == TOKEN_MODULO)
+		token.type == TOKEN_MODULO ||
+		token.type == TOKEN_REFERENCE || 
+		token.type == TOKEN_DEREFERENCE)
 	{
 		return 1;
 	}

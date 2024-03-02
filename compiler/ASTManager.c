@@ -25,8 +25,8 @@ ASTNode* buildTree(struct node** FirstNode)
 
 
 
-	if (isExpressionToken(*firstToken) || // numeric value, or a variable 
-		(firstToken->type == TOKEN_VAR && ((Token*)currentNode->next->data)->type != TOKEN_ASSIGN))
+
+	if ((isExpressionToken(*firstToken) || firstToken->type == TOKEN_VAR) && is_assign_line(FirstNode) == NULL)
 	{
 
 		currentToken = ((Token*)currentNode->data);
@@ -59,7 +59,7 @@ ASTNode* buildTree(struct node** FirstNode)
 		result->children[EXPRESSION]->children[LEAF] = buildASTNumeric(FirstNode);// only son: the numeric expresion
 		result->children[NEXT] = buildTree(FirstNode);
 	}
-	else if (isPrintToken(*firstToken)) // if printToken  , in the future we will add function support
+	else if (isPrintToken(*firstToken)) // if printToken 
 	{
 		
 		int parenthesesEqualizer = 0;
@@ -93,7 +93,7 @@ ASTNode* buildTree(struct node** FirstNode)
 		result->children[EXPRESSION] = buildASTFunctions(FirstNode);  
 		result->children[NEXT] = buildTree(&currentNode);
 	}
-	else if (isVariableToken(*firstToken)) // if variable decleration ie: int , char , float
+	else if (isVarDeclerationToken(*firstToken)) // if variable decleration ie: int , char , float
 	{
 		result->children[EXPRESSION] = buildASTVariables(FirstNode);
 		if(result->children[EXPRESSION]->children[1] == NULL)
@@ -106,7 +106,7 @@ ASTNode* buildTree(struct node** FirstNode)
 			result->children[NEXT] = buildTree(FirstNode);
 		}
 	}
-	else if (isConditionOrLoopToken(*firstToken))
+	else if (isConditionOrLoopToken(*firstToken)) // if / else / while / for
 	{
 		int parenthesesEqualizer = 0;
 
@@ -125,7 +125,7 @@ ASTNode* buildTree(struct node** FirstNode)
 		
 		result->children[NEXT] = buildTree(FirstNode);
 	}
-	else if (firstToken->type == TOKEN_VAR) // if variable id
+	else if (is_assign_line(FirstNode)) // assign
 	{
 
 		result->children[EXPRESSION] = buildASTVariables(FirstNode);

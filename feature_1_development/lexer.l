@@ -14,6 +14,31 @@ void set_output_file(FILE* file) {
     outputFile = file;
 }
 
+void tokenizeStr(const char* str)
+{
+	int i = 0;
+	fprintf(outputFile, "|\n");
+	for (i = 1; i < strlen(str); i++)
+	{
+		if (str[i] == '\"')
+		{
+			fprintf(outputFile, "1 0\n");
+			fprintf(outputFile, "|\n");
+		}
+		else if (str[i] == '\\')
+		{
+			i++;
+			fprintf(outputFile, "l \'\\%c\'\n", str[i]);
+			fprintf(outputFile, ",\n");
+		}
+		else
+		{
+			fprintf(outputFile, "l \'%c\'\n", str[i]);
+			fprintf(outputFile, ",\n");
+		}
+	}
+}
+
 %}
 %option noyywrap
 
@@ -33,6 +58,7 @@ void set_output_file(FILE* file) {
 "printChar"   { fprintf(outputFile, "h\n"); return PRINTCHAR;}
 "hadpasaShelTzaf" { fprintf(outputFile, "n\n"); return PRINTFLOAT;}
 "printFloat"   { fprintf(outputFile, "n\n"); return PRINTFLOAT;}
+"printString"	{fprintf(outputFile, "x\n"); return PRINTSTRING;}
 "veod"    { fprintf(outputFile, "2\n"); return ADD;}
 "+"       { fprintf(outputFile, "2\n"); return ADD;}
 "pahot"   { fprintf(outputFile, "3\n"); return SUB;}
@@ -83,15 +109,23 @@ void set_output_file(FILE* file) {
 "vegamshe"    { fprintf(outputFile, "a\n"); return AND;}
 "shave"	  { fprintf(outputFile, "=\n"); return ASSIGN;}
 "int"	  { fprintf(outputFile, "i\n"); return INT;}
+"pInt"	  { fprintf(outputFile, "Q\n"); return PINT;}
 "mispar"	  { fprintf(outputFile, "i\n"); return INT;}
+"mMispar"	  { fprintf(outputFile, "Q\n"); return PINT;}
 "char"	  { fprintf(outputFile, "c\n"); return CHAR;}
+"pChar"	  { fprintf(outputFile, "T\n"); return PCHAR;}
 "ot"	  { fprintf(outputFile, "c\n"); return CHAR;}
+"mOt"	  { fprintf(outputFile, "T\n"); return PCHAR;}
 "float"	  { fprintf(outputFile, "f\n"); return FLOAT;}
+"pFloat"	  { fprintf(outputFile, "X\n"); return PFLOAT;}
 "tzaf"	  { fprintf(outputFile, "f\n"); return FLOAT;}
+"mTzaf"	  { fprintf(outputFile, "X\n"); return PFLOAT;}
 "bool"	  { fprintf(outputFile, "b\n"); return BOOL;}
+"pBool"	  { fprintf(outputFile, "W\n"); return PBOOL;}
 "meteg"	  { fprintf(outputFile, "b\n"); return BOOL;}
+"mMeteg"	  { fprintf(outputFile, "W\n"); return PBOOL;}
 "if"	  { fprintf(outputFile, "I\n"); return IF;}
-"em"	  { fprintf(outputFile, "I\n"); return IF;}
+"eam"	  { fprintf(outputFile, "I\n"); return IF;}
 "else"	  { fprintf(outputFile, "E\n"); return ELSE;}
 "aheret"  { fprintf(outputFile, "E\n"); return ELSE;}
 "while"	  { fprintf(outputFile, "w\n"); return WHILE;}
@@ -105,11 +139,19 @@ void set_output_file(FILE* file) {
 "functzia" { fprintf(outputFile, "D\n"); return DEF;}
 "return" { fprintf(outputFile, "r\n"); return RETURN;}
 "hahzara" { fprintf(outputFile, "r\n"); return RETURN;}
+"&" { fprintf(outputFile, "&\n"); return REFERENCE;}
+"^" { fprintf(outputFile, "^\n"); return DEREFERENCE;}
+"[" { fprintf(outputFile, "[\n"); return LIND;}
+"]" { fprintf(outputFile, "]\n"); return RIND;}
+"|" { fprintf(outputFile, "|\n"); return LIST;}
+
 
 
 
 [a-zA-Z_][a-zA-Z0-9_]* { fprintf(outputFile, "v %s\n", yytext); strcpy(lastIdentifier, yytext); return VAR; }
 '([^\\'\n"\r\b\t\f]|\\[\\'n"tbrf])'   {fprintf(outputFile, "l %s\n", yytext); return LETTER; }
+\"([^\\'\n"\r\b\t\f]|\\[\\'n"tbrf])*\"   {tokenizeStr(yytext); return STRING; }
+
 [-]?[0-9]+   { fprintf(outputFile, "1 %s\n", yytext); return NUM;}
 [-]?[0-9]+\.[0-9]+		{ fprintf(outputFile, "d %s\n", yytext); return DECIMAL;}
 [ \t]     ; // Ignore whitespace and newline characters

@@ -22,6 +22,8 @@ void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList)
 
 void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList);
 int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
+void writeArrayInitWithSize(int size, Token* decTok, FILE* asmFile);
+void writeArrayInitWithVals(ASTNode* branch, Token* decTok, FILE* asmFile, VariableList* varList);
 void writeNumericInstruction(Token* operand, FILE* asmFile, bool isEAXdecimal, bool isEBXdecimal);
 void writeFunctionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 int isInputToken(Token token);
@@ -37,6 +39,12 @@ void writeConditionBranch(ASTNode* branch, FILE* asmFile, VariableList* varList)
 void writeDefs(ASTNode* tree, FILE* asmFile, VariableList* varList);
 int ScopeCountGetter(ASTNode* branch);
 void writeParams(ASTNode* paramBranch, VariableList* paramPtr, int funcScope, FILE* asmFile, VariableList* varlist);
+void startWriting(ASTNode* tree, const char* fileName, VariableList* varList, FILE* asmFile);
+void writeMain(char* asmFile);
+
+bool isDereferencedPTRpointsToFloat(ASTNode* branch, VariableList* varList);
+bool isDereferencedPTRpointsToBoolOrChar(ASTNode* branch, VariableList* varList);
+
 
 
 

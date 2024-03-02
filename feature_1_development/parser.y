@@ -11,20 +11,21 @@ FILE* errorFile;
     int num;
     char *str;  // Add a string field
 }
-%token NUM LETTER DECIMAL BOOL
+%token NUM LETTER DECIMAL BOOL STRING
 %token ADD SUB MUL DIV MOD
 %token LPAREN RPAREN
 %token EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS NOT OR AND
 %token IF ELSE LBRACK RBRACK WHILE FOR
 %token <str> ERROR
-%token PRINTINT PRINTCHAR PRINTFLOAT COMMA INTINPUT FLOATINPUT CHARINPUT
+%token PRINTINT PRINTCHAR PRINTFLOAT COMMA INTINPUT FLOATINPUT CHARINPUT PRINTSTRING
 %token TRUE FALSE
 %token ENDL
-%token ASSIGN
-%token INT CHAR FLOAT
+%token ASSIGN LIST
+%token INT CHAR FLOAT PINT PCHAR PFLOAT  PBOOL
 %token VAR
 %token ADDEQ SUBEQ MULEQ DIVEQ MODEQ
 %token DEF RETURN
+%token REFERENCE DEREFERENCE LIND RIND
 %left ADD SUB
 %left MUL DIV MOD
 %left EQUALS NOTEQUALS GREATER NOTGREATER LESSER NOTLESSER GREATEREQUALS LESSEREQUALS OR AND
@@ -57,6 +58,14 @@ parameterList: INT VAR
 		| CHAR VAR
 		| BOOL VAR
 		| FLOAT VAR
+		| PINT VAR
+		| PCHAR VAR
+		| PFLOAT VAR
+		| PBOOL VAR
+		| parameterList COMMA PINT VAR
+		| parameterList COMMA PCHAR VAR
+		| parameterList COMMA PFLOAT VAR
+		| parameterList COMMA PBOOL VAR
 		| parameterList COMMA INT VAR
 		| parameterList COMMA CHAR VAR
 		| parameterList COMMA BOOL VAR
@@ -88,9 +97,10 @@ empty_space : ENDL
             | empty_space ENDL
             ;
 		
-statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
-		  |  PRINTCHAR LPAREN expression_list RPAREN  ENDL { /* Handle print statement */ }
-		  |  PRINTFLOAT LPAREN expression_list RPAREN ENDL { /* Handle print statement */ }
+statement : PRINTINT LPAREN expression_list RPAREN ENDL {}
+		  |  PRINTCHAR LPAREN expression_list RPAREN  ENDL {}
+		  |  PRINTFLOAT LPAREN expression_list RPAREN ENDL {}
+		  | PRINTSTRING LPAREN str_list RPAREN ENDL {}
 		  | RETURN expression ENDL
 		  | RETURN ENDL
 		  | expression ENDL
@@ -102,14 +112,35 @@ statement : PRINTINT LPAREN expression_list RPAREN ENDL { /* Handle print statem
 		  
 		  
 		  
-		  
+str_list: STRING
+	| expression
+	| str_list COMMA STRING
+	| str_list COMMA expression
+	;
 
 		
 declaration : INT decleration_list
             | CHAR decleration_list
 			| FLOAT decleration_list
 			| BOOL decleration_list
+			| PINT decleration_list_mem
+			| PCHAR decleration_list_mem
+			| PFLOAT decleration_list_mem
+			| PBOOL decleration_list_mem
             ;
+			
+			
+decleration_list_mem : VAR
+                 | VAR ASSIGN expression
+				 | VAR ASSIGN LIND NUM RIND
+				 | VAR ASSIGN LIST expression_list LIST
+				 | VAR ASSIGN STRING
+                 | decleration_list_mem COMMA VAR
+                 | decleration_list_mem COMMA VAR ASSIGN expression
+				 | decleration_list_mem COMMA VAR ASSIGN LIND NUM RIND
+				 | decleration_list_mem VAR ASSIGN LIST expression_list LIST
+				 | decleration_list_mem VAR ASSIGN STRING
+                 ;
 
 decleration_list : VAR
                  | VAR ASSIGN expression 
@@ -122,13 +153,27 @@ expression_list : expression
                ;
 			   
 			   
-assignment : VAR ASSIGN expression
-			| VAR ADDEQ expression
-			| VAR SUBEQ expression
-			| VAR MULEQ expression
-			| VAR DIVEQ expression
-			| VAR MODEQ expression
-           ;
+assignment : VAR equaling expression
+		   | pointer_assign equaling expression
+		   ;
+		   
+pointer_assign: memory_expression VAR
+			| VAR index_expression
+			| memory_expression VAR index_expression
+			;
+
+
+
+
+
+equaling: ASSIGN
+	| ADDEQ
+	| SUBEQ
+	| MULEQ
+	| DIVEQ
+	| MODEQ
+	;
+
 
 input : INTINPUT 
 	  | FLOATINPUT 
@@ -167,6 +212,9 @@ numeric_expression : NUM
 		   | input LPAREN RPAREN
 		   | VAR LPAREN expression_list RPAREN
 		   | VAR LPAREN RPAREN
+		   | memory_expression VAR
+		   | VAR index_expression
+		   | memory_expression VAR index_expression
            | numeric_expression ADD numeric_expression { /* Handle addition here */ }
            | numeric_expression SUB numeric_expression { /* Handle subtraction here */ }
            | numeric_expression MUL numeric_expression { /* Handle multiplication here */ }
@@ -176,6 +224,17 @@ numeric_expression : NUM
 		   | error 
            ;
 
+memory_expression: REFERENCE
+		| REFERENCE DEREFERENCE
+		| DEREFERENCE
+		| REFERENCE DEREFERENCE memory_expression
+		| DEREFERENCE memory_expression
+		;
+		
+
+index_expression: LIND numeric_expression RIND
+	|	LIND numeric_expression RIND index_expression
+	;
 
 %%
 
@@ -233,7 +292,7 @@ int yyerror(char *msg)
 			fprintf(errorFile, "char");
 			i += 3;
 		}
-				else if (strncmp(msg + i, "FLOAT", 5) == 0)
+		else if (strncmp(msg + i, "FLOAT", 5) == 0)
 		{
 			fprintf(errorFile, "float");
 			i += 4;
@@ -332,6 +391,26 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "int");
 			i += 2;
+		}
+		else if (strncmp(msg + i, "PINT", 4) == 0)
+		{
+			fprintf(errorFile, "pInt");
+			i += 3;
+		}
+		else if (strncmp(msg + i, "PFLOAT", 6) == 0)
+		{
+			fprintf(errorFile, "pFloat");
+			i += 4;
+		}
+		else if (strncmp(msg + i, "PCHAR", 5) == 0)
+		{
+			fprintf(errorFile, "pChar");
+			i += 4;
+		}
+		else if (strncmp(msg + i, "PBOOL", 5) == 0)
+		{
+			fprintf(errorFile, "pBool");
+			i += 4;
 		}
 		else if (strncmp(msg + i, "VAR", 3) == 0)
 		{
@@ -433,6 +512,11 @@ int yyerror(char *msg)
 			fprintf(errorFile, "True");
 			i += 3;
 		}
+		else if (strncmp(msg + i, "LIST", 4) == 0)
+		{
+			fprintf(errorFile, "|");
+			i += 3;
+		}
 		else if (strncmp(msg + i, "FALSE", 5) == 0)
 		{
 			fprintf(errorFile, "False");
@@ -457,6 +541,16 @@ int yyerror(char *msg)
 		{
 			fprintf(errorFile, "while");
 			i += 4;
+		}
+		else if (strncmp(msg + i, "STRING", 6) == 0)
+		{
+			fprintf(errorFile, "string");
+			i += 5;
+		}
+		else if (strncmp(msg + i, "PRINTSTRING", 11) == 0)
+		{
+			fprintf(errorFile, "printString");
+			i += 10;
 		}
 		else
 		{
