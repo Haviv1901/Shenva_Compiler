@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 
     isCompilationSucceed = Compile(argv[1], argv[2]);
 
-    if(userFlags.dontPrintAscii)
+    if(userFlags.PrintAscii == 0)
     {
         return 0;
     }
@@ -49,6 +49,5 @@ int main(int argc, char* argv[])
     {
         printFile("Menu_Scripts/ascii_failure.txt");
     }
-
     return 0; // Exit successfully
 }

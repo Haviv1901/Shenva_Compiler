@@ -21,7 +21,10 @@ void printVariaballsWithScope(VariableList* curr)
 /* main function, compile a txt file into a .exe file */
 int Compile(char* inputFileName, char* outputFileName)
 {
-	printf("Starting compilation...\n");
+	if (userFlags.printLogs)
+	{
+		printf("Starting compilation...\n");
+	}
 	if (!activateLexer(inputFileName)) // lex inpput file
 	{
 		return 0;
@@ -29,7 +32,6 @@ int Compile(char* inputFileName, char* outputFileName)
 
 	llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME); // extract tokens to c memory
 	llist hold = *tokenList;
-
 	printTokenList(tokenList); // print tokens if needed
 	
 

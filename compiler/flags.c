@@ -4,7 +4,7 @@
 flags userFlags = {
 	.printLogs = false,
 	.runExecutable = false,
-	.dontPrintAscii = false,
+	.PrintAscii = false,
 	.keepAsmFile = false,
 	.keepObjectFile = false,
 	.keepTokenFile = false,
@@ -32,7 +32,7 @@ void parseCharToFlag(char toParse)
 		userFlags.printLogs = 1;
 		break;
 	case 'c':
-		userFlags.dontPrintAscii = 1;
+		userFlags.PrintAscii = 1;
 		break;
 	case 'a':
 		userFlags.keepAsmFile = 1;
@@ -56,17 +56,18 @@ void parseCharToFlag(char toParse)
 		userFlags.keepTokensErrorFile = 1;
 		userFlags.keepObjectFile = 1;
 		userFlags.keepAsmFile = 1;
+		userFlags.keepTokenFile = 1;
 		break;
 	case 'P':
 		userFlags.printVariableList = 1;
 		userFlags.printTokenList = 1;
-		userFlags.dontPrintAscii = 1;
+		userFlags.PrintAscii = 1;
 		userFlags.printLogs = 1;
 		break;
 	case 'X':
 		userFlags.printVariableList = 1;
 		userFlags.printTokenList = 1;
-		userFlags.dontPrintAscii = 1;
+		userFlags.PrintAscii = 1;
 		userFlags.printLogs = 1;
 		userFlags.keepTokenFile = 1;
 		userFlags.keepTokensErrorFile = 1;
