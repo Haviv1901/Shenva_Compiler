@@ -31,16 +31,17 @@ FILE* openFile(char* inputFileName, char* mode)
 	{
 		if (userFlags.printLogs)
 		{
-			printf("could not open file: ");
-			printf("%s\n", inputFileName);
+			printLog("could not open file: ");
 		}
 		return NULL;
 	}
 	if (userFlags.printLogs)
 	{
-		printf("successfully opened file: ");
-		printf("%s\n", inputFileName);
+		printLog("successfully opened file: ");
 	}
+	printLog(inputFileName);
+	printLog("\n");
+
 	return res;
 }
 
@@ -76,7 +77,13 @@ void printFile(const char* filename)
 }
 
 
-
+void printLog(char* msg)
+{
+	if (userFlags.printLogs)
+	{
+		printf("%s", msg);
+	}
+}
 
 char* clearExeExtension(const char* filename)
 {

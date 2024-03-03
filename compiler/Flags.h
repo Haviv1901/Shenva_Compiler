@@ -9,7 +9,7 @@
 typedef struct {
     bool printLogs;
     bool runExecutable;
-    bool PrintAscii;
+    bool dontPrintAscii;
     bool keepAsmFile;
     bool keepObjectFile;
     bool keepTokenFile;

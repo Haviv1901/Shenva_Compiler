@@ -213,8 +213,9 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 			{
 				fprintf(asmFile, "fild dword ptr [esp]\n");
 				fprintf(asmFile, "fstp dword ptr [esp]\n");
-				fprintf(asmFile, "pop eax\n");
 			}
+			fprintf(asmFile, "pop eax\n");
+
 		}
 		else
 		{

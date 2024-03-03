@@ -19,3 +19,5 @@ void closeFile(FILE* file, const char* fileName);
 void printFile(const char* filename);
 
 char* clearExeExtension(const char* filename);
+//write logs
+void printLog(char* msg);

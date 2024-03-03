@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
 
     isCompilationSucceed = Compile(argv[1], argv[2]);
 
-    if(userFlags.PrintAscii == 0)
+    if(userFlags.dontPrintAscii == 1)
     {
         return 0;
     }
