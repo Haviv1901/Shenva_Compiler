@@ -438,7 +438,11 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 				return 0;
 			}
 			
-			curr = curr->next->next;
+			if (curr->next->data->type == TOKEN_ASSIGN)
+			{
+				curr = curr->next->next;
+
+			}
 			if (curr->data->type == TOKEN_LIND && !isListSizeValid(currentToken, curr->next->data))//if its a list decleration, and its invalid
 			{
 				printf("Semantic error: list size must be bigger than 0 in decleration of %s\n", identifier);
