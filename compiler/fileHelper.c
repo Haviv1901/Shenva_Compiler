@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "Flags.h"
 
 
 /*
@@ -28,26 +29,31 @@ FILE* openFile(char* inputFileName, char* mode)
 
 	if (res == NULL)
 	{
-		printf("could not open file: ");
-		printf("%s\n", inputFileName);
+		if (userFlags.printLogs)
+		{
+			printf("could not open file: ");
+			printf("%s\n", inputFileName);
+		}
 		return NULL;
 	}
-
-	printf("successfully opened file: ");
-	printf("%s\n", inputFileName);
+	if (userFlags.printLogs)
+	{
+		printf("successfully opened file: ");
+		printf("%s\n", inputFileName);
+	}
 	return res;
 }
 
 /* open input file and return handler */
-void closeFile(FILE* file)
+void closeFile(FILE* file, const char* fileName)
 {
-	if(fclose(file) < 0)
+	if(fclose(file) != 0)
 	{
-		printf("could not close file\n");
+		printf("could not close file: %s\n", fileName);
 	}
 	else
 	{
-		printf("successfully closed file");
+		printf("successfully closed file: %s\n", fileName);
 	}
 }
 

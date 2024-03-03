@@ -23,13 +23,13 @@ void runMasmAndLink(char* outputName)
 
 	if(!userFlags.printLogs)
 	{
-		fprintf(runFile, "ml /c /Zd /coff %s.asm > NUL\n", outputNameNoExtension);
-		fprintf(runFile,"link /SUBSYSTEM:CONSOLE /OUT:%s %s.obj > NUL\n", outputName, outputNameNoExtension);
+		fprintf(runFile, "ml /c /Zd /coff /nologo %s.asm > NUL\n", outputNameNoExtension);
+		fprintf(runFile,"link /SUBSYSTEM:CONSOLE /NOLOGO %s.obj\n", outputNameNoExtension);
 	}
 	else
 	{
 		fprintf(runFile, "ml /c /Zd /coff %s.asm\n", outputNameNoExtension);
-		fprintf(runFile, "link /SUBSYSTEM:CONSOLE /OUT:%s %s.obj\n", outputName, outputNameNoExtension);
+		fprintf(runFile, "link /SUBSYSTEM:CONSOLE %s.obj\n", outputNameNoExtension);
 	}
 
 
@@ -55,14 +55,12 @@ void runMasmAndLink(char* outputName)
 	if(!userFlags.keepTokenFile)
 	{
 		// remove tokens file
-		fprintf(runFile, "del output.tok\n");
+		fprintf(runFile, "del %s.tok\n", outputNameNoExtension);
 	}
 
 
 	// remove bat file
-	fprintf(runFile, "del %s\n", BAT_FILE_NAME);
-
-	closeFile(runFile);
+	fclose(runFile);
 	ZeroMemory(&si, sizeof(si));
 	si.cb = sizeof(si);
 	ZeroMemory(&pi, sizeof(pi));
@@ -72,6 +70,7 @@ void runMasmAndLink(char* outputName)
 		// Wait until child process exits
 		WaitForSingleObject(pi.hProcess, INFINITE);
 	}
+	DeleteFileA(BAT_FILE_NAME);
 
 
 	free(outputNameNoExtension);

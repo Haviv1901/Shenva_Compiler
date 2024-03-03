@@ -14,7 +14,7 @@ FILE* openFile(char* inputFileName, char* mode);
 long fileSize(const char* filename);
 
 /* close file */
-void closeFile(FILE* file);
+void closeFile(FILE* file, const char* fileName);
 
 void printFile(const char* filename);
 

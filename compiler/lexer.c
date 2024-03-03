@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "Flags.h"
 #include "fileHelper.h"
 
 #ifndef WIN_API
@@ -25,7 +25,10 @@ int lex(char* inputFileName)
 	char* cmdLine = (char*)calloc(41 + strlen(inputFileName), 1);
 	if (cmdLine == NULL)
 	{
-		printf("error with path allocation\n");
+		if (userFlags.printLogs)
+		{
+			printf("error with path allocation\n");
+		}
 		return 0;
 	}
 	sprintf(cmdLine, "lexicalAndSyntaxAnalysis.exe %s %s", inputFileName, LEXER_OUTPUT_FILE_NAME);
@@ -52,20 +55,30 @@ int lex(char* inputFileName)
 		errorSize = fileSize(ERROR_LOG_FILE);
 		if (errorSize == 0)
 		{
-			printf("Successfully activated lexer\n");
+			if (userFlags.printLogs)
+			{
+				printf("Successfully activated lexer\n");
+			}
+
 			return true;
 		}
 		if (errorSize > 0)
 		{
-			printf("Syntax errors were found:\n");
-			writeLexErrorsIntoLog(errorSize);
+			if (userFlags.printLogs)
+			{
+				printf("Syntax errors were found:\n");
+				writeLexErrorsIntoLog(errorSize);
+			}
 			return false;
 		}
 	}
 	else // did not open file
 	{
 		free(cmdLine);
-		printf("Could not start lexer\n");
+		if (userFlags.printLogs)
+		{
+			printf("Could not start lexer\n");
+		}
 		return false;
 	}
 
