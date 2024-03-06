@@ -9,5 +9,8 @@
 #include <stdbool.h>
 
 void runMasmAndLink(char* outputName);
+bool FileExists(const char* fileName);
+void runEXEfile(char* path);
+char* createOutputFileFullName(char* outputName);
 
 #endif 

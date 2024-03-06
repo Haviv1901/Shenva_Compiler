@@ -67,7 +67,6 @@ void parseCharToFlag(char toParse)
 	case 'X':
 		userFlags.printVariableList = 1;
 		userFlags.printTokenList = 1;
-		userFlags.dontPrintAscii = 1;
 		userFlags.printLogs = 1;
 		userFlags.keepTokenFile = 1;
 		userFlags.keepTokensErrorFile = 1;

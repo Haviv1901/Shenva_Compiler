@@ -2,12 +2,14 @@
 
 #include "flags.h"
 
-
+bool FileExists(const char* fileName) 
+{
+	DWORD fileAttributes = GetFileAttributesA(fileName);
+	return (fileAttributes != INVALID_FILE_ATTRIBUTES &&!(fileAttributes & FILE_ATTRIBUTE_DIRECTORY));
+}
 
 void runMasmAndLink(char* outputName)
 {
-	STARTUPINFO si;
-	PROCESS_INFORMATION pi;
 
 	// open bat file
 	FILE* runFile = openFile(BAT_FILE_NAME, "w");
@@ -55,25 +57,57 @@ void runMasmAndLink(char* outputName)
 	if(!userFlags.keepTokenFile)
 	{
 		// remove tokens file
-		fprintf(runFile, "del %s.tok\n", outputNameNoExtension);
+		fprintf(runFile, "del output.tok\n");
 	}
 
 
 	// remove bat file
 	fclose(runFile);
-	ZeroMemory(&si, sizeof(si));
-	si.cb = sizeof(si);
-	ZeroMemory(&pi, sizeof(pi));
-	if (CreateProcessA(NULL, BAT_FILE_NAME, NULL, NULL, false, 0, NULL, NULL, &si, &pi))
-	{
 
-		// Wait until child process exits
-		WaitForSingleObject(pi.hProcess, INFINITE);
-	}
+	// run the run file
+	runEXEfile(BAT_FILE_NAME);
+
 	DeleteFileA(BAT_FILE_NAME);
 
 
 	free(outputNameNoExtension);
 
 }
+
+
+char* createOutputFileFullName(char* outputName)
+{
+	char* outputNameNoExtension = clearExeExtension(outputName);
+	int len = strlen(outputNameNoExtension);
+	outputNameNoExtension = (char*)realloc(outputNameNoExtension, len + 5);
+	if (outputNameNoExtension == NULL)
+	{
+		return NULL;
+	}
+	outputNameNoExtension[len] = '.';
+	outputNameNoExtension[len + 1] = 'e';
+	outputNameNoExtension[len+2] = 'x';
+	outputNameNoExtension[len+3] = 'e';
+	outputNameNoExtension[len+4] = '\0';
+
+	return outputNameNoExtension;
+}
+
+
+void runEXEfile(char* path)
+{
+	STARTUPINFO si;
+	PROCESS_INFORMATION pi;
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	ZeroMemory(&pi, sizeof(pi));
+	if (CreateProcessA(NULL, path, NULL, NULL, false, 0, NULL, NULL, &si, &pi))
+	{
+
+		// Wait until child process exits
+		WaitForSingleObject(pi.hProcess, INFINITE);
+	}
+
+}
+
 

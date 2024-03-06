@@ -2,6 +2,8 @@
 #include "Menu.h"
 #include <stdio.h>
 #include <crtdbg.h>
+#include "masmAndLink.h"
+
 
 #include "flags.h"
 #define _CRTDBG_MAP_ALLOC
@@ -26,7 +28,7 @@ int main(int argc, char* argv[])
 {
     bool isCompilationSucceed = false;
     bool compile = handleCommandLineArguments(argc, argv);
-
+    char* outputFullName = NULL;
 
 
     if (!compile)
@@ -36,18 +38,27 @@ int main(int argc, char* argv[])
 
     isCompilationSucceed = Compile(argv[1], argv[2]);
 
-    if(userFlags.dontPrintAscii == 1)
-    {
-        return 0;
-    }
 
     if (isCompilationSucceed)
     {
-        printFile("Menu_Scripts/ascii_success.txt");
+        if (userFlags.dontPrintAscii != 1)
+        {
+            printFile("Menu_Scripts/ascii_success.txt");
+        }
+        outputFullName = createOutputFileFullName(argv[2]);
+        if (userFlags.runExecutable == 1 && FileExists(outputFullName))
+        {
+            printf("\n\n");
+            runEXEfile(outputFullName);
+        }
+        free(outputFullName);
     }
     else
     {
-        printFile("Menu_Scripts/ascii_failure.txt");
+        if (userFlags.dontPrintAscii != 1)
+        {
+            printFile("Menu_Scripts/ascii_failure.txt");
+        }
     }
     return 0; // Exit successfully
 }
