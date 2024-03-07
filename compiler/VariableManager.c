@@ -430,7 +430,7 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 		if (isVarDeclerationToken(*curr->data)) 
 		{
 			curr = curr->next;
-			identifier = (char*)(((Token*)(curr->data))->value);//getting identifier
+			identifier = (char*)(((curr->data))->value);//getting identifier
 			if(callIsVariablExist(varListHead, identifier, currentScope) || (currentScope == GLOBAL && getVariable(varListHead, identifier) != NULL))
 			{
 				printf("Semantic error: variable %s is already defined in scope\n", identifier);
@@ -438,14 +438,18 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 				return 0;
 			}
 			
-			curr = curr->next->next;
+			if (curr->next->data->type == TOKEN_ASSIGN)
+			{
+				curr = curr->next->next;
+
+			}
 			if (curr->data->type == TOKEN_LIND && !isListSizeValid(currentToken, curr->next->data))//if its a list decleration, and its invalid
 			{
 				printf("Semantic error: list size must be bigger than 0 in decleration of %s\n", identifier);
 				deleteVariableList(varListHead);
 				return 0;
 			}
-			else if (curr->data->type == TOKEN_LIST)
+			if (curr->data->type == TOKEN_LIST)
 			{
 				curr = curr->next;
 				addElementToStackPtr(currentToken);
@@ -546,11 +550,6 @@ int createVariableListFromScope(llist* tokenList, int currentScope, ScopeTreeNod
 		}
 		else if (currentToken == TOKEN_RBRACK)
 		{
-			//outerBracketBalance--;
-			//if(outerBracketBalance == 0)
-			//{
-			//	return 1;
-			//}
 
 			return 1;
 
