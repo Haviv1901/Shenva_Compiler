@@ -3,7 +3,7 @@
 #include "InstructionWriting.h"
 #endif
 #include <stdio.h>
-
+#include <Windows.h>
 
 #include "fileHelper.h"
 bool isLastValFloat = false, isInFunc = false, isAssignToAdress = false;
@@ -19,7 +19,12 @@ int funcEndLabel = 0;
 /// <param name="boneFileNumber"> false for first bone file, true for second bone file </param>
 void copyBoneFile(FILE* asmFile, bool boneFileNumber)
 {
-	FILE* boneFile = openFile(boneFileNumber ? SECOND_BONE_FILE : FIRST_BONE_FILE, "r");
+	char path[MAX_PATH];
+	GetModuleFileName(NULL, path, MAX_PATH);
+	char* lastBackslash = strrchr(path, '\\');
+	lastBackslash[1] = '\0';
+	strcat(path, boneFileNumber ? SECOND_BONE_FILE : FIRST_BONE_FILE);
+	FILE* boneFile = openFile(path, "r");
 	// Open FIRST_BONE_FILE for reading
 
 	char buffer[1024];

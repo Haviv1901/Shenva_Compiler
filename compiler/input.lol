@@ -1,4 +1,4 @@
 
 
-printString("hello world\n")
+printString("hello\n")
 

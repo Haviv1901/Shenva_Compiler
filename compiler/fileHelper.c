@@ -1,5 +1,5 @@
 #include "fileHelper.h"
-
+#include <Windows.h>
 #include <stdlib.h>
 #include <string.h>
 #include "Flags.h"
@@ -60,7 +60,12 @@ void closeFile(FILE* file, const char* fileName)
 
 void printFile(const char* filename)
 {
-	FILE* file = fopen(filename, "r");
+	char path[MAX_PATH];
+	GetModuleFileName(NULL, path, MAX_PATH);
+	char* lastBackslash = strrchr(path, '\\');
+	lastBackslash[1] = '\0';
+	strcat(path, filename);
+	FILE* file = fopen(path, "r");
 	if (file == NULL) 
 	{
 		return;
