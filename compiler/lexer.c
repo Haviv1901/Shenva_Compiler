@@ -69,6 +69,14 @@ int lex(char* inputFileName)
 				printf("Syntax errors were found:\n");
 				writeLexErrorsIntoLog(errorSize);
 			}
+			if (userFlags.keepTokensErrorFile != 1)
+			{
+				DeleteFile(ERROR_LOG_FILE);
+			}
+			if (userFlags.keepTokenFile != 1)
+			{
+				DeleteFile(LEXER_OUTPUT_FILE_NAME);
+			}
 			return false;
 		}
 	}

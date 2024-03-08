@@ -40,6 +40,14 @@ int Compile(char* inputFileName, char* outputFileName)
 	if(isVars(tokenList) && varList == NULL) // checking if there is any undefined variable error.
 	{
 		token_llist_free(tokenList);
+		if (userFlags.keepTokensErrorFile != 1)
+		{
+			DeleteFile(ERROR_LOG_FILE);
+		}
+		if (userFlags.keepTokenFile != 1)
+		{
+			DeleteFile(LEXER_OUTPUT_FILE_NAME);
+		}
 		return 0;
 	}
 
