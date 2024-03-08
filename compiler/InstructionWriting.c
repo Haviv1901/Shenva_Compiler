@@ -19,10 +19,7 @@ int funcEndLabel = 0;
 /// <param name="boneFileNumber"> false for first bone file, true for second bone file </param>
 void copyBoneFile(FILE* asmFile, bool boneFileNumber)
 {
-	char path[MAX_PATH];
-	GetModuleFileName(NULL, path, MAX_PATH);
-	char* lastBackslash = strrchr(path, '\\');
-	lastBackslash[1] = '\0';
+	char* path = getCompilerPath();
 	strcat(path, boneFileNumber ? SECOND_BONE_FILE : FIRST_BONE_FILE);
 	FILE* boneFile = openFile(path, "r");
 	// Open FIRST_BONE_FILE for reading
@@ -34,6 +31,7 @@ void copyBoneFile(FILE* asmFile, bool boneFileNumber)
 	}
 
 	fclose(boneFile);
+	free(path);
 }
 
 
@@ -56,11 +54,22 @@ void writeMain(char* asmFile)
 }
 
 
+void writeIncludes(FILE* asmFile)
+{
+	char* path = getCompilerPath();
+	fprintf(asmFile, "include %s\\masm32\\include\\irvine\\Irvine32.inc\n", path);
+	fprintf(asmFile, "includelib %s\\masm32\\include\\irvine\\Irvine32.lib\n", path);
+	fprintf(asmFile, "includelib %s\\masm32\\lib\\kernel32.lib\n", path);
+	fprintf(asmFile, "includelib %s\\masm32\\lib\\user32.lib\n", path);
+	free(path);
+}
+
 void startWriting(ASTNode* tree, VariableList* varList, FILE* asmFile)
 {
 	int mainEndLabel = 0;
 
 	// copy first half of the basic functions and start of main
+	writeIncludes(asmFile);
 	copyBoneFile(asmFile, FIRST); 
 	mainEndLabel = lableNum;
 	lableNum++;

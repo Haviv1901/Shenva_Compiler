@@ -1,9 +1,4 @@
 
-include \masm32\include\irvine\Irvine32.inc
-includelib \masm32\include\irvine\Irvine32.lib
-includelib \masm32\lib\kernel32.lib
-includelib \masm32\lib\user32.lib
-
 
 .code
 

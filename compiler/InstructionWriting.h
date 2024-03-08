@@ -19,7 +19,7 @@
 
 void copyBoneFile(FILE* asmFile, bool boneFileNumber);
 void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList);
-
+void writeIncludes(FILE* asmFile);
 void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList);
 int writeNumericBranch(ASTNode* branch, FILE* asmFile, VariableList* varList);
 void writeArrayInitWithSize(int size, Token* decTok, FILE* asmFile);

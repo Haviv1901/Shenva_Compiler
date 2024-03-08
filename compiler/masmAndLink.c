@@ -18,20 +18,20 @@ void runMasmAndLink(char* outputName)
 		return;
 	}
 
-	char* outputNameNoExtension = clearExeExtension(outputName);
+	char* outputNameNoExtension = clearExeExtension(outputName), *path = getCompilerPath();
 	
 
 	fprintf(runFile, "@echo off\n");
 
 	if(!userFlags.printLogs)
 	{
-		fprintf(runFile, "ml /c /Zd /coff /nologo %s.asm > NUL\n", outputNameNoExtension);
-		fprintf(runFile,"link /SUBSYSTEM:CONSOLE /NOLOGO %s.obj\n", outputNameNoExtension);
+		fprintf(runFile, "%s\\masm32\\bin\\ml /c /Zd /coff /nologo %s.asm > NUL\n", path, outputNameNoExtension);
+		fprintf(runFile,"%s\\masm32\\bin\\link /SUBSYSTEM:CONSOLE /NOLOGO %s.obj\n", path, outputNameNoExtension);
 	}
 	else
 	{
-		fprintf(runFile, "ml /c /Zd /coff %s.asm\n", outputNameNoExtension);
-		fprintf(runFile, "link /SUBSYSTEM:CONSOLE %s.obj\n", outputNameNoExtension);
+		fprintf(runFile, "%s\\masm32\\bin\\ml /c /Zd /coff %s.asm > NUL\n", path, outputNameNoExtension);
+		fprintf(runFile, "%s\\masm32\\bin\\link /SUBSYSTEM:CONSOLE %s.obj\n", path, outputNameNoExtension);
 	}
 
 
@@ -71,7 +71,7 @@ void runMasmAndLink(char* outputName)
 
 
 	free(outputNameNoExtension);
-
+	free(path);
 }
 
 

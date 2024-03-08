@@ -1,12 +1,10 @@
 #include "Compiler.h"
 #include "Menu.h"
 #include <stdio.h>
-#include <crtdbg.h>
 #include "masmAndLink.h"
 
 
 #include "flags.h"
-#define _CRTDBG_MAP_ALLOC
 
 void printGreenText(const char* text)
 {

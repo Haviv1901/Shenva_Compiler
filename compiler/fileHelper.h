@@ -21,3 +21,5 @@ void printFile(const char* filename);
 char* clearExeExtension(const char* filename);
 //write logs
 void printLog(char* msg);
+//get the path to the compiler directory
+char* getCompilerPath();

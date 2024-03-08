@@ -58,12 +58,21 @@ void closeFile(FILE* file, const char* fileName)
 	}
 }
 
-void printFile(const char* filename)
+
+char* getCompilerPath()
 {
-	char path[MAX_PATH];
+	char* path = (char*)calloc(MAX_PATH, sizeof(char));
 	GetModuleFileName(NULL, path, MAX_PATH);
 	char* lastBackslash = strrchr(path, '\\');
 	lastBackslash[1] = '\0';
+	return path;
+}
+
+
+
+void printFile(const char* filename)
+{
+	char* path = getCompilerPath();
 	strcat(path, filename);
 	FILE* file = fopen(path, "r");
 	if (file == NULL) 
@@ -79,6 +88,7 @@ void printFile(const char* filename)
 	}
 
 	fclose(file);
+	free(path);
 }
 
 
