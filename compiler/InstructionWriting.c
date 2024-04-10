@@ -3,7 +3,7 @@
 #include "InstructionWriting.h"
 #endif
 #include <stdio.h>
-
+#include <Windows.h>
 
 #include "fileHelper.h"
 bool isLastValFloat = false, isInFunc = false, isAssignToAdress = false;
@@ -19,7 +19,9 @@ int funcEndLabel = 0;
 /// <param name="boneFileNumber"> false for first bone file, true for second bone file </param>
 void copyBoneFile(FILE* asmFile, bool boneFileNumber)
 {
-	FILE* boneFile = openFile(boneFileNumber ? SECOND_BONE_FILE : FIRST_BONE_FILE, "r");
+	char* path = getCompilerPath();
+	strcat(path, boneFileNumber ? SECOND_BONE_FILE : FIRST_BONE_FILE);
+	FILE* boneFile = openFile(path, "r");
 	// Open FIRST_BONE_FILE for reading
 
 	char buffer[1024];
@@ -29,6 +31,7 @@ void copyBoneFile(FILE* asmFile, bool boneFileNumber)
 	}
 
 	fclose(boneFile);
+	free(path);
 }
 
 
@@ -51,11 +54,22 @@ void writeMain(char* asmFile)
 }
 
 
-void startWriting(ASTNode* tree, const char* fileName, VariableList* varList, FILE* asmFile)
+void writeIncludes(FILE* asmFile)
+{
+	char* path = getCompilerPath();
+	fprintf(asmFile, "include %s\\masm32\\include\\irvine\\Irvine32.inc\n", path);
+	fprintf(asmFile, "includelib %s\\masm32\\include\\irvine\\Irvine32.lib\n", path);
+	fprintf(asmFile, "includelib %s\\masm32\\lib\\kernel32.lib\n", path);
+	fprintf(asmFile, "includelib %s\\masm32\\lib\\user32.lib\n", path);
+	free(path);
+}
+
+void startWriting(ASTNode* tree, VariableList* varList, FILE* asmFile)
 {
 	int mainEndLabel = 0;
 
 	// copy first half of the basic functions and start of main
+	writeIncludes(asmFile);
 	copyBoneFile(asmFile, FIRST); 
 	mainEndLabel = lableNum;
 	lableNum++;
@@ -82,16 +96,18 @@ void convertASTToASM(ASTNode* tree, const char* fileName, VariableList* varList)
 	char* asmPath = NULL;
 	asmPath = (char*)calloc(strlen(fileName) + 5, sizeof(char));
 
+	char* fileNameWithNoExtention = clearExeExtension(fileName);
 
-	strcpy(asmPath, fileName);
+	strcpy(asmPath, fileNameWithNoExtention);
 	strcat(asmPath, ".asm");
 	FILE* asmFile = openFile(asmPath, "w");
 	free(asmPath);
 
-	startWriting(tree, fileName, varList, asmFile);
+	startWriting(tree, varList, asmFile);
 
 	
 	fclose(asmFile);
+	free(fileNameWithNoExtention);
 }
 
 
@@ -211,8 +227,9 @@ void writeBranch(ASTNode* tree, FILE* asmFile, VariableList* varList)
 			{
 				fprintf(asmFile, "fild dword ptr [esp]\n");
 				fprintf(asmFile, "fstp dword ptr [esp]\n");
-				fprintf(asmFile, "pop eax\n");
 			}
+			fprintf(asmFile, "pop eax\n");
+
 		}
 		else
 		{

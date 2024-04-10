@@ -1,0 +1,9 @@
+printString("Enter 2 numbers and get the sum:\n")
+
+int a = intInput()
+printString("+\n")
+int b = intInput()
+printString("=\n")
+printInt(a + b)
+
+

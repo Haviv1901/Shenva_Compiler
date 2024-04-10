@@ -1,6 +1,7 @@
 #include "Compiler.h"
 #include <stdlib.h>
 #include "fileHelper.h"
+#include "flags.h"
 #include "lexer.h"
 
 
@@ -18,27 +19,39 @@ void printVariaballsWithScope(VariableList* curr)
 
 
 /* main function, compile a txt file into a .exe file */
-void Compile(char* inputFileName, char* outputFileName)
+int Compile(char* inputFileName, char* outputFileName)
 {
-
+	if (userFlags.printLogs)
+	{
+		printf("Starting compilation...\n");
+	}
 	if (!activateLexer(inputFileName)) // lex inpput file
 	{
-		return;
+		return 0;
 	}
 
 	llist* tokenList = extractTokensFromLexResult(LEXER_OUTPUT_FILE_NAME); // extract tokens to c memory
 	llist hold = *tokenList;
+	printTokenList(tokenList); // print tokens if needed
+	
 
-	llist_print(tokenList, tokenPrint); // print for debugging
 	VariableList* varList = createVariableList(tokenList);
 
 	if(isVars(tokenList) && varList == NULL) // checking if there is any undefined variable error.
 	{
 		token_llist_free(tokenList);
-		return;
+		if (userFlags.keepTokensErrorFile != 1)
+		{
+			DeleteFile(ERROR_LOG_FILE);
+		}
+		if (userFlags.keepTokenFile != 1)
+		{
+			DeleteFile(LEXER_OUTPUT_FILE_NAME);
+		}
+		return 0;
 	}
 
-	printVariaballsWithScope(varList);
+	printVariaballsList(varList);
 
 	ASTNode* tree = buildTree(tokenList); // build AST 
 
@@ -50,7 +63,27 @@ void Compile(char* inputFileName, char* outputFileName)
 	token_llist_free(tokenList);
 	deleteVariableList(varList);
 	callDeleteFuncList();
+	return 1;
+}
 
+void printVariaballsList(VariableList* varList)
+{
+	if(userFlags.printVariableList)
+	{
+		printf("\nVariables List:\n");
+		printVariaballsWithScope(varList);
+		printf("\n\n");
+	}
+}
+
+void printTokenList(llist* tokenList)
+{
+	if(userFlags.printTokenList)
+	{
+		printf("\nToken List:\n");
+		llist_print(tokenList, tokenPrint);
+		printf("\n\n");
+	}
 }
 
 
