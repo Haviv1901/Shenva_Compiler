@@ -54,6 +54,24 @@
     <ClCompile Include="VariableManager.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ScopeTree.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ASTconditions.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FunctuionList.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ASTdeclerations.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="flags.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TokenGetter.h">
@@ -92,10 +110,23 @@
     <ClInclude Include="VariableManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="output.tok">
-      <Filter>Source Files</Filter>
-    </None>
+    <ClInclude Include="ASTdeclerations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScopeTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ASTconditions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FunctionList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="flags.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

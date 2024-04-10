@@ -99,6 +99,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,35 +140,44 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AST.c" />
+    <ClCompile Include="ASTconditions.c" />
+    <ClCompile Include="ASTdeclerations.c" />
     <ClCompile Include="ASTfunctions.c" />
     <ClCompile Include="ASTManager.c" />
     <ClCompile Include="ASTnumeric.c" />
     <ClCompile Include="Compiler.c" />
     <ClCompile Include="fileHelper.c" />
+    <ClCompile Include="flags.c" />
+    <ClCompile Include="FunctuionList.c" />
     <ClCompile Include="InstructionWriting.c" />
     <ClCompile Include="lexer.c" />
     <ClCompile Include="llist.c" />
     <ClCompile Include="masmAndLink.c" />
+    <ClCompile Include="Menu.c" />
     <ClCompile Include="prog.c" />
+    <ClCompile Include="ScopeTree.c" />
     <ClCompile Include="TokenGetter.c" />
     <ClCompile Include="VariableManager.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AST.h" />
+    <ClInclude Include="ASTconditions.h" />
+    <ClInclude Include="ASTdeclerations.h" />
     <ClInclude Include="ASTfunctions.h" />
     <ClInclude Include="ASTManager.h" />
     <ClInclude Include="ASTnumeric.h" />
     <ClInclude Include="Compiler.h" />
     <ClInclude Include="fileHelper.h" />
+    <ClInclude Include="flags.h" />
+    <ClInclude Include="FunctionList.h" />
     <ClInclude Include="masmAndLink.h" />
     <ClInclude Include="InstructionWriting.h" />
     <ClInclude Include="lexer.h" />
     <ClInclude Include="llist.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="ScopeTree.h" />
     <ClInclude Include="TokenGetter.h" />
     <ClInclude Include="VariableManager.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="output.tok" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

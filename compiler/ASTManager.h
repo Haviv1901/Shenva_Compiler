@@ -13,6 +13,13 @@
 #include "ASTfunctions.h"
 #endif
 
+#ifndef ASTCONDITIONS_H
+#include "ASTconditions.h"
+#endif
+
+#ifndef ASTFUNCTIONS_H
+#include "ASTdeclerations.h"
+#endif
 
 
 ASTNode* buildTree(struct node** FirstNode);

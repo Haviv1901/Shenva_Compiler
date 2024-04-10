@@ -37,13 +37,28 @@ void token_llist_free(llist* list)
 {
     struct node* curr = *list;
     struct node* next;
-
+    Token* tok = curr->data; 
     while (curr != NULL)
     {
-        if (((Token*)(curr->data))->type == NUM)
+        Token* tok = (Token*)curr->data;
+
+        if (tok->type == TOKEN_NUM)
         {
-            free((int*)(((Token*)(curr->data))->value));
+            free((int*)(tok->value));
         }
+        if (tok->type == TOKEN_DECIMAL)
+        {
+            free((float*)(tok->value));
+        }
+        if (tok->type == TOKEN_VAR || tok->type == TOKEN_FUNCTION_CALL)
+        {
+            free((char*)(tok->value));
+        }
+        if (tok->type == TOKEN_LETTER)
+        {
+            free((char*)(tok->value));
+        }
+        
         free(curr->data);
         next = curr->next;
         free(curr);
@@ -128,7 +143,7 @@ void llist_append(llist* list, void* data)
 }
 
 
-void llist_push(llist* list, void* data)
+void llist_push(llist* list, Token* data)
 {
     struct node* head;
     struct node* new_node;
@@ -139,33 +154,47 @@ void llist_push(llist* list, void* data)
 
     head = *list;
 
-    // Head is empty node
-    if (head->data == NULL)
-        head->data = data;
-
-    // Head is not empty, add new node to front
-    else {
-        new_node = malloc(sizeof(struct node));
-        new_node->data = data;
-        new_node->next = head;
-        *list = new_node;
+    new_node = malloc(sizeof(struct node));
+    new_node->data = data;
+    new_node->next = NULL;
+    if (head->next)
+    {
+        new_node->next = head->next;
     }
+    head->next = new_node;
+
+
 }
 
-void* llist_pop(llist* list)
+void llist_pop(llist* list)
 {
-    void* popped_data;
     struct node* head = *list;
+    if (head == NULL)
+    {
+        return;
+    }
+    if (head->next == NULL)
+    {
+        if (head->data->value != NULL)
+        {
+            free(head->data->value);
+        }
+        free(head->data);
+        free(head);
+        return;
+    }
 
-    if (list == NULL || head->data == NULL)
-        return NULL;
-
-    popped_data = head->data;
-    *list = head->next;
-
-    free(head);
-
-    return popped_data;
+    while (head->next->next)
+    {
+        head = head->next;
+    }
+    if (head->next->data->value != NULL)
+    {
+        free(head->next->data->value);
+    }
+    free(head->next->data);
+    free(head->next);
+    head->next = NULL;
 }
 
 void llist_print_reverse(llist* list, void (*print)(void*))
@@ -181,6 +210,45 @@ void llist_print_reverse(llist* list, void (*print)(void*))
 }
 
 
+Token* llist_get_last_tok(llist* list)
+{
+    struct node* curr = *list;
+    if (!curr)
+    {
+        return NULL;
+    }
+    while (curr->next != NULL)
+    {
+        curr = curr->next;
+    }
+    return curr->data;
+
+}
+
+
+/**
+ * \brief checks if there is an assign token before theres an endl token.
+ * \param curr 
+ * \return 
+ */
+ Token* is_assign_line(struct node** curr)
+{
+    struct node* node = *curr;
+    while (node != NULL)
+    {
+        if (node->data->type == TOKEN_ASSIGN)
+        {
+            return node->data;
+        }
+        if (node->data->type == TOKEN_ENDL)
+        {
+            return NULL;
+        }
+
+        node = node->next;
+    }
+    return NULL;
+}
 
 
 void llist_print(llist* list, void (*print)(void*))

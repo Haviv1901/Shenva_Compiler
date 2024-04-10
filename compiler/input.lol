@@ -1,1 +1,4 @@
-print(-10 % 21)
+
+
+printString("hello\n")
+

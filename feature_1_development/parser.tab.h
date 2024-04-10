@@ -40,16 +40,68 @@
       know about them.  */
    enum yytokentype {
      NUM = 258,
-     ADD = 259,
-     SUB = 260,
-     MUL = 261,
-     DIV = 262,
-     MOD = 263,
-     LPAREN = 264,
-     RPAREN = 265,
-     ERROR = 266,
-     PRINT = 267,
-     ENDL = 268
+     LETTER = 259,
+     DECIMAL = 260,
+     BOOL = 261,
+     STRING = 262,
+     ADD = 263,
+     SUB = 264,
+     MUL = 265,
+     DIV = 266,
+     MOD = 267,
+     LPAREN = 268,
+     RPAREN = 269,
+     EQUALS = 270,
+     NOTEQUALS = 271,
+     GREATER = 272,
+     NOTGREATER = 273,
+     LESSER = 274,
+     NOTLESSER = 275,
+     GREATEREQUALS = 276,
+     LESSEREQUALS = 277,
+     NOT = 278,
+     OR = 279,
+     AND = 280,
+     IF = 281,
+     ELSE = 282,
+     LBRACK = 283,
+     RBRACK = 284,
+     WHILE = 285,
+     FOR = 286,
+     ERROR = 287,
+     PRINTINT = 288,
+     PRINTCHAR = 289,
+     PRINTFLOAT = 290,
+     COMMA = 291,
+     INTINPUT = 292,
+     FLOATINPUT = 293,
+     CHARINPUT = 294,
+     PRINTSTRING = 295,
+     TRUE = 296,
+     FALSE = 297,
+     ENDL = 298,
+     ASSIGN = 299,
+     LIST = 300,
+     INT = 301,
+     CHAR = 302,
+     FLOAT = 303,
+     PINT = 304,
+     PCHAR = 305,
+     PFLOAT = 306,
+     PBOOL = 307,
+     VAR = 308,
+     ADDEQ = 309,
+     SUBEQ = 310,
+     MULEQ = 311,
+     DIVEQ = 312,
+     MODEQ = 313,
+     DEF = 314,
+     RETURN = 315,
+     REFERENCE = 316,
+     DEREFERENCE = 317,
+     LIND = 318,
+     RIND = 319,
+     LOWER_THAN_ELSE = 320
    };
 #endif
 
@@ -68,7 +120,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 72 "parser.tab.h"
+#line 124 "parser.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
